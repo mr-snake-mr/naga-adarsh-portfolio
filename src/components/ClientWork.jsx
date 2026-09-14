@@ -4,11 +4,11 @@ export default function ClientWork() {
   return (
     <section className="section" id="client" data-component="client-strip" aria-labelledby="client-title">
       <div className="container">
-        <SectionHeading title="freelance & college" />
+        <SectionHeading title="experience & college" />
 
         <div className="client-grid">
           <article className="client-panel panel-tang" data-component="client-panel">
-            <span className="when">2025 · freelance</span>
+            <span className="when">sep 2025 — oct 2025 · freelance</span>
             <h3>SubbaiH Tuition & Daycare</h3>
             <p className="body">
               A tuition and daycare centre in Chennai hired me through a college
@@ -30,6 +30,33 @@ export default function ClientWork() {
               <span className="fact">html · css · javascript</span>
               <span className="fact">responsive</span>
               <span className="fact">static hosting</span>
+            </div>
+          </article>
+
+          <article className="client-panel panel-lime" data-component="client-panel">
+            <span className="when">jun 2025 — jul 2025 · chennai</span>
+            <h3>Web Developer — Eagle Hi-Tech Softclou Pvt Ltd</h3>
+            <ul className="points">
+              <li>
+                Worked directly with clients to gather requirements and build 3
+                custom web pages — 2 responsive HTML5/CSS3 sites and 1 dynamic
+                React.js web page.
+              </li>
+              <li>
+                Engineered responsive, cross-browser user interfaces using React
+                components, state management and modern CSS layout techniques.
+              </li>
+              <li>
+                Delivered end-to-end web solutions on schedule, prioritizing
+                clean component architecture, fast load times and intuitive
+                UI/UX based on direct client feedback.
+              </li>
+            </ul>
+            <div className="facts">
+              <span className="fact">react.js</span>
+              <span className="fact">html5 · css3</span>
+              <span className="fact">javascript</span>
+              <span className="fact">responsive web design</span>
             </div>
           </article>
 

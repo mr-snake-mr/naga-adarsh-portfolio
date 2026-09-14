@@ -4,7 +4,7 @@ import { Moon, Sun } from 'lucide-react';
 const NAV = [
   { label: 'work', href: '#work' },
   { label: 'demo', href: '#play' },
-  { label: 'freelance', href: '#client' },
+  { label: 'experience', href: '#client' },
   { label: 'credentials', href: '#proof' },
   { label: 'contact', href: '#contact' },
   { label: 'résumé (pdf)', href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' },

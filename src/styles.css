@@ -576,6 +576,7 @@ section { scroll-margin-top: 5rem; overflow: clip; }
 
 .panel-tang { background: var(--wash-tang); box-shadow: 6px 6px 0 var(--ink); }
 .panel-teal { background: var(--wash-teal); }
+.panel-lime { background: var(--wash-lime); }
 
 .client-panel h3 { font-size: 1.25rem; font-weight: 700; }
 
@@ -593,7 +594,32 @@ section { scroll-margin-top: 5rem; overflow: clip; }
 
 .client-panel p.body { color: var(--ink); max-width: 48ch; }
 
-.client-panel .facts { display: flex; flex-wrap: wrap; gap: var(--s3); }
+/* role bullets — hard ink squares, same sticker language as the rest */
+.client-panel .points {
+  display: grid;
+  gap: var(--s3);
+  max-width: 52ch;
+}
+
+.client-panel .points li {
+  position: relative;
+  padding-left: var(--s5);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.client-panel .points li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.5em;
+  width: 7px;
+  height: 7px;
+  background: var(--ink);
+}
+
+.client-panel .facts { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: auto; padding-top: var(--s2); }
 
 .fact {
   font-family: var(--font-mono);
@@ -1427,6 +1453,10 @@ html[data-theme='dark'] ::selection {
   .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
   .client-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1100px) {
+  .client-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 479px) {
