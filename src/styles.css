@@ -1,40 +1,52 @@
 /* ============================================================
-   Naga Adarsh — portfolio v6 · "elements"
-   Six elements, six jobs. light is the ground and the highlight,
-   bark is every letter, outline and hairline, and fire / water /
-   earth / wind are the pigments. The pigments are deep, so an
-   accent fill carries bone text — except light itself, which is
-   a light pigment and carries bark text. Hard offset shadows and
-   2px bark outlines throughout: no rotation, no blur, no extra
-   hues invented on the fly.
+   Naga Adarsh — portfolio v7 · "a dictionary of colour"
+
+   The palette is not invented. Every ground, pigment and ink
+   below is a named swatch from Sanzo Wada's A Dictionary of
+   Color Combinations (1933) — 159 colours the book only ever
+   publishes as 360 fixed pairings.
+
+   The book's own caveat sets the method. Only 140 of those 360
+   combinations hold a pair legible enough for body text, and
+   the library leans warm and mid-chroma, so a web palette built
+   from it has to DERIVE its text tones rather than lift them.
+   Here the paper, the ink and the six pigments are the book's
+   own values; each element's ink is then the most saturated
+   tone of that pigment that still clears 4.5:1 — both on the
+   paper and on the element's own wash.
+
+   Named swatches in use:
+     paper  Sulpher Yellow #39         ink   Black #159
+     fire   Carmine Red #29            water Deep Lyons Blue
+     earth  Brick Red #28              wind  Slate Color #158
+     bark   Dusky Madder Violet #153   light Yellow Ocher #60
    ============================================================ */
 
-/* Space Grotesk (display) and JetBrains Mono (labels, chips, mono) are served
-   from /fonts, not from Google. The third-party stylesheet was render-blocking
-   on the critical path and measured ~0.7s of it on a cold cache; from our own
-   origin the CSS and the fonts arrive with everything else. Latin subsets only
-   — the page is English — and each face stays lazy: a browser fetches only the
-   weights it actually renders. */
+/* Fraunces (display) and JetBrains Mono (labels, chips, mono) are served from
+   /fonts, not from Google: the third-party stylesheet was render-blocking on
+   the critical path and measured ~0.7s of it on a cold cache. Latin subsets
+   only — the page is English — and each face stays lazy, so a browser fetches
+   only the weights it actually renders. */
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Fraunces';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/space-grotesk-500.woff2') format('woff2');
+  src: url('/fonts/fraunces-400.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Fraunces';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/space-grotesk-600.woff2') format('woff2');
+  src: url('/fonts/fraunces-600.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Fraunces';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/space-grotesk-700.woff2') format('woff2');
+  src: url('/fonts/fraunces-700.woff2') format('woff2');
 }
 @font-face {
   font-family: 'JetBrains Mono';
@@ -59,74 +71,71 @@
 }
 
 :root {
-  /* light — the ground. The page is the light element. */
-  --paper: #f7f3e8;
-  --paper-sunk: #efe9da;
-  --card: #fffcf4;
-  --dot: rgba(34, 26, 17, 0.05);
+  /* A Dictionary of Color Combinations #39 Sulpher Yellow: the sheet the work
+     is printed on. Warm deliberately — the book's palette leans warm roughly
+     three to one, so a neutral ground would fight every pigment sitting on it. */
+  --paper: #f5ecc2;
+  --paper-sunk: #e8e0b8;
+  --card: #fcfaee;
 
-  /* bark — the structure: every letter, outline and hairline */
-  --ink: #221a11;
-  --ink-soft: #5b4a38;
-  --rule: #d9d0bc;
+  /* Black #159 — the dictionary's darkest swatch, and the partner the book
+     itself pairs with Sulpher Yellow (combination 52, 15.7:1). */
+  --ink: #111314;
+  --ink-soft: #6c6a5a;
+  --rule: #d5ceaa;
 
-  /* The pigments. Each one is deep here and bright in the dark theme, so
-     text on a pigment fill is governed by --on-accent and never inherited. */
-  --fire: #bc3a16;   /* ember      — action */
-  --water: #175f74;  /* deep water — information */
-  --earth: #8a5a24;  /* clay       — mass */
-  --wind: #4e6e72;   /* slate      — quiet */
-  --bark: #3a2a1b;   /* umber      — roots */
-  --light: #d9a21b;  /* sun        — the highlight */
+  /* The pigments, each a named swatch. Deep here, luminous in the dark theme,
+     so text on a pigment fill is governed by --on-accent and never inherited. */
+  --fire: #a62c37;   /* Carmine Red #29      — action */
+  --water: #1c4286;  /* Deep Lyons Blue      — information */
+  --earth: #a84222;  /* Brick Red #28        — mass */
+  --wind: #34454c;   /* Slate Color #158     — quiet */
+  --bark: #4e1d4c;   /* Dusky Madder Violet  — roots */
+  --light: #e2b540;  /* Yellow Ocher #60     — the highlight */
 
-  --fire-wash: #fae7dd;
-  --water-wash: #dcebee;
-  --earth-wash: #f1e6d3;
-  --wind-wash: #e4edec;
-  --bark-wash: #eae2d5;
-  --light-wash: #faf0d6;
+  --fire-wash: #e7c9a9;
+  --water-wash: #cecdb7;
+  --earth-wash: #e7cda5;
+  --wind-wash: #d2cead;
+  --bark-wash: #d7c7ad;
+  --light-wash: #f2e2ab;
 
-  /* A text tone per element, so a component can be built entirely inside its
-     own family — pigment for its edges and marks, wash for its surface, ink
-     for its words — without borrowing another element's colour. Every ink
-     below clears 4.5:1 both on the ground and on its own wash. */
-  --fire-ink: #8f2a0f;
-  --water-ink: #11485a;
-  --earth-ink: #6b4415;
-  --wind-ink: #3a5357;
-  --bark-ink: #2a1d12;
-  /* Dark amber, not mid: this one has to read on the ground, on the light
-     wash AND on the gold marker itself. */
-  --light-ink: #4a3208;
+  /* A text tone per element. The dictionary's own note is that these are
+     largely warm, mid-chroma pigments whose published pairings often lack a
+     readable body-text tone — so each ink below is the MOST saturated tone of
+     its pigment that still clears 4.5:1, on the ground and on its own wash. */
+  --fire-ink: #a22b36;
+  --water-ink: #1c4286;
+  --earth-ink: #973d20;
+  --wind-ink: #34454c;
+  --bark-ink: #4e1d4c;
+  --light-ink: #77622a;
 
-  /* Hard-offset shadow tone per element, so a component's shadow is its own
-     hue instead of the page's. In light the ink is already a dark tint of the
-     hue, so the two coincide here; dark needs its own set below. */
-  --fire-shadow: #8f2a0f;  --water-shadow: #11485a; --earth-shadow: #6b4415;
-  --wind-shadow: #3a5357;  --bark-shadow: #2a1d12;  --light-shadow: #4a3208;
+  /* Elevation is a hue here, not an offset — see --lift-*. */
+  --fire-shadow: #a22b36;  --water-shadow: #1c4286; --earth-shadow: #973d20;
+  --wind-shadow: #34454c;  --bark-shadow: #4e1d4c;  --light-shadow: #77622a;
 
-  /* Text on a pigment fill. The light theme's pigments are deep, so that
-     text is bone. light is the single exception: it is a light pigment in
-     both themes and therefore always carries bark. */
-  --on-accent: #f7f3e8;
-  --on-light: #221a11;
+  /* Text on a pigment fill. All five deep pigments clear 4.5:1 against the
+     paper (fire 5.8, earth 5.1, water 8.1, wind 8.4, bark 11.0), so bone text
+     holds on every one. light is the single exception: a light pigment in both
+     themes, so it always carries ink. */
+  --on-accent: #f5ecc2;
+  --on-light: #111314;
 
-  /* The marker swipe sits BEHIND letterforms, so it has to contrast with
-     them rather than with the page. Here the letters are bark, so the swipe
-     is light. */
+  /* The marker swipe sits BEHIND letterforms, so it contrasts with them and
+     not with the page: Yellow Ocher behind ink letters measures 9.7:1. */
   --marker: var(--light);
 
-  /* the closing band: bark in light, a banked fire in dark. Dark in both
-     themes, so the light element is the one thing glowing on it. */
-  --band: #1c140b;
-  --band-fg: #f7f3e8;
-  --band-soft: rgba(247, 243, 232, 0.62);
-  --band-line: rgba(247, 243, 232, 0.24);
+  /* The closing band is Dusky Madder Violet — the deepest swatch in the
+     palette that is still a colour rather than a black. */
+  --band: #4e1d4c;
+  --band-fg: #f5ecc2;
+  --band-soft: rgba(245, 236, 194, 0.66);
+  --band-line: rgba(245, 236, 194, 0.24);
 
-  --shadow-ink: #221a11;
-
-  /* type */
-  --font-display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* type — a high-contrast serif for display, the system face for reading,
+     mono for labels. */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
@@ -135,17 +144,19 @@
   --s6: 1.5rem; --s8: 2rem; --s10: 2.5rem; --s12: 3rem; --s16: 4rem;
   --section-y: clamp(4rem, 8vw, 7rem);
 
-  /* radius */
-  --r-xs: 0.3rem;
-  --r-s: 0.5rem;
-  --r-m: 0.75rem;
-  --r-l: 1.1rem;
+  /* radius — restrained: this theme is a printed sheet, not a sticker wall */
+  --r-xs: 0.25rem;
+  --r-s: 0.375rem;
+  --r-m: 0.55rem;
+  --r-l: 0.8rem;
   --r-pill: 999px;
 
-  /* elevation — hard offsets, never blurred */
-  --lift-1: 3px 3px 0 var(--shadow-ink);
-  --lift-2: 5px 5px 0 var(--shadow-ink);
-  --lift-3: 8px 8px 0 var(--shadow-ink);
+  /* Elevation is light falling on the sheet rather than a second copy of the
+     element behind it, so the shadows are soft, layered, and tinted with the
+     palette's own black instead of a neutral #000. */
+  --lift-1: 0 1px 2px rgba(17, 19, 20, 0.05), 0 2px 6px rgba(17, 19, 20, 0.045);
+  --lift-2: 0 2px 5px rgba(17, 19, 20, 0.06), 0 10px 22px rgba(17, 19, 20, 0.07);
+  --lift-3: 0 5px 14px rgba(17, 19, 20, 0.08), 0 20px 44px rgba(17, 19, 20, 0.11);
 
   /* motion */
   --t-fast: 120ms;
@@ -173,8 +184,6 @@ html, body { overflow-x: clip; }
 body {
   margin: 0;
   background-color: var(--paper);
-  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
-  background-size: 24px 24px;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 1rem;
@@ -191,7 +200,7 @@ svg { display: block; }
 ::selection { background: var(--fire); color: var(--on-accent); }
 
 :focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: var(--r-xs);
 }
@@ -232,7 +241,9 @@ section {
   top: 0;
   z-index: 50;
   background: var(--paper);
-  border-bottom: 2px solid var(--ink);
+  /* a hairline, not a drawn rule: the header is separated from the sheet by a
+     thin tint of the ink rather than by a second black line across the page */
+  border-bottom: 1px solid var(--rule);
 }
 
 .topbar-row {
@@ -259,11 +270,10 @@ section {
 .brand::before {
   content: "";
   flex: none;
-  width: 11px;
-  height: 11px;
-  border-radius: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
   background: var(--fire);
-  border: 2px solid var(--ink);
 }
 
 .nav-desktop { display: none; }
@@ -299,9 +309,8 @@ section {
 .dot-cluster { display: flex; gap: 5px; align-items: center; }
 .dot-cluster i {
   display: block;
-  width: 9px; height: 9px;
+  width: 7px; height: 7px;
   border-radius: 50%;
-  border: 2px solid var(--ink);
 }
 /* one element, three dots: the header's element is fire, matching the brand
    square and the reading bar. Three colours in one cluster was a crossing. */
@@ -318,14 +327,15 @@ section {
   font-weight: 700;
   color: var(--ink);
   background: var(--card);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-pill);
   text-decoration: none;
   white-space: nowrap;
   box-shadow: var(--lift-1);
-  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
 }
-.cv-pill:hover { transform: translate(-1px, -2px); box-shadow: var(--lift-2); }
+.cv-pill:hover { transform: translateY(-1px); box-shadow: var(--lift-2); border-color: var(--fire); }
 
 .theme-btn,
 .menu-btn {
@@ -340,10 +350,13 @@ section {
   font-weight: 700;
   color: var(--ink);
   background: var(--card);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-m);
   cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
+.theme-btn:hover,
+.menu-btn:hover { border-color: var(--fire); }
 .menu-btn { padding: 0 14px; }
 
 /* The toggle's icon is chosen from the <html data-theme> the boot script sets,
@@ -355,7 +368,7 @@ html[data-theme='dark'] .theme-ico-light { display: none; }
 html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 .menu-panel {
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   background: var(--paper);
 }
 .menu-panel[hidden] { display: none; }
@@ -367,14 +380,14 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
-  border-bottom: 2px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
   transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
 .menu-panel li:last-child a { border-bottom: 0; }
 .menu-panel a:hover,
 .menu-panel a:focus-visible {
   background: var(--fire-wash);
-  box-shadow: inset 4px 0 0 var(--fire);
+  box-shadow: inset 3px 0 0 var(--fire);
 }
 
 /* reading-position bar, pinned to the header's bottom rule */
@@ -382,8 +395,8 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -2px;
-  height: 3px;
+  bottom: -1px;
+  height: 2px;
   pointer-events: none;
 }
 .topbar-progress i {
@@ -411,16 +424,15 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   text-decoration: none;
   cursor: pointer;
   color: var(--ink);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-pill);
-  box-shadow: 3px 3px 0 var(--shadow-tint, var(--shadow-ink));
-  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  box-shadow: var(--lift-1);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
 }
-.btn:hover {
-  transform: translate(-1px, -2px);
-  box-shadow: 5px 5px 0 var(--shadow-tint, var(--shadow-ink));
-}
-.btn:active { transform: none; box-shadow: 1px 1px 0 var(--shadow-tint, var(--shadow-ink)); }
+.btn:hover { transform: translateY(-1px); box-shadow: var(--lift-2); }
+.btn:active { transform: none; box-shadow: var(--lift-1); }
 
 /* mid-run: flat and clearly inert, but the label stays fully readable */
 .btn:disabled {
@@ -430,19 +442,19 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   opacity: 0.78;
 }
 
-/* fire: solid, edged in its own darker tone, worded in bone */
+/* fire: solid, worded in bone. Filled buttons drop their rule entirely — a
+   hairline of the fill's own tone would only thicken the edge. */
 .btn-fire {
-  --shadow-tint: var(--fire-shadow);
   background: var(--fire);
   color: var(--on-accent);
-  border-color: var(--fire-ink);
+  border-color: var(--fire);
 }
+
 .btn-paper { background: var(--card); color: var(--ink); }
 
 /* water: the channel. Its own wash for the surface, its own edge, its own ink,
    filling solid on hover — the component never leaves its element. */
 .btn-water {
-  --shadow-tint: var(--water-shadow);
   background: var(--water-wash);
   color: var(--water-ink);
   border-color: var(--water);
@@ -450,16 +462,17 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
 .btn-water:hover {
   background: var(--water);
   color: var(--on-accent);
-  border-color: var(--water-ink);
+  border-color: var(--water);
 }
-.btn-ghost { background: transparent; box-shadow: none; }
-.btn-ghost:hover { background: var(--paper-sunk); box-shadow: var(--lift-1); }
+
+.btn-ghost { background: transparent; border-color: transparent; box-shadow: none; }
+.btn-ghost:hover { background: var(--card); border-color: var(--rule); box-shadow: var(--lift-1); }
 
 /* ---------- hero ---------- */
 
 .hero {
   padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(4rem, 9vw, 7.5rem);
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
 
 .hero-grid { display: grid; gap: var(--s10); }
@@ -476,7 +489,7 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   gap: var(--s3) var(--s5);
   padding-bottom: var(--s5);
   margin-bottom: var(--s10);
-  border-bottom: 2px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 /* The hero is the one place where all six elements are on show at once, and
@@ -494,18 +507,17 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   font-weight: 700;
   color: var(--fire-ink);
   background: var(--fire-wash);
-  border: 2px solid var(--fire);
+  border: 1px solid var(--fire);
   border-radius: var(--r-pill);
   white-space: nowrap;
 }
 
 .status-dot {
   flex: none;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--fire);
-  border: 2px solid var(--fire-ink);
 }
 
 /* earth: the place. Same recipe, clay throughout. */
@@ -522,10 +534,9 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
 .hero-meta-line::before {
   content: "";
   flex: none;
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   background: var(--earth);
-  border: 1px solid var(--earth-ink);
 }
 
 .hero-name {
@@ -533,9 +544,8 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 10vw, 7rem);
   font-weight: 700;
-  /* The name is a light component: dark-amber letterforms with the sun behind
-     them. Reading it as bare bark letters with a gold swipe borrowed from
-     another element was the last crossing in the hero. */
+  /* A light component throughout: Yellow Ocher's own ink for the letterforms,
+     and the pigment itself as the swipe behind them. */
   color: var(--light-ink);
   line-height: 0.92;
   letter-spacing: -0.03em;
@@ -549,9 +559,10 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 .hero-name .mark {
   /* rides up across the baseline so it reads as a marker, not an underline.
-     Sunlight behind the bark letters — the light element's one loud moment. */
+     Yellow Ocher behind ink letterforms: the one place on the page where a
+     palette colour is used as a highlighter rather than as a surface. */
   box-shadow: inset 0 -0.3em 0 var(--marker);
-  border-radius: 3px;
+  border-radius: 2px;
   animation: markIn 520ms var(--ease) 360ms both;
 }
 
@@ -625,11 +636,11 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   flex-wrap: wrap;
   align-items: baseline;
   gap: 2px var(--s4);
-  padding: 9px 14px;
+  padding: 10px 15px;
   background: var(--rcw, transparent);
-  border: 2px solid var(--rc, var(--fire));
+  border: 1px solid var(--rc, var(--fire));
   border-radius: var(--r-m);
-  box-shadow: 3px 3px 0 var(--rc-shadow, var(--shadow-ink));
+  box-shadow: var(--lift-1);
 }
 
 .receipt-label {
@@ -652,7 +663,6 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
   width: 8px;
   height: 8px;
   background: var(--rc, var(--fire));
-  border: 1px solid var(--rc-ink, var(--fire-ink));
 }
 
 .receipt-value {
@@ -714,11 +724,10 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   --spec-el: var(--earth);
   --spec-ink: var(--earth-ink);
   --spec-wash: var(--earth-wash);
-  --shadow-tint: var(--earth-shadow);
   background: var(--spec-wash);
-  border: 2px solid var(--spec-el);
+  border: 1px solid var(--spec-el);
   border-radius: var(--r-l);
-  box-shadow: 5px 5px 0 var(--shadow-tint, var(--shadow-ink));
+  box-shadow: var(--lift-2);
   overflow: hidden;
 }
 
@@ -743,7 +752,6 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   text-transform: uppercase;
   color: var(--on-accent);
   background: var(--spec-el);
-  border-bottom: 2px solid var(--spec-ink);
 }
 
 /* The element name, lowercase against the panel's caps. Kept at full
@@ -778,7 +786,9 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--spec-el);
+  /* The label takes the element's own ink, not its raw pigment: Brick Red set
+     on its own wash measures 3.7:1, under the 4.5:1 this copy needs. */
+  color: var(--spec-ink);
   padding-top: 2px;
 }
 
@@ -787,7 +797,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  color: var(--spec-ink);
+  color: var(--ink);
   overflow-wrap: anywhere;
 }
 
@@ -800,7 +810,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   text-decoration: none;
   color: var(--spec-ink);
   background: var(--spec-wash);
-  border-top: 2px solid var(--spec-el);
+  border-top: 1px solid var(--spec-el);
   transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 .spec-link:hover { background: var(--spec-el); color: var(--on-accent); }
@@ -829,13 +839,13 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
 
 /* ---------- sections + headings ---------- */
 
-/* Every section opens with a stratum of its own element, sitting directly on
-   top of the bark hairline that closes the section above. Four bands down the
-   page, and the palette has stated itself once each. */
+/* Every section opens with a thin stratum of its own element, sitting directly
+   on top of the hairline that closes the section above. Five bands down the
+   page, and the dictionary has stated itself once each. */
 .section {
   padding: var(--section-y) 0;
-  border-bottom: 2px solid var(--ink);
-  border-top: 4px solid var(--el, transparent);
+  border-bottom: 1px solid var(--rule);
+  border-top: 2px solid var(--el, transparent);
 }
 
 .section[data-el='fire'] { --el: var(--fire); }
@@ -875,8 +885,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   letter-spacing: 0.04em;
   color: var(--on-accent);
   background: var(--accent, var(--fire));
-  border: 2px solid var(--ink);
-  border-radius: var(--r-s);
+  border-radius: var(--r-xs);
 }
 
 /* names the element the section is built from. The palette is part of the
@@ -904,9 +913,9 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
 
 .eyebrow-rule {
   flex: 1;
-  height: 2px;
+  height: 1px;
   background: currentColor;
-  opacity: 0.18;
+  opacity: 0.28;
 }
 
 .section-heading h2 {
@@ -941,9 +950,9 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   display: flex;
   flex-direction: column;
   background: var(--card);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-l);
-  box-shadow: var(--lift-2);
+  box-shadow: var(--lift-1);
   overflow: hidden;
   transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
 }
@@ -952,7 +961,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
 .project-card.a-water { --accent: var(--water); --wash: var(--water-wash); }
 .project-card.a-earth { --accent: var(--earth); --wash: var(--earth-wash); }
 
-.project-card:hover { transform: translate(-3px, -3px); box-shadow: var(--lift-3); }
+.project-card:hover { transform: translateY(-2px); box-shadow: var(--lift-3); }
 
 /* the tinted header is what gives each card its own identity */
 .card-head {
@@ -962,7 +971,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   gap: var(--s3) var(--s4);
   padding: var(--s5) var(--s6);
   background: var(--wash);
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
 
 .card-numeral {
@@ -978,12 +987,11 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   font-variant-numeric: tabular-nums;
   color: var(--on-accent);
   background: var(--accent);
-  border: 2px solid var(--ink);
   border-radius: var(--r-m);
-  box-shadow: 3px 3px 0 var(--shadow-ink);
-  transition: transform var(--t-base) var(--ease);
+  box-shadow: var(--lift-1);
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
 }
-.project-card:hover .card-numeral { transform: rotate(-2deg); }
+.project-card:hover .card-numeral { transform: translateY(-1px); box-shadow: var(--lift-2); }
 
 .card-kind {
   justify-self: end;
@@ -1039,10 +1047,9 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   position: absolute;
   left: 1px;
   top: 0.52em;
-  width: 9px;
-  height: 3px;
+  width: 10px;
+  height: 2px;
   background: var(--accent);
-  border: 1px solid var(--ink);
 }
 
 .card-pill {
@@ -1053,7 +1060,6 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   font-weight: 700;
   color: var(--on-accent);
   background: var(--accent);
-  border: 2px solid var(--ink);
   border-radius: var(--r-pill);
 }
 
@@ -1077,12 +1083,13 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   font-weight: 700;
   color: var(--on-accent);
   background: var(--accent, var(--fire));
-  border: 2px solid var(--ink);
+  border: 0;
   border-radius: var(--r-pill);
   text-decoration: none;
+  box-shadow: var(--lift-1);
   transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
-.link-cta:hover { transform: translate(-1px, -2px); box-shadow: var(--lift-1); }
+.link-cta:hover { transform: translateY(-1px); box-shadow: var(--lift-2); }
 
 .text-link {
   font-family: var(--font-mono);
@@ -1118,7 +1125,6 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
-  border: 1px solid var(--ink);
 }
 
 /* ---------- experience panels ---------- */
@@ -1136,8 +1142,8 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   gap: var(--s4);
   padding: var(--s5) var(--s6) var(--s6);
   background: var(--card);
-  border: 2px solid var(--ink);
-  border-top: 8px solid var(--panel-accent);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--panel-accent);
   border-radius: var(--r-l);
   box-shadow: var(--lift-1);
 }
@@ -1161,7 +1167,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   font-size: 0.6875rem;
   font-weight: 700;
   background: var(--paper-sunk);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-pill);
 }
 
@@ -1205,7 +1211,7 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
      fall back to the UA's grey and read as washed out */
   color: var(--ink);
   background: var(--paper-sunk);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-pill);
 }
 
@@ -1225,8 +1231,8 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   gap: 6px;
   padding: var(--s4) var(--s5);
   background: var(--card);
-  border: 2px solid var(--ink);
-  border-left: 7px solid var(--badge-accent);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--badge-accent);
   border-radius: var(--r-m);
   box-shadow: var(--lift-1);
 }
@@ -1235,7 +1241,7 @@ a.badge {
   text-decoration: none;
   transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
 }
-a.badge:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2); }
+a.badge:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 a.badge:hover .b-title { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
 
 .b-light { --badge-accent: var(--light); }
@@ -1292,13 +1298,13 @@ a.badge:hover .b-title { text-decoration: underline; text-underline-offset: 3px;
   gap: var(--s3);
   min-height: 132px;
   padding: var(--s5);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-l);
   box-shadow: var(--lift-1);
   text-decoration: none;
   transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
-a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2); }
+a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 
 .stat-value {
   font-family: var(--font-display);
@@ -1335,7 +1341,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   align-items: baseline;
   gap: 4px var(--s4);
   padding: var(--s4) 0;
-  border-top: 2px solid var(--rule);
+  border-top: 1px solid var(--rule);
 }
 
 .repo-name {
@@ -1361,10 +1367,10 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   gap: var(--s4);
   padding: var(--s5);
   background: var(--card);
-  border: 2px solid var(--ink);
-  border-top: 8px solid var(--water);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--water);
   border-radius: var(--r-l);
-  box-shadow: var(--lift-2);
+  box-shadow: var(--lift-1);
 }
 
 .lab-nn { gap: var(--s3); padding: var(--s4); }
@@ -1410,7 +1416,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
 .nn-explain {
   margin: 0;
   background: var(--paper-sunk);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-m);
 }
 
@@ -1512,7 +1518,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   gap: var(--s2);
 }
 
-.nn-metrics { background: var(--card); border: 2px solid var(--ink); border-radius: var(--r-m); }
+.nn-metrics { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-m); }
 
 .nn-metric {
   display: flex;
@@ -1542,7 +1548,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   gap: 2px;
   padding: var(--s3) var(--s4);
   background: var(--paper-sunk);
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: var(--r-m);
 }
 .verdict-name {
@@ -1557,10 +1563,10 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
 /* no green anywhere in this palette, so the verdict colours carry the
    meaning instead: light for a clear fit, fire for the alarm, wind for the
    merely unsatisfying one. */
-.verdict-light { background: var(--light); border-color: var(--ink); }
+.verdict-light { background: var(--light); border-color: transparent; }
 .verdict-light .verdict-name, .verdict-light .verdict-why { color: var(--on-light); }
-.verdict-fire { background: var(--fire); border-color: var(--ink); }
-.verdict-wind { background: var(--wind); border-color: var(--ink); }
+.verdict-fire { background: var(--fire); border-color: transparent; }
+.verdict-wind { background: var(--wind); border-color: transparent; }
 .verdict-fire .verdict-name, .verdict-fire .verdict-why,
 .verdict-wind .verdict-name, .verdict-wind .verdict-why { color: var(--on-accent); }
 .verdict-idle { background: var(--paper-sunk); }
@@ -1592,11 +1598,11 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   padding: var(--section-y) 0 clamp(3rem, 6vw, 5rem);
   background: var(--band);
   color: var(--band-fg);
-  /* the closing stratum is light, not bark: the page ends by lighting up */
-  border-top: 4px solid var(--light);
+  /* the closing stratum is the light element: the page ends by lighting up */
+  border-top: 3px solid var(--light);
 }
 
-.eyebrow-inverse .eyebrow-num { background: var(--light); color: var(--on-light); border-color: var(--band-line); }
+.eyebrow-inverse .eyebrow-num { background: var(--light); color: var(--on-light); }
 .eyebrow-inverse .eyebrow-el { color: var(--band-soft); }
 .eyebrow-inverse .eyebrow-rule { opacity: 0.3; }
 
@@ -1654,7 +1660,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   gap: var(--s6);
   margin-top: var(--s10);
   padding-top: var(--s6);
-  border-top: 2px solid var(--band-line);
+  border-top: 1px solid var(--band-line);
 }
 
 .icon-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); }
@@ -1667,7 +1673,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   height: 44px;
   color: var(--band-fg);
   background: transparent;
-  border: 2px solid var(--band-line);
+  border: 1px solid var(--band-line);
   border-radius: var(--r-m);
   transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
     color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
@@ -1694,7 +1700,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   text-decoration: none;
   white-space: nowrap;
   color: var(--band-fg);
-  border: 2px solid var(--band-line);
+  border: 1px solid var(--band-line);
   border-radius: var(--r-m);
   transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
     color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
@@ -1718,7 +1724,7 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
   text-decoration: none;
   white-space: nowrap;
   color: var(--band-fg);
-  border: 2px solid var(--band-line);
+  border: 1px solid var(--band-line);
   border-radius: var(--r-pill);
   transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
     color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
@@ -1733,77 +1739,81 @@ a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2);
 /* ---------- dark theme ---------- */
 
 html[data-theme='dark'] {
-  --paper: #14110c;
-  --paper-sunk: #1b1710;
+  /* Inverted, and out of the same book: the ground is Black #159 and the bone
+     is Sulpher Yellow #39. The paper and the ink simply trade places, so the
+     palette is still only ever reading from the dictionary. */
+  --paper: #111314;
+  --paper-sunk: #1c1e1f;
   /* the surface sits clearly above the page, so panels read as panels */
-  --card: #221c14;
-  --ink: #f3eee1;
-  --ink-soft: #a89c86;
-  --rule: #342c20;
-  --dot: rgba(243, 238, 225, 0.06);
+  --card: #232526;
+  --ink: #f5ecc2;
+  --ink-soft: #83806b;
+  --rule: #414243;
 
-  /* The pigments invert. Deep in the light theme, bright here — so a fill
-     holds its contrast against the ground in either theme, and the text on
-     it just swaps ends. */
-  --fire: #ee6b41;
-  --water: #4fb3c9;
-  --earth: #c98a45;
-  --wind: #8fb3b0;
-  --bark: #a98460;
-  --light: #f0c24a;
+  /* The pigments invert. Deep in the light theme, luminous here, so a fill
+     holds its contrast against the ground in either theme and the text on it
+     just swaps ends. Every value is a named swatch: Eugenia Red A, Light
+     Glaucous Blue, Yellow Ocher, Warm Gray, Spinel Red, Sulpher Yellow. */
+  --fire: #e2625e;
+  --water: #a5c8d1;
+  --earth: #e2b540;
+  --wind: #a1a39a;
+  --bark: #f27291;
+  --light: #f5ecc2;
 
-  /* Bright enough that a tinted card head still reads as tinted. Collapse
-     these and the three project cards become three identical dark boxes,
-     which was the single biggest reason the old dark mode felt flat. */
-  --fire-wash: #4a1a0d;
-  --water-wash: #0f3340;
-  --earth-wash: #3b2c0e;
-  --wind-wash: #1c2e30;
-  --bark-wash: #2c2117;
-  --light-wash: #3e3212;
+  /* 20% of the pigment laid over the black. Bright enough that a tinted card
+     head still reads as tinted — collapse these and the three project cards
+     become three identical dark boxes. */
+  --fire-wash: #3b2323;
+  --water-wash: #2f373a;
+  --earth-wash: #3b331d;
+  --wind-wash: #2e302f;
+  --bark-wash: #3e262d;
+  --light-wash: #3f3e37;
 
-  --on-accent: #14110c;
-  --on-light: #14110c;
-  --shadow-ink: #060402;
+  /* Text on a pigment fill. Here the pigments are already luminous enough to
+     carry the ground on top of them, so --on-accent becomes the black. */
+  --on-accent: #111314;
+  --on-light: #111314;
 
-  /* In dark the pigments are already light enough to serve as their own text
-     tone, so an element's ink and its pigment are the same value here. */
+  /* In dark the pigments are light enough to serve as their own text tone, so
+     an element's ink and its pigment are the same value here. */
   --fire-ink: var(--fire);
   --water-ink: var(--water);
   --earth-ink: var(--earth);
   --wind-ink: var(--wind);
   --bark-ink: var(--bark);
-  /* Here the marker is bronze, so the name's letters have to be bone — which
-     is this theme's ink anyway. */
   --light-ink: var(--ink);
 
-  /* A shadow is darkness: the bright pigments cannot be used for one without
-     turning it into a glow, so each element gets a deep version of its hue. */
-  --fire-shadow: #351206;  --water-shadow: #05222b; --earth-shadow: #2a1e08;
-  --wind-shadow: #112429;  --bark-shadow: #150f08;  --light-shadow: #2d2308;
+  /* A shadow is darkness: a luminous pigment used as one reads as a glow, so
+     each element gets a deep tone of its own hue. */
+  --fire-shadow: #3b2323;  --water-shadow: #2f373a; --earth-shadow: #3b331d;
+  --wind-shadow: #2e302f;  --bark-shadow: #3e262d;  --light-shadow: #3f3e37;
 
-  /* Bronze, not gold: here the letters are bone, and bone on gold measures
-     1.4:1 — the bottoms of "adarsh" were washing out against the swipe. */
-  --marker: #8a6410;
+  /* Carmine Red #29 behind the name. The letters here are bone, and bone on
+     the dictionary's own gold measures 1.4:1 — the bottoms of "adarsh" washed
+     out against the swipe. Against a deep carmine they read at 5.8:1. */
+  --marker: #a62c37;
 
-  /* a banked fire, so the closing band is a colour moment rather than one
-     more dark rectangle */
-  --band: #2a1207;
-  --band-fg: #f3eee1;
-  --band-soft: rgba(243, 238, 225, 0.66);
-  --band-line: rgba(243, 238, 225, 0.22);
+  /* Dusky Madder Violet holds in both themes: on the black ground it sits
+     well above the page, so the closing band stays a colour moment rather
+     than one more dark rectangle. */
+  --band: #4e1d4c;
+  --band-fg: #f5ecc2;
+  --band-soft: rgba(245, 236, 194, 0.68);
+  --band-line: rgba(245, 236, 194, 0.24);
 
   color-scheme: dark;
 }
 
 /* depth over a flat dark field: fire behind the hero, water under the lab */
 html[data-theme='dark'] .hero {
-  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(238, 107, 65, 0.16), transparent 70%);
+  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(226, 98, 94, 0.15), transparent 70%);
 }
 
 /* the lab panel gets the same treatment under its water spine */
 html[data-theme='dark'] .lab {
-  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(79, 179, 201, 0.12), transparent 72%);
+  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(165, 200, 209, 0.12), transparent 72%);
 }
 
 html[data-theme='dark'] ::selection {

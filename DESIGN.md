@@ -389,3 +389,65 @@ Brief: the page must be readable by crawlers and must not wait on a third party 
 **Also:** an explicit space between the two `<h1>` lines (text extraction read `nagaadarsh`), plus the metadata, icons, JSON-LD, `robots.txt`, `sitemap.xml` and `vercel.json` described in `SEO-AUDIT.md`.
 
 **Verified** — `npm run build` clean (1591 modules; HTML 8.74 kB carrying 27,051 chars of prerendered markup; CSS 33.9 kB / 6.7 kB gzip; JS 178.3 kB / 57.3 kB gzip). Rendered over HTTP at 1440×1000 and 390×844 in both themes: webfonts still in use (checked with CDP `CSS.getPlatformFontsForNode`), exactly one theme icon per theme, no horizontal overflow, 0 console messages, 0 failed requests, hydration clean. FCP/LCP 584 ms self-hosted vs 1292–1468 / 1520–1820 ms before; CLS 0.0005 both ways. Lab numbers on one machine, not field data.
+
+## v10 — "a dictionary of colour" (supersedes the v2 citrus palette, the v6/v7/v8 element values, and v9's "the type looks identical")
+
+Brief: replace the palette with something thematic and elegant, using **Sanzo Wada's *A Dictionary of Color Combinations* (1933)** as the reference. Layout, structure, copy and component grammar are unchanged; this pass is colour, elevation, and the brand surfaces.
+
+### The method comes from the book, not from taste
+
+The dictionary is **159 named swatches published only as 360 fixed pairings**. Its own dataset note is the constraint that shapes everything below: *only 140 of the 360 combinations hold a pair legible enough for body text*, and the library leans warm and mid-chroma. So a web palette built from it cannot lift its text colours — it has to **derive** them. Verified independently against the dataset: 140/360 clear 4.5:1 on the strongest in-combination pair.
+
+The rule that follows: **the paper, the ink and the six pigments are the book's own hex values; every text tone is derived.**
+
+| Role | Wada swatch | Hex | Notes |
+|---|---|---|---|
+| `--paper` | Sulpher Yellow #39 | `#f5ecc2` | Pairs with Black #159 at **15.67:1** — the book's own combination 52 |
+| `--ink` | Black #159 | `#111314` | The dictionary's darkest swatch |
+| `--fire` | Carmine Red #29 | `#a62c37` | combination 104 with Sulpher Yellow |
+| `--water` | Deep Lyons Blue | `#1c4286` | |
+| `--earth` | Brick Red #28 | `#a84222` | Burnt Sienna was tried first and measured **4.38:1** — under the bar |
+| `--wind` | Slate Color #158 | `#34454c` | |
+| `--bark` | Dusky Madder Violet #153 | `#4e1d4c` | Also the closing band |
+| `--light` | Yellow Ocher #60 | `#e2b540` | A light pigment in both themes, so it carries ink |
+
+Derived and then measured, never guessed: washes are **18% of the pigment over the paper**; each element's `-ink` is the **most saturated** tone of its own pigment that still clears 4.5:1 on the ground *and* on that element's wash. Bone text on a pigment fill clears on all five deep pigments — fire 5.82, earth 5.09, water 8.13, wind 8.40, bark 11.01.
+
+### The one rule that had to change
+
+`.spec-row dt` set the element's **raw pigment as text on its own wash**. That is 3.7:1 for Brick Red and **1.46:1** for Yellow Ocher — invisible, not merely weak. Labels now take `--spec-ink` and values take `--ink`; the hierarchy survives as two different darks, and both are verified on the wash.
+
+### De-brutalising (this is what makes it read as "elegant")
+
+The v6 palette was only half the theme; the other half was structural, and it was structural in the opposite direction.
+
+- **38 rule-weight outlines → hairlines.** Components now separate with `1px solid var(--rule)` rather than `2px solid var(--ink)`. Kept at full weight only where they are *strata*: the section top rules, panel and lab spines, badge edges, the footer's light rule.
+- **Hard offset shadows → soft layered elevation.** `3px 3px 0` offsets on buttons, spec card, receipts and numerals are gone; `--lift-1/2/3` are two-blur layers tinted with the palette's own black (`rgba(17,19,20,…)`), so depth reads as light on a sheet rather than a second copy of the element.
+- **Rotation removed**, along with the 24px `--dot` page grid. Both were the loudest "sticker" signals left.
+- Radius scale tightened (`.25/.375/.55/.8rem`) to suit a printed sheet.
+
+### Dark theme, inverted from the same book
+
+The ground is **Black #159** and the bone is **Sulpher Yellow #39** — the paper and ink trade places, so dark mode is still only reading from the dictionary. The pigments turn luminous and each is likewise a named swatch: Eugenia Red A, Light Glaucous Blue, Yellow Ocher, Warm Gray, Spinel Red. `--on-accent` becomes the black. Dusky Madder Violet holds as the closing band in **both** themes.
+
+One fix carried forward: the marker behind the name's letterforms is **Carmine Red**, because bone letters on the dictionary's own gold measure 1.4:1 and washed out. Deep carmine reads at **5.82:1**.
+
+### Type and brand surfaces
+
+**Fraunces replaces Space Grotesk** as `--font-display` (supersedes v9's claim that the type was untouched): a high-contrast serif is the other half of "elegant", and it is self-hosted like the rest. The `space-grotesk-*.woff2` files stay in `public/fonts` but are no longer declared or preloaded, so nothing fetches them. `--font-body` remains the system stack; JetBrains Mono keeps labels and chips. `index.html` preloads `fraunces-700` instead, and `theme-color` / the pre-CSS boot background move to `#f5ecc2`.
+
+The brand surfaces were still wearing the old citrus palette and had to be rebuilt rather than left behind: `favicon.svg` is now a Carmine Red tile with a Sulpher Yellow N, `favicon-192.png` / `apple-touch-icon.png` were re-rendered from it, and `og-image.png` was regenerated at 1200×630 — Fraunces name, Yellow Ocher marker, hairline chips, the same verified claims as before.
+
+### Verified
+
+`npm run build` clean (1591 modules; HTML 9.08 kB carrying **27,105** chars of prerendered markup; CSS **33.55 kB** / 6.64 kB gzip; JS **178.23 kB** / 57.33 kB gzip).
+
+Rendered over HTTP from `dist` through headless Chrome over CDP at 1440×900 and 390×844, in both themes, toggling the real `.theme-btn`:
+
+- `body` background computed as `rgb(245, 236, 194)` in light and `rgb(17, 19, 20)` in dark; `body` colour the exact inverse.
+- `.hero-name` computes to `Fraunces, "Iowan Old Style", Georgia, "Times New Roman", serif` — the serif is actually loading, not falling back.
+- `.project-card` border `1px`, shadow the two-layer `--lift-1`; `.site-footer` `rgb(78, 29, 76)` (Dusky Madder Violet) in **both** themes.
+- `document.fonts.status === "loaded"`; **0** elements whose text colour equals its painted background; **0** horizontally overflowing elements; `scrollWidth === innerWidth` at 1440 and at 390.
+- `og-image.png` 1200×630, `favicon-192.png` 192×192, `apple-touch-icon.png` 180×180 — dimensions read back from the PNG headers after generation.
+
+Screenshots captured to `theme-check/` for review; headless Chrome closed through CDP and the preview server stopped.
