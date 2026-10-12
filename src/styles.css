@@ -81,7 +81,9 @@
   /* Black #159 — the dictionary's darkest swatch, and the partner the book
      itself pairs with Sulpher Yellow (combination 52, 15.7:1). */
   --ink: #111314;
-  --ink-soft: #6c6a5a;
+  /* darker than the paper alone would need: this also has to clear 4.5:1 on
+     every section band, and the bands are no longer the colour of the paper */
+  --ink-soft: #5f5d4f;
   --rule: #d5ceaa;
 
   /* The pigments, each a named swatch, each standing for a thing rather than a
@@ -106,6 +108,17 @@
   --wind-wash: #a1a39a;   /* Warm Gray        — air */
   --bark-wash: #c5a56e;   /* Isabella Color   — wood */
   --light-wash: #fbe6a0;  /* Naples Yellow    — sun */
+
+  /* Each section sits on its OWN ground rather than on the shared sheet, so no
+     two sections read as one continuous surface. Mixed from the element's own
+     wash toward white: mixing into the cream paper instead turned every blue
+     into an olive, which put the elements back to looking alike. */
+  --fire-bg: #facabf;
+  --water-bg: #daedf4;
+  --earth-bg: #e5e6d2;
+  --wind-bg: #d8d8d5;
+  --bark-bg: #e7d9c2;
+  --light-bg: #fdf5d7;
 
   /* A text tone per element, so a component can be built entirely inside its
      own family. Each is the MOST saturated tone of its pigment that still
@@ -834,19 +847,24 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
 
 /* Every section opens with a thin stratum of its own element, sitting directly
    on top of the hairline that closes the section above. Five bands down the
-   page, and the dictionary has stated itself once each. */
+   page, each on its own ground, and the dictionary states itself once each
+   without ever printing its name. */
 .section {
   padding: var(--section-y) 0;
+  background: var(--bg, var(--paper));
   border-bottom: 1px solid var(--rule);
   border-top: 2px solid var(--el, transparent);
 }
 
-.section[data-el='fire'] { --el: var(--fire); }
-.section[data-el='water'] { --el: var(--water); }
-.section[data-el='earth'] { --el: var(--earth); }
-.section[data-el='wind'] { --el: var(--wind); }
-.section[data-el='bark'] { --el: var(--bark); }
-.section[data-el='light'] { --el: var(--light); }
+/* Each section carries its own GROUND as well as its own colour, so the page
+   reads as a run of separate bands rather than one sheet with rules drawn
+   across it. */
+.section[data-el='fire'] { --el: var(--fire); --bg: var(--fire-bg); }
+.section[data-el='water'] { --el: var(--water); --bg: var(--water-bg); }
+.section[data-el='earth'] { --el: var(--earth); --bg: var(--earth-bg); }
+.section[data-el='wind'] { --el: var(--wind); --bg: var(--wind-bg); }
+.section[data-el='bark'] { --el: var(--bark); --bg: var(--bark-bg); }
+.section[data-el='light'] { --el: var(--light); --bg: var(--light-bg); }
 
 .section-heading {
   display: flex;
@@ -1726,7 +1744,7 @@ html[data-theme='dark'] {
   /* the surface sits clearly above the page, so panels read as panels */
   --card: #232526;
   --ink: #f5ecc2;
-  --ink-soft: #83806b;
+  --ink-soft: #9e9a80;
   --rule: #414243;
 
   /* The pigments invert. Deep in the light theme, luminous here, so a fill
@@ -1750,6 +1768,14 @@ html[data-theme='dark'] {
   --wind-wash: #1c2225;
   --bark-wash: #221d15;
   --light-wash: #504421;
+
+  /* the section bands again, lifted off the black ground */
+  --fire-bg: #352316;
+  --water-bg: #293235;
+  --earth-bg: #242f1b;
+  --wind-bg: #282a29;
+  --bark-bg: #2e2a22;
+  --light-bg: #363630;
 
   /* Text on a pigment fill. Here the pigments are already luminous enough to
      carry the ground on top of them, so --on-accent becomes the black. */
@@ -1891,12 +1917,15 @@ html[data-theme='dark'] ::selection {
 
 /* The element's own pigment + the height its motif wants. `light` masks in
    --light-ink, because gold on a pale gold wash is invisible. */
-[data-el='fire']  { --motif-color: var(--fire);      --motif-h: 15px; }
-[data-el='water'] { --motif-color: var(--water);     --motif-h: 13px; }
-[data-el='earth'] { --motif-color: var(--earth);     --motif-h: 15px; }
-[data-el='wind']  { --motif-color: var(--wind);      --motif-h: 11px; }
-[data-el='bark']  { --motif-color: var(--bark);      --motif-h: 13px; }
-[data-el='light'] { --motif-color: var(--light-ink); --motif-h: 11px; }
+/* `--motif-w` is one tile of that element's pattern. The drift animation moves
+   the mask by exactly this much, so the pattern is at the same phase when it
+   wraps and the loop never snaps. */
+[data-el='fire']  { --motif-color: var(--fire);      --motif-h: 15px; --motif-w: 26px; }
+[data-el='water'] { --motif-color: var(--water);     --motif-h: 13px; --motif-w: 40px; }
+[data-el='earth'] { --motif-color: var(--earth);     --motif-h: 15px; --motif-w: 30px; }
+[data-el='wind']  { --motif-color: var(--wind);      --motif-h: 11px; --motif-w: 86px; }
+[data-el='bark']  { --motif-color: var(--bark);      --motif-h: 13px; --motif-w: 15px; }
+[data-el='light'] { --motif-color: var(--light-ink); --motif-h: 11px; --motif-w: 28px; }
 
 /* flame — tongues of fire, two heights so the row never looks mechanical */
 [data-el='fire'] {
@@ -2000,3 +2029,84 @@ html[data-theme='dark'] ::selection {
    the fill. That is still the element's own pair — nothing is borrowed. */
 .spec-head,
 .stat-tile { --motif-color: var(--on-accent); }
+
+/* ============================================================
+   MOTION
+
+   Two independent things, both opt-out:
+
+     1. each element's motif strip moves the way that element
+        would move — ocean and air travel, a leaf sways, a
+        flame flickers, wood holds still;
+     2. each section rises as it enters the viewport.
+
+   (2) is behind @supports, so a browser without scroll-driven
+   animations renders exactly the page it got before — nothing is
+   ever hidden in the first place. Both sit behind
+   prefers-reduced-motion, and the existing degrade list at the
+   foot of this file already strips the hover transforms.
+   ============================================================ */
+
+/* One tile per loop. Because the mask repeats, moving it by exactly its own
+   tile width lands on the same phase — so the wrap is invisible. */
+@keyframes motifDrift {
+  from { -webkit-mask-position: 0 0; mask-position: 0 0; }
+  to   { -webkit-mask-position: var(--motif-w) 0; mask-position: var(--motif-w) 0; }
+}
+
+@keyframes motifPulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ocean — a slow swell */
+  :is(.section, .client-panel, .stat-tile)[data-el='water']::before,
+  .project-card[data-el='water'] .card-head::before {
+    animation: motifDrift 6s linear infinite;
+  }
+
+  /* air — the fastest of the six, because that is what wind is */
+  :is(.section, .client-panel, .stat-tile)[data-el='wind']::before,
+  .project-card[data-el='wind'] .card-head::before {
+    animation: motifDrift 2.6s linear infinite;
+  }
+
+  /* leaves do not travel; they sway. Same drift, very slow. */
+  :is(.section, .client-panel, .stat-tile)[data-el='earth']::before,
+  .project-card[data-el='earth'] .card-head::before,
+  .spec-card[data-el='earth'] .spec-head::before {
+    animation: motifDrift 11s linear infinite;
+  }
+
+  /* A flame that slides sideways reads as scrolling wallpaper, so fire
+     flickers in place instead of moving. */
+  :is(.section, .client-panel, .stat-tile)[data-el='fire']::before,
+  .project-card[data-el='fire'] .card-head::before {
+    animation: motifPulse 1.9s ease-in-out infinite;
+  }
+
+  /* sun — a slower shimmer */
+  :is(.section, .client-panel, .stat-tile)[data-el='light']::before {
+    animation: motifPulse 3.4s ease-in-out infinite;
+  }
+
+  /* bark is not in this list on purpose: wood does not move. */
+}
+
+/* Sections rise as they come into view. `animation-duration: auto` hands the
+   duration to the scroll timeline; where that is unsupported but timelines are
+   not, the animation simply sits at its end state, which is the static page. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section > .container,
+    .site-footer > .container {
+      animation-name: riseIn;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 12% cover 30%;
+    }
+  }
+}
