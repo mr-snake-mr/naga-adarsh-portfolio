@@ -2,12 +2,18 @@ import { SectionHeading } from './ui';
 
 export default function ClientWork() {
   return (
-    <section className="section" id="client" data-component="client-strip" aria-labelledby="client-title">
+    <section className="section" id="client" data-el="earth" data-component="client-strip" aria-labelledby="client-title">
       <div className="container">
-        <SectionHeading title="experience & college" />
+        <SectionHeading
+          id="client-title"
+          index="03"
+          accent="earth"
+          title="experience & college"
+          note="Paid work, a referral gig, and the degree that runs alongside them."
+        />
 
         <div className="client-grid">
-          <article className="client-panel panel-tang" data-component="client-panel">
+          <article className="client-panel panel-earth" data-component="client-panel">
             <span className="when">sep 2025 — oct 2025 · freelance</span>
             <h3>SubbaiH Tuition & Daycare</h3>
             <p className="body">
@@ -33,7 +39,7 @@ export default function ClientWork() {
             </div>
           </article>
 
-          <article className="client-panel panel-lime" data-component="client-panel">
+          <article className="client-panel panel-water" data-component="client-panel">
             <span className="when">jun 2025 — jul 2025 · chennai</span>
             <h3>Web Developer — Eagle Hi-Tech Softclou Pvt Ltd</h3>
             <ul className="points">
@@ -60,7 +66,7 @@ export default function ClientWork() {
             </div>
           </article>
 
-          <article className="client-panel panel-teal" data-component="client-panel">
+          <article className="client-panel panel-wind" data-component="client-panel">
             <span className="when">2023 — 2027</span>
             <h3>B.Tech — Information Technology</h3>
             <p className="body">

@@ -1,25 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 const NAV = [
-  { label: 'work', href: '#work' },
-  { label: 'demo', href: '#play' },
-  { label: 'experience', href: '#client' },
-  { label: 'credentials', href: '#proof' },
-  { label: 'contact', href: '#contact' },
-  { label: 'résumé (pdf)', href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' },
+  { id: 'work', label: 'work', href: '#work' },
+  { id: 'play', label: 'demo', href: '#play' },
+  { id: 'client', label: 'experience', href: '#client' },
+  { id: 'proof', label: 'credentials', href: '#proof' },
+  { id: 'contact', label: 'contact', href: '#contact' },
 ];
 
+const RESUME = { label: 'cv ↓', href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' };
+
+// The boot script in main.jsx has already stamped data-theme on <html>, so the
+// DOM is the source of truth. Guarded because this renders on the server too.
 function currentTheme() {
+  if (typeof document === 'undefined') return 'light';
   return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 }
 
+const THEME_COPY = {
+  dark: { label: 'switch to light theme', title: 'light mode' },
+  light: { label: 'switch to dark theme', title: 'dark mode' },
+  unknown: { label: 'toggle colour theme', title: 'colour theme' },
+};
+
 export default function TopBar() {
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState(currentTheme);
+  // null until mounted: the prerendered HTML cannot know the visitor's saved
+  // theme, so the first client render must agree with it. The icon itself is
+  // CSS-driven, so there is no flash — only the label waits for the effect.
+  const [theme, setTheme] = useState(null);
+  const [active, setActive] = useState('');
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    setTheme(currentTheme());
+  }, []);
 
   function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     try {
       localStorage.setItem('na-theme', next);
@@ -29,20 +48,64 @@ export default function TopBar() {
     setTheme(next);
   }
 
+  // Reading-position bar. rAF-throttled, passive listener.
+  useEffect(() => {
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Highlight the section the reader is currently inside.
+  useEffect(() => {
+    const ids = ['top', ...NAV.map((item) => item.id)];
+    const els = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!els.length || typeof IntersectionObserver === 'undefined') return undefined;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length) setActive(visible[0].target.id);
+      },
+      { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+    );
+
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <header className="topbar" data-component="site-header">
       <div className="container">
         <div className="topbar-row">
-          <a className="brand" href="#top">naga adarsh</a>
+          <a className="brand" href="#top">
+            naga adarsh
+          </a>
 
           <nav className="nav-desktop" aria-label="Primary">
             <ul className="nav-list">
               {NAV.map((item) => (
-                <li key={item.label}>
+                <li key={item.id}>
                   <a
-                    className="nav-link"
+                    className={`nav-link${active === item.id ? ' is-active' : ''}`}
                     href={item.href}
-                    {...(item.download ? { download: item.download } : {})}
+                    aria-current={active === item.id ? 'true' : undefined}
                   >
                     {item.label}
                   </a>
@@ -55,15 +118,18 @@ export default function TopBar() {
             <span className="dot-cluster" aria-hidden="true">
               <i /><i /><i />
             </span>
-            <span className="sticker sticker-lime">open to internships — class of 2027</span>
+            <a className="cv-pill" href={RESUME.href} download={RESUME.download}>
+              {RESUME.label}
+            </a>
             <button
               type="button"
               className="theme-btn"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'switch to light theme' : 'switch to dark theme'}
-              title={theme === 'dark' ? 'light mode' : 'dark mode'}
+              aria-label={THEME_COPY[theme || 'unknown'].label}
+              title={THEME_COPY[theme || 'unknown'].title}
             >
-              {theme === 'dark' ? <Sun size={18} strokeWidth={1.9} /> : <Moon size={18} strokeWidth={1.9} />}
+              <Moon className="theme-ico theme-ico-light" size={18} strokeWidth={1.9} aria-hidden="true" />
+              <Sun className="theme-ico theme-ico-dark" size={18} strokeWidth={1.9} aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -76,24 +142,28 @@ export default function TopBar() {
             </button>
           </div>
         </div>
+      </div>
 
-        {open && (
-          <nav className="menu-panel" id="menu-panel" aria-label="Mobile" data-component="nav-menu">
-            <ul>
-              {NAV.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    {...(item.download ? { download: item.download } : {})}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+      <nav className="menu-panel" id="menu-panel" aria-label="Mobile" data-component="nav-menu" hidden={!open}>
+        <div className="container">
+          <ul>
+            {[...NAV, { id: 'cv', ...RESUME }].map((item) => (
+              <li key={item.id}>
+                <a
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  {...(item.download ? { download: item.download } : {})}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      <div className="topbar-progress" aria-hidden="true">
+        <i style={{ transform: `scaleX(${progress})` }} />
       </div>
     </header>
   );

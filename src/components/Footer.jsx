@@ -1,14 +1,22 @@
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { IconLink } from './ui';
 
+const RESUME = { href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' };
+
 export default function Footer() {
   return (
     <footer className="site-footer" id="contact" data-component="site-footer" aria-labelledby="contact-title">
       <div className="container">
-        <p className="footer-label">contact</p>
+        <p className="eyebrow eyebrow-inverse">
+          <span className="eyebrow-num" aria-hidden="true">05</span>
+          <span className="eyebrow-el" aria-hidden="true">light</span>
+          <span className="eyebrow-rule" aria-hidden="true" />
+        </p>
 
-        <a className="big-mail" id="contact-title" href="mailto:nagaadarsh354@gmail.com">
-          email me → nagaadarsh354@gmail.com
+        <h2 className="footer-title" id="contact-title">let's build something</h2>
+
+        <a className="big-mail" href="mailto:nagaadarsh354@gmail.com">
+          nagaadarsh354@gmail.com<span className="big-mail-arrow" aria-hidden="true">→</span>
         </a>
 
         <p className="footer-meta">
@@ -35,15 +43,15 @@ export default function Footer() {
             <IconLink text href="https://codolio.com/profile/fOaTXef" label="Codolio profile (opens in new tab)">
               cd
             </IconLink>
-            <a
-              className="mono-link resume-link"
-              href="/assets/resume.pdf"
-              download="Naga_Adarsh_Resume.pdf"
-            >
+            <a className="mono-link resume-link" href={RESUME.href} download={RESUME.download}>
               résumé pdf ↓
             </a>
           </div>
-          <p className="footer-close">chennai, in · class of 2027</p>
+
+          <div className="footer-end">
+            <p className="footer-close">chennai, in · class of 2027 · nag.is-a.dev</p>
+            <a className="to-top" href="#top">back to top ↑</a>
+          </div>
         </div>
       </div>
     </footer>

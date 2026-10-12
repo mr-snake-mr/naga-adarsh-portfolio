@@ -1,30 +1,40 @@
 import { SectionHeading } from './ui';
 
+const PATENT = 'https://drive.google.com/file/d/1-oCO61LDZnqCTJXcOmF623QZO5dA4dUV/view';
+
+// Each credential takes the element that suits it: the patent is the light
+// one, the hackathon finals are fire, the cloud cert is water, the network
+// cert is wind.
 const BADGES = [
+  {
+    tag: 'patent',
+    title: 'Published Indian patent application IN202641004962 A1',
+    cls: 'b-light',
+    href: PATENT,
+  },
   {
     tag: 'hackathon',
     title: 'Smart India Hackathon — college-level finalist, 2024 & 2025',
-    cls: 'b-tang',
-    tilt: 'tilt-l',
+    cls: 'b-fire',
   },
   {
     tag: 'certification',
     title: 'Microsoft Certified: Azure Developer Associate',
-    cls: 'b-teal',
+    cls: 'b-water',
     href: 'https://learn.microsoft.com/api/credentials/share/en-us/NagaAdarsh-7898/699D12D414C38A62',
-    tilt: 'tilt-r',
   },
   {
     tag: 'certification',
     title: 'Cisco CCNA 1 · 2 · 3',
-    cls: 'b-sand',
+    cls: 'b-wind',
   },
 ];
 
 const PROFILES = [
-  { value: '670+', cap: 'problems solved on LeetCode', href: 'https://leetcode.com/naga_adarsh_s', cls: 'tile-tang', label: '670+ LeetCode problems' },
-  { value: '1700+', cap: 'CodeChef rating, division 2', href: 'https://www.codechef.com/users/mr_snake_mr', cls: 'tile-teal', label: '1700+ CodeChef rating' },
-  { value: '750+', cap: 'problems tracked on Codolio', href: 'https://codolio.com/profile/fOaTXef', cls: 'tile-lime', label: '750+ problems on Codolio' },
+  { value: '670+', cap: 'problems solved on LeetCode', href: 'https://leetcode.com/naga_adarsh_s', cls: 'tile-fire', label: '670+ LeetCode problems' },
+  { value: '1700+', cap: 'CodeChef rating, division 2', href: 'https://www.codechef.com/users/mr_snake_mr', cls: 'tile-water', label: '1700+ CodeChef rating' },
+  { value: '750+', cap: 'problems tracked on Codolio', href: 'https://codolio.com/profile/fOaTXef', cls: 'tile-earth', label: '750+ problems on Codolio' },
+  { value: '92%', cap: 'model accuracy · 3,000+ freshness images', href: PATENT, cls: 'tile-light', label: '92% model accuracy — opens the patent application' },
 ];
 
 const REPOS = [
@@ -35,16 +45,22 @@ const REPOS = [
 
 export default function Proof() {
   return (
-    <section className="section" id="proof" data-component="proof" aria-labelledby="proof-title">
+    <section className="section" id="proof" data-el="bark" data-component="proof" aria-labelledby="proof-title">
       <div className="container">
-        <SectionHeading title="credentials" note="Certs, contest finals and coding scores — the links go to the real thing." />
+        <SectionHeading
+          id="proof-title"
+          index="04"
+          accent="bark"
+          title="credentials"
+          note="Certs, contest finals and coding scores — the links go to the real thing."
+        />
 
         <div className="badges" data-component="proof-badges">
           {BADGES.map((badge) => (
             badge.href ? (
               <a
                 key={badge.title}
-                className={`badge ${badge.cls} ${badge.tilt || ''}`}
+                className={`badge ${badge.cls}`}
                 href={badge.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -56,7 +72,7 @@ export default function Proof() {
             ) : (
               <div
                 key={badge.title}
-                className={`badge ${badge.cls} ${badge.tilt || ''}`}
+                className={`badge ${badge.cls}`}
                 data-component="badge"
               >
                 <span className="b-tag">{badge.tag}</span>
@@ -79,6 +95,7 @@ export default function Proof() {
             >
               <span className="stat-value">{profile.value}</span>
               <span className="stat-cap">{profile.cap}</span>
+              <span className="stat-go" aria-hidden="true">open →</span>
             </a>
           ))}
         </div>

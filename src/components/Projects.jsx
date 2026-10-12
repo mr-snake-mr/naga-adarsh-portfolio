@@ -3,7 +3,8 @@ import { SectionHeading } from './ui';
 const PROJECTS = [
   {
     numeral: '01',
-    accent: 'a-tang',
+    accent: 'a-fire',
+    kind: 'computer vision',
     title: 'Real-Time Freshness Indicator',
     href: 'https://github.com/mr-snake-mr/Real-Time-Freshness-Indicator',
     story: 'Point a camera at fruit and vegetables, and it scores how fresh they are in real time — before the spoilage spreads.',
@@ -21,7 +22,8 @@ const PROJECTS = [
   },
   {
     numeral: '02',
-    accent: 'a-teal',
+    accent: 'a-water',
+    kind: 'retrieval + llm',
     title: 'Scholar RAG Engine',
     href: 'https://github.com/mr-snake-mr/scholar-rag-engine',
     story: 'Ask a research question in plain language, get an answer drawn from papers and pages you chose.',
@@ -38,7 +40,8 @@ const PROJECTS = [
   },
   {
     numeral: '03',
-    accent: 'a-lime',
+    accent: 'a-earth',
+    kind: 'backend + infra',
     title: 'Nag-Link Shortener',
     href: 'https://github.com/mr-snake-mr/nag-shortener',
     story: 'A URL shortener with custom slugs — paste a long link, get a short one that redirects fast.',
@@ -57,50 +60,60 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section className="section" id="work" data-component="work-showcase" aria-labelledby="work-title">
+    <section className="section" id="work" data-el="fire" data-component="work-showcase" aria-labelledby="work-title">
       <div className="container">
-        <SectionHeading title="my projects" note="Three things I built end to end, with the numbers they actually hit." />
+        <SectionHeading
+          id="work-title"
+          index="01"
+          accent="fire"
+          title="selected work"
+          note="Three things I built end to end, with the numbers they actually hit."
+        />
 
         <div className="work-grid">
           {PROJECTS.map((project) => (
             <article className={`project-card ${project.accent}`} key={project.numeral} data-component="project-card">
-              <span className="card-numeral">{project.numeral}</span>
+              <header className="card-head">
+                <span className="card-numeral">{project.numeral}</span>
+                <span className="card-kind">{project.kind}</span>
+                <h3 className="card-title">
+                  <a href={project.href} target="_blank" rel="noopener noreferrer">{project.title}</a>
+                </h3>
+              </header>
 
-              <h3>
-                <a href={project.href} target="_blank" rel="noopener noreferrer">{project.title}</a>
-              </h3>
+              <div className="card-body">
+                <p className="card-story">{project.story}</p>
 
-              <p className="card-story">{project.story}</p>
+                <ul className="card-done">
+                  {project.done.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
 
-              <ul className="card-done">
-                {project.done.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+                <span className="card-pill">{project.pill}</span>
 
-              <span className="card-pill">{project.pill}</span>
+                <div className="card-links">
+                  {project.links.map((link, i) => (
+                    <a
+                      key={link.label}
+                      className={i === 0 ? 'link-cta' : 'text-link'}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.label} →
+                    </a>
+                  ))}
+                  {project.links.some((l) => l.note) && (
+                    <span className="link-note">live demo may cold-boot</span>
+                  )}
+                </div>
 
-              <div className="card-links">
-                {project.links.map((link) => (
-                  <a
-                    key={link.label}
-                    className="text-link"
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {link.label} →
-                  </a>
-                ))}
-                {project.links.some((l) => l.note) && (
-                  <span className="link-note">live demo may cold-boot</span>
-                )}
-              </div>
-
-              <div className="card-tags">
-                {project.tags.map((tag) => (
-                  <span className="tag" key={tag}>{tag}</span>
-                ))}
+                <div className="card-tags">
+                  {project.tags.map((tag) => (
+                    <span className="tag" key={tag}>{tag}</span>
+                  ))}
+                </div>
               </div>
             </article>
           ))}

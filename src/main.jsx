@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App';
 import './styles.css';
 
@@ -12,17 +12,22 @@ import './styles.css';
   } catch (e) {
     /* ignore */
   }
-  // light is the default; only a saved choice overrides it
-  if (theme !== 'light' && theme !== 'dark') {
-    theme = 'light';
-  }
+  // A saved choice wins. Otherwise light, always — deliberately ignoring
+  // prefers-color-scheme so a dark-set device still lands on the paper theme.
+  if (theme !== 'light' && theme !== 'dark') theme = 'light';
   root.setAttribute('data-theme', theme);
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e1322' : '#fffbea');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#14110c' : '#f7f3e8');
 })();
 
-createRoot(document.getElementById('root')).render(
+const container = document.getElementById('root');
+const app = (
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
+
+// Production builds prerender the page into #root (see scripts/prerender.mjs), so
+// that markup is hydrated rather than thrown away. Dev keeps the plain render.
+if (container.hasChildNodes()) hydrateRoot(container, app);
+else createRoot(container).render(app);

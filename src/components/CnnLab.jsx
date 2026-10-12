@@ -13,13 +13,13 @@ const CHUNK = 2000;
 const { train, val } = demoData();
 
 function verdictFor(steps, tr, va) {
-  if (steps === 0) return { label: 'not trained yet', cls: 'verdict-sand', why: 'press “run the full experiment” and watch the boundary appear.' };
-  if (steps < 6000) return { label: 'still learning', cls: 'verdict-sand', why: 'not enough training yet — let it finish (or keep pressing +2,000).' };
+  if (steps === 0) return { label: 'not trained yet', cls: 'verdict-idle', why: 'press “run the full experiment” and watch the boundary appear.' };
+  if (steps < 6000) return { label: 'still learning', cls: 'verdict-idle', why: 'not enough training yet — let it finish (or keep pressing +2,000).' };
   const gap = tr - va;
-  if (tr >= 0.9 && gap >= 0.06) return { label: 'overfitting', cls: 'verdict-tang', why: 'training looks great, but it fails on new data — it memorised the noise instead of learning the pattern.' };
-  if (tr < 0.9 && va <= 0.88) return { label: 'underfitting', cls: 'verdict-teal', why: 'even the training data isn\'t learned — the network is simply too small for this problem.' };
-  if (va >= tr - 0.04 && tr >= 0.85) return { label: 'healthy fit', cls: 'verdict-lime', why: 'training and new-data scores match — it learned the real pattern.' };
-  return { label: 'still learning', cls: 'verdict-sand', why: 'not quite there — run the full experiment again.' };
+  if (tr >= 0.9 && gap >= 0.06) return { label: 'overfitting', cls: 'verdict-fire', why: 'training looks great, but it fails on new data — it memorised the noise instead of learning the pattern.' };
+  if (tr < 0.9 && va <= 0.88) return { label: 'underfitting', cls: 'verdict-wind', why: 'even the training data isn\'t learned — the network is simply too small for this problem.' };
+  if (va >= tr - 0.04 && tr >= 0.85) return { label: 'healthy fit', cls: 'verdict-light', why: 'training and new-data scores match — it learned the real pattern.' };
+  return { label: 'still learning', cls: 'verdict-idle', why: 'not quite there — run the full experiment again.' };
 }
 
 export default function CnnLab() {
@@ -113,12 +113,12 @@ export default function CnnLab() {
         const num = parseInt(n, 16);
         return `rgba(${(num >> 16) & 255},${(num >> 8) & 255},${num & 255},${a})`;
       };
-      const bg = tkn('--paper', '#0e1322');
-      const line = tkn('--ink', '#e9effb');
-      const dot1 = tkn('--lime', '#c6f12e');
-      const wrong = tkn('--tang', '#ff6b1a');
+      const bg = tkn('--card', '#fffcf4');
+      const line = tkn('--ink', '#221a11');
+      const dot1 = tkn('--light', '#d9a21b');
+      const wrong = tkn('--fire', '#bc3a16');
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const dot0 = isDark ? '#1d2740' : '#fffbea';
+      const dot0 = tkn('--card', '#fffcf4');
       const zone = hexA(dot1, isDark ? 0.16 : 0.3);
       ctx.clearRect(0, 0, S, S);
       ctx.fillStyle = bg;
@@ -192,9 +192,12 @@ export default function CnnLab() {
   }
 
   return (
-    <section className="section section-play" id="play" data-component="dropout-lab" aria-labelledby="play-title">
+    <section className="section section-play" id="play" data-el="water" data-component="dropout-lab" aria-labelledby="play-title">
       <div className="container">
         <SectionHeading
+          id="play-title"
+          index="02"
+          accent="water"
           title="train a tiny neural net"
           note="A real mini network, like the one inside the freshness project, learning to tell two classes apart. Each preset is one experiment — pick it and press run."
         />
@@ -230,13 +233,13 @@ export default function CnnLab() {
               <li><b>the shaded zone</b> — where the network thinks class 1 lives.</li>
               <li><b>training score</b> — how well it remembers the examples it trained on.</li>
               <li><b>brand-new score</b> — how it does on fruit it has never seen. that one matters.</li>
-              <li><b>green circles</b> — its decision cells. drop one and it has to learn with less.</li>
+              <li><b>the lit circles</b> — its decision cells. drop one and it has to learn with less.</li>
             </ol>
           </div>
 
           <div className="nn-stage">
             <div className="nn-net">
-              <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Network diagram with clickable hidden neurons">
+              <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Network diagram — hidden neurons are buttons">
                 {nodes.map((nd) => (
                   <g key={nd.i} className="nn-wire" opacity="0.55">
                     <line x1={xIn} y1={yMid - 20} x2={nd.x} y2={nd.y} />
@@ -244,11 +247,11 @@ export default function CnnLab() {
                     <line x1={nd.x} y1={nd.y} x2={xOut} y2={yMid} />
                   </g>
                 ))}
-                <circle className="nn-node" cx={xIn} cy={yMid - 20} r="13" style={{ fill: 'var(--teal)' }} />
-                <circle className="nn-node" cx={xIn} cy={yMid + 20} r="13" style={{ fill: 'var(--teal)' }} />
+                <circle className="nn-node" cx={xIn} cy={yMid - 20} r="13" style={{ fill: 'var(--water)' }} />
+                <circle className="nn-node" cx={xIn} cy={yMid + 20} r="13" style={{ fill: 'var(--water)' }} />
                 <text x={xIn} y={yMid - 20 + 5} textAnchor="middle" fontSize="12" className="nn-lbl">x</text>
                 <text x={xIn} y={yMid + 20 + 5} textAnchor="middle" fontSize="12" className="nn-lbl">y</text>
-                <circle className="nn-node" cx={xOut} cy={yMid} r="13" style={{ fill: 'var(--tang)' }} />
+                <circle className="nn-node" cx={xOut} cy={yMid} r="13" style={{ fill: 'var(--fire)' }} />
                 <text x={xOut} y={yMid + 5} textAnchor="middle" fontSize="11" className="nn-lbl">0/1</text>
                 {nodes.map((nd) => (
                   <g
@@ -264,7 +267,7 @@ export default function CnnLab() {
                     <circle
                       className="nn-node"
                       cx={nd.x} cy={nd.y} r="13"
-                      style={{ fill: nd.on ? 'var(--lime)' : 'var(--sand)' }}
+                      style={{ fill: nd.on ? 'var(--light)' : 'var(--paper-sunk)' }}
                       strokeDasharray={nd.on ? '0' : '3 2'}
                       opacity={nd.on ? 1 : 0.7}
                     />
@@ -272,13 +275,13 @@ export default function CnnLab() {
                   </g>
                 ))}
               </svg>
-              <p className="nn-caption">{h} green neurons in the middle — click one to drop it out</p>
+              <p className="nn-caption">{h} lit neurons in the middle — click one to drop it out</p>
             </div>
 
             <div className="nn-canvas-wrap">
-              <canvas ref={canvasRef} className="nn-canvas" aria-label="Decision map of the trained network" />
+              <canvas ref={canvasRef} className="nn-canvas" role="img" aria-label="Decision map of the trained network" />
               <div className="nn-legend mono">
-                <span><i className="lg lg-lime" />class 1</span>
+                <span><i className="lg lg-light" />class 1</span>
                 <span><i className="lg lg-hollow" />class 0</span>
                 <span><i className="lg lg-x" />got it wrong</span>
                 <span><i className="lg lg-zone" />network says class 1</span>
@@ -302,7 +305,7 @@ export default function CnnLab() {
               </div>
 
               <div className="nn-actions">
-                <button type="button" className="btn btn-lime" onClick={runToTarget} disabled={busy}>
+                <button type="button" className="btn btn-fire" onClick={runToTarget} disabled={busy}>
                   {busy ? 'training…' : 'run the full experiment'}
                 </button>
                 <button type="button" className="btn btn-paper" onClick={addSteps} disabled={busy}>

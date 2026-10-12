@@ -3,9 +3,176 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Naga Adarsh — final-year B.Tech IT student in Chennai. Computer vision and backend projects with code and live demos." />
-    <meta name="theme-color" content="#fffbea" />
+
     <title>Naga Adarsh — AI &amp; Backend Portfolio</title>
+    <meta
+      name="description"
+      content="Naga Adarsh — final-year B.Tech IT student in Chennai. Computer-vision and backend projects with code, live demos and a published Indian patent application."
+    />
+    <meta name="theme-color" content="#f7f3e8" />
+    <!-- light is the default regardless of the device setting, so UA widgets
+         (scrollbars, form controls) must not render dark before CSS lands -->
+    <meta name="color-scheme" content="light" />
+
+    <!-- Canonical is the bare directory URL: Vercel also serves /index.html, and
+         this is what makes the two collapse into one page. -->
+    <link rel="canonical" href="https://nag.is-a.dev/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Naga Adarsh" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Naga Adarsh" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:url" content="https://nag.is-a.dev/" />
+    <meta property="og:title" content="Naga Adarsh — AI &amp; Backend Portfolio" />
+    <meta
+      property="og:description"
+      content="Computer vision, retrieval and backend work — a published Indian patent application, two SIH finals, paid client work, and code you can run."
+    />
+    <meta property="og:image" content="https://nag.is-a.dev/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Naga Adarsh — computer-vision and backend projects with code and live demos."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Naga Adarsh — AI &amp; Backend Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Computer vision, retrieval and backend work — a published Indian patent application, two SIH finals, paid client work, and code you can run."
+    />
+    <meta name="twitter:image" content="https://nag.is-a.dev/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="Naga Adarsh — computer-vision and backend projects with code and live demos."
+    />
+
+    <!-- Both families are self-hosted (see the @font-face block in styles.css),
+         so nothing is fetched from a third-party origin before first paint.
+         These two faces are the ones above the fold: the name, and the mono
+         labels and chips. -->
+    <link rel="preload" href="/fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-700.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      html { background: #f7f3e8; }
+      html[data-theme='dark'] { background: #14110c; }
+    </style>
+
+    <!-- One @graph, one script, no repeated/conflicting definitions. Every value
+         here is stated on the page itself; nothing is inferred or invented. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://nag.is-a.dev/#person",
+            "name": "Naga Adarsh",
+            "url": "https://nag.is-a.dev/",
+            "email": "mailto:nagaadarsh354@gmail.com",
+            "jobTitle": "Computer-vision and backend developer",
+            "description": "Final-year B.Tech Information Technology student in Chennai who builds computer-vision and backend systems: a real-time freshness indicator published as Indian patent application IN202641004962 A1, a retrieval-augmented search engine for research papers, and a URL shortener.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Chennai",
+              "addressCountry": "IN"
+            },
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "Easwari Engineering College"
+            },
+            "knowsAbout": [
+              "computer vision",
+              "machine learning",
+              "retrieval-augmented generation",
+              "backend development",
+              "Python",
+              "TensorFlow",
+              "OpenCV",
+              "FastAPI",
+              "Redis",
+              "React"
+            ],
+            "hasCredential": {
+              "@type": "EducationalOccupationalCredential",
+              "name": "Microsoft Certified: Azure Developer Associate",
+              "credentialCategory": "certification",
+              "url": "https://learn.microsoft.com/api/credentials/share/en-us/NagaAdarsh-7898/699D12D414C38A62"
+            },
+            "award": "Smart India Hackathon college-level finalist, 2024 and 2025",
+            "sameAs": [
+              "https://github.com/mr-snake-mr",
+              "https://linkedin.com/in/naga-adarsh",
+              "https://leetcode.com/naga_adarsh_s",
+              "https://www.codechef.com/users/mr_snake_mr",
+              "https://codolio.com/profile/fOaTXef"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://nag.is-a.dev/#website",
+            "url": "https://nag.is-a.dev/",
+            "name": "Naga Adarsh — AI & Backend Portfolio",
+            "inLanguage": "en",
+            "author": { "@id": "https://nag.is-a.dev/#person" },
+            "publisher": { "@id": "https://nag.is-a.dev/#person" }
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://nag.is-a.dev/#profilepage",
+            "url": "https://nag.is-a.dev/",
+            "name": "Naga Adarsh — AI & Backend Portfolio",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://nag.is-a.dev/#website" },
+            "about": { "@id": "https://nag.is-a.dev/#person" },
+            "mainEntity": { "@id": "https://nag.is-a.dev/#person" },
+            "hasPart": [
+              { "@id": "https://nag.is-a.dev/#freshness-indicator" },
+              { "@id": "https://nag.is-a.dev/#scholar-rag-engine" },
+              { "@id": "https://nag.is-a.dev/#nag-link-shortener" }
+            ]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://nag.is-a.dev/#freshness-indicator",
+            "name": "Real-Time Freshness Indicator",
+            "description": "A MobileNetV2 CNN served through a Flask pipeline that scores the freshness of fruit and vegetables from a camera feed in real time, with decay modelling on top of the score.",
+            "codeRepository": "https://github.com/mr-snake-mr/Real-Time-Freshness-Indicator",
+            "programmingLanguage": "Python",
+            "keywords": "computer vision, image classification, MobileNetV2, TensorFlow, Flask",
+            "author": { "@id": "https://nag.is-a.dev/#person" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://nag.is-a.dev/#scholar-rag-engine",
+            "name": "Scholar RAG Engine",
+            "description": "A retrieval-augmented engine that answers research questions in plain language from sources you choose, using FAISS vector search with ColBERT late-interaction retrieval and cross-encoder reranking behind a FastAPI backend.",
+            "codeRepository": "https://github.com/mr-snake-mr/scholar-rag-engine",
+            "programmingLanguage": "Python",
+            "keywords": "retrieval-augmented generation, FAISS, ColBERT, FastAPI",
+            "author": { "@id": "https://nag.is-a.dev/#person" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://nag.is-a.dev/#nag-link-shortener",
+            "name": "Nag-Link Shortener",
+            "description": "A URL shortener with custom slugs: serverless edge functions handle the redirect path and Upstash Redis caching keeps lookups fast.",
+            "codeRepository": "https://github.com/mr-snake-mr/nag-shortener",
+            "programmingLanguage": "TypeScript",
+            "keywords": "url shortener, serverless, Redis, Next.js",
+            "author": { "@id": "https://nag.is-a.dev/#person" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

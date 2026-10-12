@@ -1,0 +1,8 @@
+# nag.is-a.dev — single-page portfolio (one canonical URL: https://nag.is-a.dev/)
+# Nothing here is blocked on purpose: the site is one HTML document, and its CSS
+# and JS are what render that document for any client that runs scripts.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://nag.is-a.dev/sitemap.xml

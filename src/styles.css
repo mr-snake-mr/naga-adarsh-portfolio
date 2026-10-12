@@ -1,99 +1,216 @@
 /* ============================================================
-   Naga Adarsh — portfolio v2 · "Citrus court" sticker wall
-   Contract: DESIGN.md (canvas-designer v2). System fonts,
-   zero images, zero decorative gradients, AA ink-on-accent.
+   Naga Adarsh — portfolio v6 · "elements"
+   Six elements, six jobs. light is the ground and the highlight,
+   bark is every letter, outline and hairline, and fire / water /
+   earth / wind are the pigments. The pigments are deep, so an
+   accent fill carries bone text — except light itself, which is
+   a light pigment and carries bark text. Hard offset shadows and
+   2px bark outlines throughout: no rotation, no blur, no extra
+   hues invented on the fly.
    ============================================================ */
 
+/* Space Grotesk (display) and JetBrains Mono (labels, chips, mono) are served
+   from /fonts, not from Google. The third-party stylesheet was render-blocking
+   on the critical path and measured ~0.7s of it on a cold cache; from our own
+   origin the CSS and the fonts arrive with everything else. Latin subsets only
+   — the page is English — and each face stays lazy: a browser fetches only the
+   weights it actually renders. */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-700.woff2') format('woff2');
+}
+
 :root {
-  /* citrus court palette */
-  --paper: #fffbea;
-  --sand: #f6f2e1;
-  --ink: #26180d;
-  --ink-muted: #786e61;
-  --hairline: #e1dbcb;
-  --tang: #ff6b1a;
-  --lime: #c6f12e;
-  --teal: #19b0a2;
-  --wash-tang: #ffead1;
-  --wash-teal: #e3f2e1;
-  --wash-lime: #f8fad3;
+  /* light — the ground. The page is the light element. */
+  --paper: #f7f3e8;
+  --paper-sunk: #efe9da;
+  --card: #fffcf4;
+  --dot: rgba(34, 26, 17, 0.05);
 
-  /* fonts */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+  /* bark — the structure: every letter, outline and hairline */
+  --ink: #221a11;
+  --ink-soft: #5b4a38;
+  --rule: #d9d0bc;
 
-  /* spacing (rem) */
+  /* The pigments. Each one is deep here and bright in the dark theme, so
+     text on a pigment fill is governed by --on-accent and never inherited. */
+  --fire: #bc3a16;   /* ember      — action */
+  --water: #175f74;  /* deep water — information */
+  --earth: #8a5a24;  /* clay       — mass */
+  --wind: #4e6e72;   /* slate      — quiet */
+  --bark: #3a2a1b;   /* umber      — roots */
+  --light: #d9a21b;  /* sun        — the highlight */
+
+  --fire-wash: #fae7dd;
+  --water-wash: #dcebee;
+  --earth-wash: #f1e6d3;
+  --wind-wash: #e4edec;
+  --bark-wash: #eae2d5;
+  --light-wash: #faf0d6;
+
+  /* A text tone per element, so a component can be built entirely inside its
+     own family — pigment for its edges and marks, wash for its surface, ink
+     for its words — without borrowing another element's colour. Every ink
+     below clears 4.5:1 both on the ground and on its own wash. */
+  --fire-ink: #8f2a0f;
+  --water-ink: #11485a;
+  --earth-ink: #6b4415;
+  --wind-ink: #3a5357;
+  --bark-ink: #2a1d12;
+  /* Dark amber, not mid: this one has to read on the ground, on the light
+     wash AND on the gold marker itself. */
+  --light-ink: #4a3208;
+
+  /* Hard-offset shadow tone per element, so a component's shadow is its own
+     hue instead of the page's. In light the ink is already a dark tint of the
+     hue, so the two coincide here; dark needs its own set below. */
+  --fire-shadow: #8f2a0f;  --water-shadow: #11485a; --earth-shadow: #6b4415;
+  --wind-shadow: #3a5357;  --bark-shadow: #2a1d12;  --light-shadow: #4a3208;
+
+  /* Text on a pigment fill. The light theme's pigments are deep, so that
+     text is bone. light is the single exception: it is a light pigment in
+     both themes and therefore always carries bark. */
+  --on-accent: #f7f3e8;
+  --on-light: #221a11;
+
+  /* The marker swipe sits BEHIND letterforms, so it has to contrast with
+     them rather than with the page. Here the letters are bark, so the swipe
+     is light. */
+  --marker: var(--light);
+
+  /* the closing band: bark in light, a banked fire in dark. Dark in both
+     themes, so the light element is the one thing glowing on it. */
+  --band: #1c140b;
+  --band-fg: #f7f3e8;
+  --band-soft: rgba(247, 243, 232, 0.62);
+  --band-line: rgba(247, 243, 232, 0.24);
+
+  --shadow-ink: #221a11;
+
+  /* type */
+  --font-display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* space */
   --s1: 0.25rem; --s2: 0.5rem; --s3: 0.75rem; --s4: 1rem; --s5: 1.25rem;
   --s6: 1.5rem; --s8: 2rem; --s10: 2.5rem; --s12: 3rem; --s16: 4rem;
-  --section-y: clamp(3.5rem, 8vw, 7rem);
+  --section-y: clamp(4rem, 8vw, 7rem);
 
   /* radius */
-  --r-s: 0.375rem;
+  --r-xs: 0.3rem;
+  --r-s: 0.5rem;
   --r-m: 0.75rem;
-  --r-l: 1.25rem;
+  --r-l: 1.1rem;
   --r-pill: 999px;
+
+  /* elevation — hard offsets, never blurred */
+  --lift-1: 3px 3px 0 var(--shadow-ink);
+  --lift-2: 5px 5px 0 var(--shadow-ink);
+  --lift-3: 8px 8px 0 var(--shadow-ink);
 
   /* motion */
   --t-fast: 120ms;
-  --t-base: 200ms;
+  --t-base: 220ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* layout */
-  --container: 80rem;
-  --gutter: clamp(1rem, 5vw, 3.5rem);
-  --topbar-h: 60px;
+  --container: 76rem;
+  --gutter: clamp(1.25rem, 4.5vw, 3rem);
+  --topbar-h: 64px;
+
+  /* light is the default on every device, including dark-set ones */
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 
 html, body { overflow-x: clip; }
 
 body {
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 24px 24px;
   color: var(--ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, p { margin: 0; }
+h1, h2, h3, h4, p, dl, dd, figure { margin: 0; }
 a { color: inherit; }
-ul { margin: 0; padding: 0; list-style: none; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
 svg { display: block; }
 
-::selection { background: var(--ink); color: var(--lime); }
-
-.mono { font-family: var(--font-mono); }
-
-/* ---------- focus ---------- */
+::selection { background: var(--fire); color: var(--on-accent); }
 
 :focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 3px;
+  border-radius: var(--r-xs);
 }
 
-.btn:focus-visible,
-a:focus-visible .fill-ink { outline-color: var(--lime); }
+.mono { font-family: var(--font-mono); }
 
 .skip-link {
   position: absolute;
   left: -999px;
   top: var(--s4);
   z-index: 100;
-  background: var(--ink);
-  color: var(--lime);
   padding: 10px 16px;
-  border-radius: var(--r-m);
+  font-weight: 700;
   text-decoration: none;
-  font-weight: 600;
+  background: var(--fire);
+  color: var(--on-accent);
+  border-radius: var(--r-m);
 }
 .skip-link:focus { left: var(--s4); }
-
-/* ---------- shell ---------- */
 
 .page { min-height: 100vh; }
 
@@ -103,7 +220,10 @@ a:focus-visible .fill-ink { outline-color: var(--lime); }
   padding-inline: var(--gutter);
 }
 
-section { scroll-margin-top: 5rem; overflow: clip; }
+section {
+  scroll-margin-top: 5.5rem;
+  overflow: clip;
+}
 
 /* ---------- top bar ---------- */
 
@@ -124,95 +244,156 @@ section { scroll-margin-top: 5rem; overflow: clip; }
 }
 
 .brand {
-  font-size: 1.125rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   text-decoration: none;
-  letter-spacing: -0.01em;
   padding: var(--s2) 0;
+  white-space: nowrap;
+}
+
+.brand::before {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  background: var(--fire);
+  border: 2px solid var(--ink);
 }
 
 .nav-desktop { display: none; }
 
-.nav-list { display: flex; align-items: center; gap: var(--s8); }
+.nav-list { display: flex; align-items: center; gap: var(--s5); }
 
 .nav-link {
+  display: inline-block;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 2px;
+  padding: 6px 1px;
+  box-shadow: inset 0 -0.6em 0 transparent;
+  transition: box-shadow var(--t-fast) var(--ease);
 }
 
-.nav-link:hover { border-bottom-color: var(--ink); }
+.nav-link:hover { box-shadow: inset 0 -0.6em 0 var(--rule); }
+
+/* the current section takes the same swipe as the hero name — both are the
+   light element, which is the only pigment a bark letterform can sit on */
+.nav-link.is-active {
+  font-weight: 700;
+  box-shadow: inset 0 -0.6em 0 var(--marker);
+}
 
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: var(--s4);
+  gap: var(--s3);
 }
 
-.dot-cluster {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
+.dot-cluster { display: flex; gap: 5px; align-items: center; }
 .dot-cluster i {
-  width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--ink); display: block;
+  display: block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
 }
-.dot-cluster i:nth-child(1) { background: var(--teal); }
-.dot-cluster i:nth-child(2) { background: var(--lime); }
-.dot-cluster i:nth-child(3) { background: var(--tang); }
+/* one element, three dots: the header's element is fire, matching the brand
+   square and the reading bar. Three colours in one cluster was a crossing. */
+.dot-cluster i { background: var(--fire); }
 
-.sticker {
+/* the résumé lives here rather than in the nav — it is a download, not a section */
+.cv-pill {
   display: inline-flex;
   align-items: center;
+  min-height: 40px;
+  padding: 6px 14px;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--card);
   border: 2px solid var(--ink);
   border-radius: var(--r-pill);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--lift-1);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
+.cv-pill:hover { transform: translate(-1px, -2px); box-shadow: var(--lift-2); }
 
-.sticker-lime { background: var(--lime); }
-.sticker-tang { background: var(--tang); }
-.sticker-teal { background: var(--teal); }
-.sticker-paper { background: var(--paper); }
-
+.theme-btn,
 .menu-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  font-weight: 600;
-  background: var(--paper);
+  font-weight: 700;
   color: var(--ink);
+  background: var(--card);
   border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
-  padding: 8px 14px;
+  border-radius: var(--r-m);
   cursor: pointer;
-  min-height: 44px;
 }
+.menu-btn { padding: 0 14px; }
+
+/* The toggle's icon is chosen from the <html data-theme> the boot script sets,
+   never from JS state. Picking it in JS would make the prerendered HTML differ
+   from the first client render for anyone with a saved theme (hydration
+   mismatch); with CSS the correct icon is on screen from the first paint. */
+.theme-ico-dark { display: none; }
+html[data-theme='dark'] .theme-ico-light { display: none; }
+html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 .menu-panel {
   border-top: 2px solid var(--ink);
   background: var(--paper);
 }
+.menu-panel[hidden] { display: none; }
 
 .menu-panel a {
   display: block;
-  padding: 14px 0;
+  padding: 14px var(--s3);
   font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
-  border-bottom: 2px solid var(--hairline);
+  border-bottom: 2px solid var(--rule);
+  transition: background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
 .menu-panel li:last-child a { border-bottom: 0; }
-.menu-panel a:hover { color: var(--tang); }
+.menu-panel a:hover,
+.menu-panel a:focus-visible {
+  background: var(--fire-wash);
+  box-shadow: inset 4px 0 0 var(--fire);
+}
+
+/* reading-position bar, pinned to the header's bottom rule */
+.topbar-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 3px;
+  pointer-events: none;
+}
+.topbar-progress i {
+  display: block;
+  height: 100%;
+  background: var(--fire);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform 90ms linear;
+}
 
 /* ---------- buttons ---------- */
 
@@ -223,95 +404,289 @@ section { scroll-margin-top: 5rem; overflow: clip; }
   gap: 8px;
   min-height: 48px;
   padding: 12px 22px;
-  border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
+  font-family: var(--font-display);
   font-size: 0.9375rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
   cursor: pointer;
-  transition: transform var(--t-fast) var(--ease);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-pill);
+  box-shadow: 3px 3px 0 var(--shadow-tint, var(--shadow-ink));
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
-.btn:hover { transform: translateY(-2px); }
-.btn-lime { background: var(--lime); color: var(--ink); }
-.btn-paper { background: var(--paper); color: var(--ink); }
+.btn:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 5px 5px 0 var(--shadow-tint, var(--shadow-ink));
+}
+.btn:active { transform: none; box-shadow: 1px 1px 0 var(--shadow-tint, var(--shadow-ink)); }
+
+/* mid-run: flat and clearly inert, but the label stays fully readable */
+.btn:disabled {
+  cursor: progress;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.78;
+}
+
+/* fire: solid, edged in its own darker tone, worded in bone */
+.btn-fire {
+  --shadow-tint: var(--fire-shadow);
+  background: var(--fire);
+  color: var(--on-accent);
+  border-color: var(--fire-ink);
+}
+.btn-paper { background: var(--card); color: var(--ink); }
+
+/* water: the channel. Its own wash for the surface, its own edge, its own ink,
+   filling solid on hover — the component never leaves its element. */
+.btn-water {
+  --shadow-tint: var(--water-shadow);
+  background: var(--water-wash);
+  color: var(--water-ink);
+  border-color: var(--water);
+}
+.btn-water:hover {
+  background: var(--water);
+  color: var(--on-accent);
+  border-color: var(--water-ink);
+}
+.btn-ghost { background: transparent; box-shadow: none; }
+.btn-ghost:hover { background: var(--paper-sunk); box-shadow: var(--lift-1); }
 
 /* ---------- hero ---------- */
 
 .hero {
-  padding: clamp(2.5rem, 6vw, 5rem) 0 clamp(4rem, 10vw, 8rem);
+  padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(4rem, 9vw, 7.5rem);
   border-bottom: 2px solid var(--ink);
 }
 
-.hero .deco-row {
+.hero-grid { display: grid; gap: var(--s10); }
+
+.hero-side { display: none; }
+
+/* Masthead band: spans the full container, so the two-column split starts at
+   the name rather than after two lines of meta text. */
+.hero-meta {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--s4);
-  margin-bottom: var(--s8);
+  justify-content: space-between;
+  gap: var(--s3) var(--s5);
+  padding-bottom: var(--s5);
+  margin-bottom: var(--s10);
+  border-bottom: 2px solid var(--rule);
 }
 
-.greeting {
+/* The hero is the one place where all six elements are on show at once, and
+   every component here is built from its OWN element only: that element's wash
+   for the surface, its pigment for the edge and the marks, its ink for the
+   words. Nothing inside a component is borrowed from a different element.
+   This pill is fire — the live signal. */
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 6px 15px 6px 10px;
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--ink-muted);
-  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--fire-ink);
+  background: var(--fire-wash);
+  border: 2px solid var(--fire);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
 }
 
-.deco-squares { display: flex; gap: 6px; }
-.deco-squares i {
-  width: 12px; height: 12px; display: block;
-  border: 2px solid var(--ink);
+.status-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fire);
+  border: 2px solid var(--fire-ink);
 }
-.deco-squares i:nth-child(1) { background: var(--tang); transform: rotate(45deg); }
-.deco-squares i:nth-child(2) { background: var(--lime); }
-.deco-squares i:nth-child(3) { background: var(--teal); border-radius: 50%; }
+
+/* earth: the place. Same recipe, clay throughout. */
+.hero-meta-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--earth-ink);
+}
+
+.hero-meta-line::before {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  background: var(--earth);
+  border: 1px solid var(--earth-ink);
+}
 
 .hero-name {
-  font-size: clamp(2.75rem, 13vw, 8.5rem);
-  font-weight: 800;
-  line-height: 0.96;
-  letter-spacing: -0.01em;
+  /* vw fallback first; the container query below sizes to the real column */
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 10vw, 7rem);
+  font-weight: 700;
+  /* The name is a light component: dark-amber letterforms with the sun behind
+     them. Reading it as bare bark letters with a gold swipe borrowed from
+     another element was the last crossing in the hero. */
+  color: var(--light-ink);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  /* Caps are wider than lowercase, so the tracking opens slightly to let the
+     strokes breathe at this size. The DOM text stays lowercase and the case
+     is purely visual, so a screen reader reads a name instead of spelling it. */
   text-transform: uppercase;
 }
 
 .hero-name .line { display: block; }
 
 .hero-name .mark {
-  box-shadow: inset 0 -0.28em 0 var(--lime);
-  border-radius: 2px;
+  /* rides up across the baseline so it reads as a marker, not an underline.
+     Sunlight behind the bark letters — the light element's one loud moment. */
+  box-shadow: inset 0 -0.3em 0 var(--marker);
+  border-radius: 3px;
+  animation: markIn 520ms var(--ease) 360ms both;
 }
 
-.hero-value {
+/* the name is width-bound, not viewport-bound: sizing off the column stops
+   "adarsh" clipping between 1024px and ~1200px, and lets it fill wider screens */
+@supports (container-type: inline-size) {
+  .hero-main { container-type: inline-size; }
+  /* "ADARSH" measures about 4em in caps, so 22cqw is what genuinely fits the
+     column — at the old 25cqw the caps overran it and clipped. */
+  .hero-name { font-size: clamp(2.5rem, 22cqw, 9rem); }
+}
+
+@keyframes markIn {
+  from { box-shadow: inset 0 -0.3em 0 transparent; }
+  to { box-shadow: inset 0 -0.3em 0 var(--marker); }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* one orchestrated entrance on load, then everything holds still */
+.hero-meta { animation: riseIn 560ms var(--ease) both; }
+.hero-name .line:nth-child(1) { animation: riseIn 560ms var(--ease) 80ms both; }
+.hero-name .line:nth-child(2) { animation: riseIn 560ms var(--ease) 160ms both; }
+.hero-lead { animation: riseIn 560ms var(--ease) 240ms both; }
+.hero-actions { animation: riseIn 560ms var(--ease) 400ms both; }
+.soul-line { animation: riseIn 560ms var(--ease) 460ms both; }
+.hero-side { animation: riseIn 560ms var(--ease) 300ms both; }
+
+.hero-lead {
   margin-top: var(--s6);
-  max-width: 46ch;
-  font-size: clamp(1.125rem, 4.2vw, 1.5rem);
-  font-weight: 500;
-  line-height: 1.45;
+  max-width: 44ch;
+  font-size: clamp(1.0625rem, 2.2vw, 1.25rem);
+  line-height: 1.55;
 }
 
-.hero-chips {
+/* Receipts panel — the four proof points as data rows that match the toolbox
+   card's rhythm. Laid out this way so the right column holds its own against
+   the height of the name, instead of ending halfway down the hero. */
+/* Four receipts, four components, four elements — and deliberately NO shared
+   card. A bark frame holding rows in four other elements is itself the
+   crossing this pass removes, so each receipt is its own bordered strip. */
+.receipt-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.receipt-block-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.receipt-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+/* Each strip is assembled only from its own element: that element's wash for
+   the surface, its pigment for the edge and the square, its ink for the
+   words. Nothing in a strip comes from anywhere else. */
+.receipt-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s3);
-  margin-top: var(--s6);
+  align-items: baseline;
+  gap: 2px var(--s4);
+  padding: 9px 14px;
+  background: var(--rcw, transparent);
+  border: 2px solid var(--rc, var(--fire));
+  border-radius: var(--r-m);
+  box-shadow: 3px 3px 0 var(--rc-shadow, var(--shadow-ink));
 }
 
-.hero-chips .chip {
+.receipt-label {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 6.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rc-ink, var(--ink));
+}
+
+.receipt-label::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--rc, var(--fire));
+  border: 1px solid var(--rc-ink, var(--fire-ink));
+}
+
+.receipt-value {
+  flex: 1 1 10rem;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--ink);
-  border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
-  padding: 8px 14px;
-  text-decoration: none;
-  transition: transform var(--t-fast) var(--ease);
+  color: var(--rc-ink, var(--ink));
+  overflow-wrap: anywhere;
 }
-.hero-chips a.chip:hover { transform: translateY(-2px); }
-.chip-tang { background: var(--tang); }
-.chip-lime { background: var(--lime); }
-.chip-teal { background: var(--teal); }
-.chip-paper { background: var(--paper); }
+
+/* underlined in the strip's own pigment on hover — an underline cannot collide
+   with the glyphs the way a swipe behind them would */
+a.receipt-value {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--t-base) var(--ease);
+}
+a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
+
+/* the one line here that owns no element — it is page ink, not a component */
+.receipt-note {
+  max-width: 40ch;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* both hero panels share the fire header — the colour inside the receipts
+   rows is what distinguishes them, so the two cards read as one system */
+
 
 .hero-actions {
   display: flex;
@@ -321,128 +696,235 @@ section { scroll-margin-top: 5rem; overflow: clip; }
   margin-top: var(--s8);
 }
 
+/* closes the hero: wind, the quiet element — its pigment for the rule and its
+   ink for the words, nothing else */
 .soul-line {
+  margin-top: var(--s12);
+  padding-top: var(--s4);
+  border-top: 2px solid var(--wind);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--ink-muted);
-  margin-top: var(--s5);
+  color: var(--wind-ink);
 }
 
-/* ---------- hero wide two-column (fills the laptop screen) ---------- */
-
-.hero-grid {
-  display: grid;
-  gap: var(--s10);
-}
-
-.hero-side { display: none; }
-
-.side-card {
-  background: var(--tang);
-  border: 2px solid var(--ink);
+/* spec sheet — the hero's right column */
+/* A whole element family in one place. Every part of the panel below reads
+   from these three, so a panel can only ever be one element's colours. */
+.spec-card {
+  --spec-el: var(--earth);
+  --spec-ink: var(--earth-ink);
+  --spec-wash: var(--earth-wash);
+  --shadow-tint: var(--earth-shadow);
+  background: var(--spec-wash);
+  border: 2px solid var(--spec-el);
   border-radius: var(--r-l);
-  box-shadow: 6px 6px 0 var(--ink);
-  padding: var(--s8);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--s4);
+  box-shadow: 5px 5px 0 var(--shadow-tint, var(--shadow-ink));
+  overflow: hidden;
 }
 
-.side-tag {
+.spec-card.el-earth {
+  --spec-el: var(--earth);
+  --spec-ink: var(--earth-ink);
+  --spec-wash: var(--earth-wash);
+}
+
+
+
+.spec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: 9px 16px;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
-  padding: 4px 12px;
+  color: var(--on-accent);
+  background: var(--spec-el);
+  border-bottom: 2px solid var(--spec-ink);
 }
 
-.side-line {
-  font-size: 1.125rem;
+/* The element name, lowercase against the panel's caps. Kept at full
+   opacity on purpose: dimming it drops the pair under 4.5:1 against the
+   dark theme's brighter bark header. */
+.spec-el {
+  text-transform: none;
+  letter-spacing: 0.08em;
   font-weight: 600;
-  line-height: 1.45;
-  max-width: 30ch;
 }
 
-.side-mail {
-  font-weight: 800;
-  font-size: clamp(1.0625rem, 1.4vw, 1.375rem);
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  box-shadow: inset 0 -0.14em 0 var(--ink);
-  border-radius: 2px;
-  overflow-wrap: anywhere;
-}
-.side-mail:hover { color: var(--paper); }
+/* no vertical padding: the rows are a ruled table, and a tinted row surface
+   would otherwise leave a strip of the panel showing above and below it */
+.spec-rows { padding: 0; }
 
-.side-links {
+.spec-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s4);
-  padding-top: var(--s2);
+  gap: 2px var(--s4);
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--spec-el);
+}
+.spec-row:last-child { border-bottom: 0; }
+
+/* labels in the pigment, values in the ink — a hierarchy inside one family,
+   rather than two different elements stacked in the same row */
+.spec-row dt {
+  flex: none;
+  width: 6.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--spec-el);
+  padding-top: 2px;
 }
 
-.side-links .text-link {
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: none;
-  border-bottom: 2px solid transparent;
+.spec-row dd {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--spec-ink);
+  overflow-wrap: anywhere;
 }
-.side-links .text-link:hover { border-bottom-color: var(--ink); }
+
+.spec-link {
+  display: block;
+  padding: 13px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--spec-ink);
+  background: var(--spec-wash);
+  border-top: 2px solid var(--spec-el);
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.spec-link:hover { background: var(--spec-el); color: var(--on-accent); }
+
+.side-note {
+  max-width: 36ch;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
 
 @media (min-width: 1024px) {
   .hero-grid {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: clamp(2rem, 5vw, 5rem);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
     align-items: start;
   }
-  .hero-side { display: block; }
+  .hero-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s5);
+    padding-top: var(--s2);
+  }
 }
 
-/* ---------- sections ---------- */
+/* ---------- sections + headings ---------- */
 
-.section { padding: var(--section-y) 0; border-bottom: 2px solid var(--ink); }
+/* Every section opens with a stratum of its own element, sitting directly on
+   top of the bark hairline that closes the section above. Four bands down the
+   page, and the palette has stated itself once each. */
+.section {
+  padding: var(--section-y) 0;
+  border-bottom: 2px solid var(--ink);
+  border-top: 4px solid var(--el, transparent);
+}
+
+.section[data-el='fire'] { --el: var(--fire); }
+.section[data-el='water'] { --el: var(--water); }
+.section[data-el='earth'] { --el: var(--earth); }
+.section[data-el='wind'] { --el: var(--wind); }
+.section[data-el='bark'] { --el: var(--bark); }
+.section[data-el='light'] { --el: var(--light); }
 
 .section-heading {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: var(--s4);
+  gap: var(--s2) var(--s8);
   margin-bottom: var(--s10);
 }
 
-.section-heading h2 {
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  text-transform: lowercase;
-}
-
-.section-heading .count {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.section-heading .section-note {
+/* numbered section marker: accent chip + a hairline to the gutter */
+.eyebrow {
   flex-basis: 100%;
-  margin-top: var(--s2);
-  max-width: 52ch;
-  color: var(--ink-muted);
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
 }
 
-.section-note {
-  max-width: 52ch;
-  color: var(--ink-muted);
-  font-size: 1rem;
-  margin-top: var(--s2);
+.eyebrow-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--on-accent);
+  background: var(--accent, var(--fire));
+  border: 2px solid var(--ink);
+  border-radius: var(--r-s);
+}
+
+/* names the element the section is built from. The palette is part of the
+   page's own copy rather than left as a colour code. */
+/* Element names are always lowercase mono, everywhere they appear — the
+   uppercase in a panel header belongs to the component's name, not the
+   element's, and that contrast is the whole visual grammar. */
+.eyebrow-el {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.eyebrow[data-accent='fire'] { --accent: var(--fire); }
+.eyebrow[data-accent='water'] { --accent: var(--water); }
+.eyebrow[data-accent='earth'] { --accent: var(--earth); }
+.eyebrow[data-accent='wind'] { --accent: var(--wind); }
+.eyebrow[data-accent='bark'] { --accent: var(--bark); }
+.eyebrow[data-accent='light'] { --accent: var(--light); }
+
+/* light is a light pigment in both themes, so its chip carries bark */
+.eyebrow[data-accent='light'] .eyebrow-num { color: var(--on-light); }
+
+.eyebrow-rule {
+  flex: 1;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.18;
+}
+
+.section-heading h2 {
+  flex: 0 1 auto;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+/* sits beside the heading on wide screens, drops below once 22rem no longer
+   fits — one row, deliberately, rather than an accidental wrap */
+.section-heading .section-note {
+  flex: 1 1 22rem;
+  max-width: 42ch;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
 }
 
 /* ---------- project cards ---------- */
@@ -450,406 +932,442 @@ section { scroll-margin-top: 5rem; overflow: clip; }
 .work-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--s8);
+  gap: var(--s6);
 }
 
 .project-card {
-  --card-accent: var(--tang);
-  --card-wash: var(--wash-tang);
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--r-l);
-  box-shadow: 6px 6px 0 var(--ink);
-  padding: var(--s6);
+  --accent: var(--fire);
+  --wash: var(--fire-wash);
   display: flex;
   flex-direction: column;
-  gap: var(--s4);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-l);
+  box-shadow: var(--lift-2);
+  overflow: hidden;
   transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
 }
-.project-card.a-teal { --card-accent: var(--teal); --card-wash: var(--wash-teal); }
-.project-card.a-lime { --card-accent: var(--lime); --card-wash: var(--wash-lime); }
+/* Sibling cards have to be told apart at a glance, so each takes its own
+   element even though the section's own is fire. */
+.project-card.a-water { --accent: var(--water); --wash: var(--water-wash); }
+.project-card.a-earth { --accent: var(--earth); --wash: var(--earth-wash); }
 
-.project-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 var(--ink);
+.project-card:hover { transform: translate(-3px, -3px); box-shadow: var(--lift-3); }
+
+/* the tinted header is what gives each card its own identity */
+.card-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--s3) var(--s4);
+  padding: var(--s5) var(--s6);
+  background: var(--wash);
+  border-bottom: 2px solid var(--ink);
 }
 
 .card-numeral {
-  align-self: flex-start;
-  background: var(--card-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: var(--on-accent);
+  background: var(--accent);
   border: 2px solid var(--ink);
   border-radius: var(--r-m);
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1;
-  padding: 8px 16px;
-  letter-spacing: -0.02em;
+  box-shadow: 3px 3px 0 var(--shadow-ink);
+  transition: transform var(--t-base) var(--ease);
 }
+.project-card:hover .card-numeral { transform: rotate(-2deg); }
 
-.project-card h3 {
-  font-size: 1.375rem;
+.card-kind {
+  justify-self: end;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
 
-.project-card h3 a {
-  text-decoration: none;
-  box-shadow: inset 0 -0.14em 0 transparent;
-  transition: box-shadow var(--t-base) var(--ease);
+.card-title {
+  grid-column: 1 / -1;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
 }
-.project-card h3 a:hover { box-shadow: inset 0 -0.18em 0 var(--card-accent); }
 
-.card-story { color: var(--ink); font-size: 1rem; max-width: 48ch; }
+.card-title a {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--t-base) var(--ease);
+}
+/* An underline rather than a swipe: the title sits on the card's own wash,
+   where a second tint of that same wash would not read at all. */
+.card-title a:hover { text-decoration-color: var(--accent); }
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  padding: var(--s6);
+}
+
+.card-story { max-width: 46ch; }
+
+.card-done {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.card-done li { position: relative; padding-left: var(--s4); }
+.card-done li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.52em;
+  width: 9px;
+  height: 3px;
+  background: var(--accent);
+  border: 1px solid var(--ink);
+}
 
 .card-pill {
   align-self: flex-start;
-  background: var(--card-accent);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--on-accent);
+  background: var(--accent);
   border: 2px solid var(--ink);
   border-radius: var(--r-pill);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 6px 12px;
 }
 
 .card-links {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--s4);
+  align-items: center;
+  gap: var(--s3) var(--s4);
   margin-top: auto;
   padding-top: var(--s4);
 }
+
+/* the one link that matters on each card, promoted to a target */
+.link-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--on-accent);
+  background: var(--accent, var(--fire));
+  border: 2px solid var(--ink);
+  border-radius: var(--r-pill);
+  text-decoration: none;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.link-cta:hover { transform: translate(-1px, -2px); box-shadow: var(--lift-1); }
 
 .text-link {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--ink);
   text-decoration: none;
   box-shadow: inset 0 -0.16em 0 transparent;
   transition: box-shadow var(--t-base) var(--ease);
 }
-.text-link:hover { box-shadow: inset 0 -0.16em 0 var(--card-accent, var(--lime)); }
+/* swipes use the element's wash, never its pigment: these links are bark
+   text, and bark on a deep pigment measures about 3:1 */
+.text-link:hover { box-shadow: inset 0 -0.16em 0 var(--wash, var(--light-wash)); }
 
 .link-note {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  color: var(--ink-muted);
+  color: var(--ink-soft);
 }
 
 .card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
   align-items: center;
+  gap: 6px 14px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--ink);
+  font-size: 0.6875rem;
+  color: var(--ink-soft);
 }
-
 .card-tags .tag { display: inline-flex; align-items: center; gap: 6px; }
 .card-tags .tag::before {
   content: "";
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--card-accent);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
   border: 1px solid var(--ink);
 }
 
-/* ---------- client work ---------- */
+/* ---------- experience panels ---------- */
 
 .client-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--s8);
+  gap: var(--s5);
 }
 
 .client-panel {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-l);
-  padding: var(--s6);
+  --panel-accent: var(--earth);
   display: flex;
   flex-direction: column;
   gap: var(--s4);
+  padding: var(--s5) var(--s6) var(--s6);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-top: 8px solid var(--panel-accent);
+  border-radius: var(--r-l);
+  box-shadow: var(--lift-1);
 }
 
-.panel-tang { background: var(--wash-tang); box-shadow: 6px 6px 0 var(--ink); }
-.panel-teal { background: var(--wash-teal); }
-.panel-lime { background: var(--wash-lime); }
+.panel-earth { --panel-accent: var(--earth); }
+.panel-water { --panel-accent: var(--water); }
+.panel-wind { --panel-accent: var(--wind); }
 
-.client-panel h3 { font-size: 1.25rem; font-weight: 700; }
+.client-panel h3 {
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+}
 
 .client-panel .when {
+  align-self: flex-start;
+  padding: 4px 11px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--paper);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  background: var(--paper-sunk);
   border: 2px solid var(--ink);
   border-radius: var(--r-pill);
-  padding: 4px 10px;
-  align-self: flex-start;
 }
 
-.client-panel p.body { color: var(--ink); max-width: 48ch; }
+.client-panel .body { max-width: 48ch; color: var(--ink-soft); }
 
-/* role bullets — hard ink squares, same sticker language as the rest */
-.client-panel .points {
+.points {
   display: grid;
   gap: var(--s3);
   max-width: 52ch;
 }
-
-.client-panel .points li {
+.points li {
   position: relative;
   padding-left: var(--s5);
-  color: var(--ink);
   font-size: 0.9375rem;
   line-height: 1.55;
 }
-
-.client-panel .points li::before {
-  content: '';
+.points li::before {
+  content: "";
   position: absolute;
   left: 2px;
-  top: 0.5em;
+  top: 0.52em;
   width: 7px;
   height: 7px;
   background: var(--ink);
 }
 
-.client-panel .facts { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: auto; padding-top: var(--s2); }
-
-.fact {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
-  padding: 5px 11px;
-  background: var(--paper);
-}
-
-/* ---------- proof ---------- */
-
-.badges {
+.facts {
   display: flex;
   flex-wrap: wrap;
+  gap: var(--s2);
+  margin-top: auto;
+  padding-top: var(--s3);
+}
+
+.fact {
+  padding: 5px 11px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  /* a <button> does not inherit body colour — without this the preset chips
+     fall back to the UA's grey and read as washed out */
+  color: var(--ink);
+  background: var(--paper-sunk);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-pill);
+}
+
+/* ---------- credentials ---------- */
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--s4);
   margin-bottom: var(--s12);
 }
 
 .badge {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  padding: var(--s4) var(--s5);
+  --badge-accent: var(--light);
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 4px 4px 0 var(--ink);
-  max-width: 17rem;
+  padding: var(--s4) var(--s5);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-left: 7px solid var(--badge-accent);
+  border-radius: var(--r-m);
+  box-shadow: var(--lift-1);
 }
 
-.badge .b-tag {
+a.badge {
+  text-decoration: none;
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+a.badge:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2); }
+a.badge:hover .b-title { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+
+.b-light { --badge-accent: var(--light); }
+.b-fire { --badge-accent: var(--fire); }
+.b-water { --badge-accent: var(--water); }
+.b-wind { --badge-accent: var(--wind); }
+
+.b-tag {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.b-title {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.mini-label {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin: var(--s12) 0 var(--s4);
   font-family: var(--font-mono);
   font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.85;
+  color: var(--ink-soft);
 }
-
-.badge .b-title { font-weight: 700; font-size: 0.9375rem; line-height: 1.3; }
-
-.badge a.b-title { text-decoration: none; }
-.badge a.b-title:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
-
-.b-tang { background: var(--tang); }
-.b-lime { background: var(--lime); }
-.b-teal { background: var(--teal); }
-.b-sand { background: var(--sand); }
-
-@media (min-width: 768px) {
-  .badge.tilt-l { transform: rotate(-1.5deg); }
-  .badge.tilt-r { transform: rotate(1.2deg); }
+.mini-label::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--rule);
 }
-
-.stat-wrap { max-width: 40rem; }
 
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--s4);
+  max-width: 40rem;
 }
 
 .stat-tile {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  padding: var(--s4) var(--s5);
-  min-height: 128px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: var(--s3);
-  box-shadow: 4px 4px 0 var(--ink);
-  transition: transform var(--t-fast) var(--ease);
+  min-height: 132px;
+  padding: var(--s5);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-l);
+  box-shadow: var(--lift-1);
+  text-decoration: none;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
+a.stat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--lift-2); }
 
-a.stat-tile { text-decoration: none; }
-a.stat-tile:hover { transform: translate(-2px, -2px); }
-a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 3px; }
-
-.stat-tile .stat-value {
-  font-size: clamp(2.25rem, 14vw, 4.5rem);
-  font-weight: 800;
+.stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
 }
 
-.stat-tile .stat-cap {
+.stat-cap { font-family: var(--font-mono); font-size: 0.6875rem; line-height: 1.4; }
+
+.stat-go {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.tile-tang { background: var(--tang); }
-.tile-teal { background: var(--teal); }
-.tile-lime { background: var(--lime); }
-.tile-ink { background: var(--ink); }
-.tile-ink .stat-value, .tile-ink .stat-cap { color: var(--paper); }
-
-/* ---------- footer ---------- */
-
-.site-footer {
-  background: var(--lime);
-  border-top: 2px solid var(--ink);
-  padding: var(--section-y) 0 clamp(3rem, 7vw, 6rem);
-}
-
-.footer-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  opacity: 0.72;
 }
 
-.big-mail {
-  display: inline-block;
-  margin-top: var(--s6);
-  font-size: clamp(1.15rem, 6.5vw, 3.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  box-shadow: inset 0 -0.12em 0 var(--ink);
-  border-radius: 2px;
-  max-width: 100%;
-}
+/* Three pigments and then the crown stat in light — the 92% tile is the one
+   that opens the patent, so it is the brightest thing in the row. */
+.tile-fire { background: var(--fire); color: var(--on-accent); }
+.tile-water { background: var(--water); color: var(--on-accent); }
+.tile-earth { background: var(--earth); color: var(--on-accent); }
+.tile-light { background: var(--light); color: var(--on-light); }
 
-.big-mail:hover { color: var(--paper); }
+.repo-list { display: flex; flex-direction: column; }
 
-.footer-row {
+.repo-list li {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--s8);
-  margin-top: var(--s12);
-  border-top: 2px solid var(--ink);
-  padding-top: var(--s8);
+  align-items: baseline;
+  gap: 4px var(--s4);
+  padding: var(--s4) 0;
+  border-top: 2px solid var(--rule);
 }
 
-.icon-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  background: var(--paper);
-  color: var(--ink);
-  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
-}
-.icon-link:hover { transform: translateY(-2px); background: var(--paper); }
-
-.icon-links { display: flex; flex-wrap: wrap; gap: var(--s3); }
-
-.footer-close {
+.repo-name {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: inset 0 -0.14em 0 transparent;
+  transition: box-shadow var(--t-base) var(--ease);
 }
+.repo-name:hover { box-shadow: inset 0 -0.14em 0 var(--bark-wash); }
 
-.footer-meta {
-  margin-top: var(--s4);
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--ink);
-}
+.repo-what { color: var(--ink-soft); font-size: 0.9375rem; }
+.repo-links { display: inline-flex; gap: var(--s4); margin-left: auto; }
 
-/* ---------- url lab ---------- */
+/* ---------- dropout lab ---------- */
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
+.section-play { padding-top: calc(var(--section-y) * 0.6); }
 
 .lab {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-l);
-  background: var(--wash-lime);
-  box-shadow: 6px 6px 0 var(--ink);
-  padding: var(--s8);
   display: flex;
   flex-direction: column;
   gap: var(--s4);
-}
-
-.lab-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s3);
-}
-
-.lab-input {
-  flex: 1 1 260px;
-  min-width: 0;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--ink);
-  background: var(--paper);
+  padding: var(--s5);
+  background: var(--card);
   border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  padding: 12px 14px;
+  border-top: 8px solid var(--water);
+  border-radius: var(--r-l);
+  box-shadow: var(--lift-2);
 }
 
-.lab-input::placeholder { color: var(--ink-muted); }
-
-.lab-go { white-space: nowrap; }
-
-.lab-samples {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s3);
-}
-
-.lab-hint {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--ink-muted);
-}
+.lab-nn { gap: var(--s3); padding: var(--s4); }
 
 .lab-sample {
   cursor: pointer;
@@ -860,91 +1378,40 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
 }
 .lab-sample:hover { transform: translateY(-2px); }
 
-.lab-error {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  border: 2px solid var(--ink);
-  background: var(--wash-tang);
-  border-radius: var(--r-m);
-  padding: var(--s3) var(--s4);
-  overflow-wrap: anywhere;
+/* while a run is in flight the presets lock. Dim the surface, never the
+   text — the UA's disabled grey was barely legible on the sunk fill. */
+.nn-presets .lab-sample:disabled {
+  cursor: progress;
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  border-color: var(--rule);
 }
 
-.lab-line {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--r-s);
-  padding: var(--s3) var(--s4);
-  overflow-wrap: anywhere;
+.nn-presets .lab-sample:disabled.active {
+  color: var(--on-accent);
+  background: var(--water);
+  border-color: var(--ink);
 }
 
-.lab-rows {
-  margin: 0;
-}
-
-.lab-row {
-  display: flex;
-  gap: var(--s3);
-  padding: var(--s3) 0;
-  border-top: 2px solid var(--ink);
-  min-width: 0;
-}
-
-.lab-row dt {
-  flex: none;
-  width: 5.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding-top: 3px;
-}
-
-.lab-row dd {
-  margin: 0;
-  min-width: 0;
+.nn-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s2);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  overflow-wrap: anywhere;
-  align-items: baseline;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.nn-presets .lab-sample.active {
+  background: var(--water);
+  color: var(--on-accent);
+  border-color: var(--ink);
 }
 
-.param {
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--r-pill);
-  padding: 2px 10px;
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
-}
-
-.lab-foot {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--ink-muted);
-  border-top: 2px solid var(--ink);
-  padding-top: var(--s3);
-}
-
-/* ---------- dropout lab (compact, fits one screen) ---------- */
-
-.section-play { padding-top: calc(var(--section-y) * 0.4); }
-
-.section-play .section-heading { margin-bottom: var(--s3); }
-
-.lab-nn { gap: var(--s3); padding: var(--s4); }
+.cfg-blurb { margin-left: var(--s2); font-size: 0.75rem; color: var(--ink-soft); }
 
 .nn-explain {
+  margin: 0;
+  background: var(--paper-sunk);
   border: 2px solid var(--ink);
   border-radius: var(--r-m);
-  background: var(--paper);
-  margin: 0 0 var(--s2);
 }
 
 .nn-explain-t {
@@ -953,63 +1420,31 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   align-items: center;
   justify-content: space-between;
   gap: var(--s3);
-  background: transparent;
-  border: 0;
-  padding: 8px 14px;
+  padding: 9px 14px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink);
+  background: transparent;
+  border: 0;
   cursor: pointer;
 }
 
-.nn-explain ol {
-  list-style: none;
-  margin: 0;
-  padding: 0 var(--s5) var(--s3);
-  display: none;
-}
-
+.nn-explain ol { display: none; }
 .nn-explain.open ol {
   display: flex;
   flex-direction: column;
   gap: var(--s1);
   max-height: 150px;
   overflow-y: auto;
-  border-top: 1px solid var(--hairline);
-  padding-top: var(--s2);
+  padding: var(--s2) var(--s5) var(--s3);
+  border-top: 1px solid var(--rule);
 }
-
-.nn-explain li {
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--ink);
-}
-
+.nn-explain li { font-size: 0.8125rem; line-height: 1.45; }
 .nn-explain b { font-weight: 700; }
 
-.nn-presets {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s3);
-}
-
-.nn-presets .lab-sample.active {
-  background: var(--tang);
-  color: var(--ink);
-}
-
-.cfg-blurb {
-  color: var(--ink);
-  font-weight: 500;
-  font-size: 0.75rem;
-  margin-left: var(--s2);
-}
-
-/* single-row stage: net | canvas | side controls */
 .nn-stage {
   display: flex;
   flex-wrap: wrap;
@@ -1019,30 +1454,18 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
 }
 
 .nn-net { flex: 0 1 240px; min-width: 180px; }
-
-.nn-net svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
+.nn-net svg { width: 100%; height: auto; }
 
 .nn-caption {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--ink);
   margin-top: var(--s2);
   text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--ink-soft);
 }
 
 .nn-canvas-wrap { flex: 1 1 320px; max-width: 380px; min-width: 230px; }
-
-.nn-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: 380px;
-  margin-inline: auto;
-}
+.nn-canvas { width: 100%; height: auto; max-width: 380px; margin-inline: auto; }
 
 .nn-legend {
   display: flex;
@@ -1050,10 +1473,10 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   justify-content: center;
   gap: var(--s3);
   margin-top: var(--s2);
-  font-size: 0.6875rem;
-  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--ink-soft);
 }
-
 .nn-legend span { display: inline-flex; align-items: center; gap: 5px; }
 
 .lg {
@@ -1064,10 +1487,10 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   display: inline-block;
   flex: none;
 }
-.lg-lime { background: var(--lime); }
-.lg-paper { background: var(--paper); }
-.lg-zone { background: var(--lime); border-radius: 3px; opacity: 0.5; }
-.lg-x { background: transparent; position: relative; border: 0; }
+.lg-light { background: var(--light); }
+.lg-hollow { background: var(--card); }
+.lg-zone { background: var(--light); border-radius: 3px; opacity: 0.55; }
+.lg-x { position: relative; background: transparent; border: 0; }
 .lg-x::before, .lg-x::after {
   content: "";
   position: absolute;
@@ -1075,7 +1498,7 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   top: 4px;
   width: 9px;
   height: 2px;
-  background: var(--tang);
+  background: var(--fire);
   transform: rotate(45deg);
 }
 .lg-x::after { transform: rotate(-45deg); }
@@ -1089,11 +1512,7 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   gap: var(--s2);
 }
 
-.nn-metrics {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  background: var(--paper);
-}
+.nn-metrics { background: var(--card); border: 2px solid var(--ink); border-radius: var(--r-m); }
 
 .nn-metric {
   display: flex;
@@ -1102,367 +1521,371 @@ a.stat-tile:hover .stat-value { text-decoration: underline; text-underline-offse
   gap: var(--s3);
   padding: var(--s2) var(--s4);
 }
+.nn-metric + .nn-metric { border-top: 1px solid var(--rule); }
 
-.nn-metric + .nn-metric { border-top: 1px solid var(--hairline); }
-
-.m-cap {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--ink-muted);
-}
-
+.m-cap { font-family: var(--font-mono); font-size: 0.625rem; color: var(--ink-soft); }
 .m-val {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
-.nn-actions {
-  display: flex;
-  gap: var(--s3);
-}
-
-.nn-actions .btn { min-height: 44px; padding: 10px 16px; font-size: 0.875rem; }
+.nn-actions { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.nn-actions .btn { min-height: 40px; padding: 8px 14px; font-size: 0.8125rem; }
 
 .verdict {
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
-  background: var(--sand);
-  padding: var(--s3) var(--s4);
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: var(--s3) var(--s4);
+  background: var(--paper-sunk);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-m);
 }
-
 .verdict-name {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.verdict-why { font-size: 0.8125rem; line-height: 1.45; }
 
-.verdict-why { font-size: 0.8125rem; line-height: 1.45; color: var(--ink); }
+/* no green anywhere in this palette, so the verdict colours carry the
+   meaning instead: light for a clear fit, fire for the alarm, wind for the
+   merely unsatisfying one. */
+.verdict-light { background: var(--light); border-color: var(--ink); }
+.verdict-light .verdict-name, .verdict-light .verdict-why { color: var(--on-light); }
+.verdict-fire { background: var(--fire); border-color: var(--ink); }
+.verdict-wind { background: var(--wind); border-color: var(--ink); }
+.verdict-fire .verdict-name, .verdict-fire .verdict-why,
+.verdict-wind .verdict-name, .verdict-wind .verdict-why { color: var(--on-accent); }
+.verdict-idle { background: var(--paper-sunk); }
 
-.verdict-lime { background: var(--lime); }
-.verdict-tang { background: var(--tang); }
-.verdict-teal { background: var(--teal); }
-.verdict-sand { background: var(--sand); }
-
-.nn-actions .btn { min-height: 40px; padding: 8px 13px; font-size: 0.8125rem; }
+.nn-wire line { stroke: var(--ink); }
+.nn-node { stroke: var(--ink); stroke-width: 2; }
+.nn-lbl { fill: var(--on-accent); font-family: var(--font-mono); font-weight: 700; }
+.nn-x { fill: var(--ink); font-weight: 800; }
 
 /* short screens: shrink the stage so the whole demo fits */
 @media (max-height: 840px) {
-  .section-play { padding-top: 0.5rem; }
-  .section-play .section-heading { margin-bottom: var(--s2); }
-  .lab-nn { padding: var(--s3); gap: var(--s2); }
+  .section-play { padding-top: 1rem; }
+  .section-play .section-heading { margin-bottom: var(--s3); }
+  .lab-nn { padding: var(--s3); }
   .nn-canvas-wrap, .nn-canvas { max-width: 330px; }
   .nn-net { flex-basis: 220px; }
   .nn-side { max-width: 300px; }
-  .cfg-blurb { font-size: 0.6875rem; }
 }
 
 @media (max-height: 700px) {
   .nn-canvas-wrap, .nn-canvas { max-width: 290px; }
   .nn-net { flex-basis: 200px; }
   .nn-caption { display: none; }
-  .nn-legend { margin-top: 2px; }
-  .section-play { padding-top: 0.25rem; }
 }
 
-/* ---------- v3 content additions ---------- */
+/* ---------- closing band ---------- */
 
-.stack-line {
+.site-footer {
+  padding: var(--section-y) 0 clamp(3rem, 6vw, 5rem);
+  background: var(--band);
+  color: var(--band-fg);
+  /* the closing stratum is light, not bark: the page ends by lighting up */
+  border-top: 4px solid var(--light);
+}
+
+.eyebrow-inverse .eyebrow-num { background: var(--light); color: var(--on-light); border-color: var(--band-line); }
+.eyebrow-inverse .eyebrow-el { color: var(--band-soft); }
+.eyebrow-inverse .eyebrow-rule { opacity: 0.3; }
+
+.footer-title {
+  margin-top: var(--s3);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.big-mail {
+  display: inline-block;
+  margin-top: var(--s5);
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 6vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.14;
+  color: var(--light);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 -0.1em 0 var(--light);
+  border-radius: 3px;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.big-mail-arrow {
+  display: inline-block;
+  margin-left: 0.18em;
+  transition: transform var(--t-base) var(--ease);
+}
+
+.big-mail:hover,
+.big-mail:focus-visible {
+  background: var(--light);
+  color: var(--on-light);
+}
+.big-mail:hover .big-mail-arrow { transform: translateX(0.14em); }
+
+.footer-meta {
+  margin-top: var(--s4);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  line-height: 1.6;
-  margin: 0;
-  overflow-wrap: anywhere;
+  color: var(--band-soft);
 }
 
-.stack-line strong { font-weight: 700; letter-spacing: 0.02em; }
-
-.card-done {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s2);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.card-done li {
-  position: relative;
-  padding-left: var(--s4);
-}
-
-.card-done li::before {
-  content: "";
-  position: absolute;
-  left: 1px;
-  top: 0.5em;
-  width: 9px;
-  height: 3px;
-  background: var(--card-accent);
-  border: 1px solid var(--ink);
-}
-
-.mini-label {
-  margin: var(--s10) 0 var(--s4);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: var(--s3);
-}
-
-.mini-label::after {
-  content: "";
-  height: 2px;
-  background: var(--ink);
-  flex: 1;
-}
-
-.repo-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.repo-list li {
+.footer-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px var(--s4);
-  border-top: 2px solid var(--ink);
-  padding: var(--s4) 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s6);
+  margin-top: var(--s10);
+  padding-top: var(--s6);
+  border-top: 2px solid var(--band-line);
 }
 
-.repo-name {
-  font-weight: 700;
-  font-size: 1rem;
-  text-decoration: none;
-  box-shadow: inset 0 -0.14em 0 transparent;
-  transition: box-shadow var(--t-base) var(--ease);
-}
-.repo-name:hover { box-shadow: inset 0 -0.14em 0 var(--teal); }
+.icon-links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); }
 
-.repo-what { color: var(--ink-muted); font-size: 0.9375rem; }
-
-.repo-links {
-  display: inline-flex;
-  gap: var(--s4);
-  margin-left: auto;
-}
-
-#proof .stat-grid {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-#proof .stat-grid { max-width: none; }
-
-#proof .stat-grid .stat-value {
-  font-size: clamp(2.25rem, 8vw, 3.5rem);
-}
-
-@media (min-width: 640px) {
-  #proof .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-/* ---------- dark mode + accent contrast ---------- */
-
-:root {
-  /* text that sits on bright accent fills — stays dark in both themes */
-  --on-accent: #26180d;
-}
-
-/* midnight terminal v2 — navy + violet + amber + cyan, no green */
-html[data-theme='dark'] {
-  --paper: #0d1220;
-  --sand: #181f33;
-  --ink: #edf1fb;
-  --ink-muted: #a9b4cf;
-  --hairline: #2a3452;
-  --wash-lime: #211b38;
-  --wash-tang: #2b1c0e;
-  --wash-teal: #0c2230;
-  --wash-paper: #181f33;
-  --lime: #a78bfa;
-  --tang: #ffb454;
-  --teal: #4fd6e8;
-  --on-accent: #0b0f1f;
-  color-scheme: dark;
-}
-
-/* crisp flat look in dark: drop hard offset shadows, keep the outlines */
-html[data-theme='dark'] .badge,
-html[data-theme='dark'] .project-card,
-html[data-theme='dark'] .side-card,
-html[data-theme='dark'] .lab,
-html[data-theme='dark'] .stat-tile,
-html[data-theme='dark'] .client-panel {
-  box-shadow: none;
-}
-
-/* dark accents stay dark-on-bright so contrast holds in both themes */
-.btn-lime,
-.sticker-lime,
-.verdict-lime,
-.verdict-tang,
-.verdict-teal {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-.verdict-lime .verdict-why,
-.verdict-tang .verdict-why,
-.verdict-teal .verdict-why,
-.verdict-lime .verdict-name,
-.verdict-tang .verdict-name,
-.verdict-teal .verdict-name {
-  color: var(--on-accent);
-}
-
-.side-card {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-.side-tag {
-  color: var(--ink);
-  border-color: var(--ink);
-}
-
-.side-card .text-link { color: var(--on-accent); }
-
-.badge.b-lime,
-.badge.b-tang,
-.badge.b-teal {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-.stat-tile.tile-lime,
-.stat-tile.tile-tang,
-.stat-tile.tile-teal {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-.nn-presets .lab-sample.active {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-/* footer sits on a lime band forever */
-.site-footer { color: var(--on-accent); border-top-color: var(--on-accent); }
-
-.site-footer .icon-link,
-.site-footer .mono-link {
-  color: var(--on-accent);
-  border-color: var(--on-accent);
-}
-
-.footer-meta,
-.big-mail { color: var(--on-accent); }
-
-/* in dark mode the footer joins the dark page, with lime accents */
-html[data-theme='dark'] .site-footer {
-  background: var(--paper);
-  border-top-color: var(--hairline);
-  color: var(--ink);
-}
-
-html[data-theme='dark'] .site-footer .footer-label { color: var(--ink-muted); }
-
-html[data-theme='dark'] .site-footer .big-mail {
-  color: var(--lime);
-  box-shadow: inset 0 -0.12em 0 var(--lime);
-}
-
-html[data-theme='dark'] .site-footer .icon-link,
-html[data-theme='dark'] .site-footer .mono-link {
-  color: var(--ink);
-  border-color: var(--ink);
-}
-
-html[data-theme='dark'] .site-footer .footer-meta { color: var(--ink-muted); }
-
-/* lab card in dark uses a dark neutral surface instead of the bright wash */
-html[data-theme='dark'] .lab { background: var(--sand); }
-html[data-theme='dark'] .client-panel,
-html[data-theme='dark'] .stat-tile.tile-sand { background: var(--sand); }
-
-/* network svg adapts to theme */
-.nn-wire line { stroke: var(--ink); }
-.nn-node { stroke: var(--ink); stroke-width: 2; }
-.nn-lbl { fill: var(--on-accent); font-family: var(--font-mono); font-weight: 700; }
-.nn-x { fill: var(--ink); font-weight: 800; }
-
-/* theme toggle button */
-.theme-btn {
+.icon-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 2px solid var(--ink);
-  border-radius: var(--r-m);
+  color: var(--band-fg);
   background: transparent;
-  color: var(--ink);
-  cursor: pointer;
-  flex: none;
+  border: 2px solid var(--band-line);
+  border-radius: var(--r-m);
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.icon-link:hover {
+  transform: translateY(-2px);
+  background: var(--light);
+  color: var(--on-light);
+  border-color: var(--light);
 }
 
-html[data-theme='dark'] ::selection {
-  background: var(--lime);
-  color: var(--on-accent);
-}
+.icon-text { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; }
 
-/* ---------- icon-text chips + reduced motion ---------- */
-
-.icon-text {
+/* the résumé link wears the same chip as the icon links instead of
+   rendering as bare underlined text next to them */
+.mono-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 700;
   text-decoration: none;
-  text-transform: lowercase;
+  white-space: nowrap;
+  color: var(--band-fg);
+  border: 2px solid var(--band-line);
+  border-radius: var(--r-m);
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.mono-link:hover {
+  transform: translateY(-2px);
+  background: var(--light);
+  color: var(--on-light);
+  border-color: var(--light);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .btn, .chip, .project-card, .stat-tile, .icon-link, .text-link { transition: none; }
-  .btn:hover, .chip:hover, .project-card:hover, .stat-tile:hover, .icon-link:hover { transform: none; }
-  .project-card, .badge { box-shadow: none; }
+.footer-end { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); }
+
+.footer-close { font-family: var(--font-mono); font-size: 0.75rem; color: var(--band-soft); }
+
+.to-top {
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--band-fg);
+  border: 2px solid var(--band-line);
+  border-radius: var(--r-pill);
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.to-top:hover {
+  transform: translateY(-2px);
+  background: var(--light);
+  color: var(--on-light);
+  border-color: var(--light);
 }
 
-/* ---------- tablet / desktop ---------- */
+/* ---------- dark theme ---------- */
+
+html[data-theme='dark'] {
+  --paper: #14110c;
+  --paper-sunk: #1b1710;
+  /* the surface sits clearly above the page, so panels read as panels */
+  --card: #221c14;
+  --ink: #f3eee1;
+  --ink-soft: #a89c86;
+  --rule: #342c20;
+  --dot: rgba(243, 238, 225, 0.06);
+
+  /* The pigments invert. Deep in the light theme, bright here — so a fill
+     holds its contrast against the ground in either theme, and the text on
+     it just swaps ends. */
+  --fire: #ee6b41;
+  --water: #4fb3c9;
+  --earth: #c98a45;
+  --wind: #8fb3b0;
+  --bark: #a98460;
+  --light: #f0c24a;
+
+  /* Bright enough that a tinted card head still reads as tinted. Collapse
+     these and the three project cards become three identical dark boxes,
+     which was the single biggest reason the old dark mode felt flat. */
+  --fire-wash: #4a1a0d;
+  --water-wash: #0f3340;
+  --earth-wash: #3b2c0e;
+  --wind-wash: #1c2e30;
+  --bark-wash: #2c2117;
+  --light-wash: #3e3212;
+
+  --on-accent: #14110c;
+  --on-light: #14110c;
+  --shadow-ink: #060402;
+
+  /* In dark the pigments are already light enough to serve as their own text
+     tone, so an element's ink and its pigment are the same value here. */
+  --fire-ink: var(--fire);
+  --water-ink: var(--water);
+  --earth-ink: var(--earth);
+  --wind-ink: var(--wind);
+  --bark-ink: var(--bark);
+  /* Here the marker is bronze, so the name's letters have to be bone — which
+     is this theme's ink anyway. */
+  --light-ink: var(--ink);
+
+  /* A shadow is darkness: the bright pigments cannot be used for one without
+     turning it into a glow, so each element gets a deep version of its hue. */
+  --fire-shadow: #351206;  --water-shadow: #05222b; --earth-shadow: #2a1e08;
+  --wind-shadow: #112429;  --bark-shadow: #150f08;  --light-shadow: #2d2308;
+
+  /* Bronze, not gold: here the letters are bone, and bone on gold measures
+     1.4:1 — the bottoms of "adarsh" were washing out against the swipe. */
+  --marker: #8a6410;
+
+  /* a banked fire, so the closing band is a colour moment rather than one
+     more dark rectangle */
+  --band: #2a1207;
+  --band-fg: #f3eee1;
+  --band-soft: rgba(243, 238, 225, 0.66);
+  --band-line: rgba(243, 238, 225, 0.22);
+
+  color-scheme: dark;
+}
+
+/* depth over a flat dark field: fire behind the hero, water under the lab */
+html[data-theme='dark'] .hero {
+  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(238, 107, 65, 0.16), transparent 70%);
+}
+
+/* the lab panel gets the same treatment under its water spine */
+html[data-theme='dark'] .lab {
+  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(79, 179, 201, 0.12), transparent 72%);
+}
+
+html[data-theme='dark'] ::selection {
+  background: var(--light);
+  color: var(--on-light);
+}
+
+/* ---------- responsive ---------- */
+
+/* The header is one fixed, non-wrapping row. Measured, the inline nav alone
+   needs ~620px, so the menu button carries it until 1024. The decorative dot
+   cluster waits for 1152. The availability claim deliberately lives in the hero
+   masthead and the footer — never in the header, where it just repeated the
+   hero inside the same viewport. */
+.dot-cluster { display: none; }
 
 @media (min-width: 768px) {
+  .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .client-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1024px) {
   .nav-desktop { display: block; }
   .menu-btn { display: none; }
   .menu-panel { display: none; }
+  .nav-list { gap: var(--s4); }
+}
 
-  .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (min-width: 1152px) {
+  .dot-cluster { display: flex; }
+}
 
-  .client-grid { grid-template-columns: 1fr 1fr; }
+@media (min-width: 1280px) {
+  .nav-list { gap: var(--s5); }
 }
 
 @media (min-width: 1100px) {
   .client-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-@media (max-width: 479px) {
-  .sticker { display: none; }
+/* four across, so credentials fills its width instead of leaving the right
+   half of the section empty beside a 2x2 that was capped at 40rem */
+@media (min-width: 1024px) {
+  #proof .stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+
+/* narrowest phones: the résumé lives in the menu panel and the footer */
+@media (max-width: 399px) {
+  .cv-pill { display: none; }
 }
 
 @media (max-width: 767px) {
   .project-card, .client-panel { max-width: 44rem; margin-inline: auto; }
+
+  .stat-grid { gap: var(--s3); }
+  .stat-tile { min-height: 112px; padding: var(--s4); }
+  #proof .stat-grid { max-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .btn, .project-card, .stat-tile, .icon-link, .text-link, .cv-pill, .link-cta,
+  .to-top, .nav-link, .menu-panel a, .spec-link, .repo-name, a.badge, .card-title a,
+  .mono-link, .lab-sample, .big-mail, .big-mail-arrow, .topbar-progress i,
+  .receipt-value {
+    transition: none;
+  }
+
+  .btn:hover, .project-card:hover, .stat-tile:hover, .icon-link:hover,
+  .cv-pill:hover, .link-cta:hover, .to-top:hover, .mono-link:hover, a.badge:hover,
+  .lab-sample:hover {
+    transform: none;
+  }
+
+  .project-card:hover .card-numeral { transform: none; }
+
+  .hero-meta, .hero-name .line, .hero-lead, .hero-actions, .soul-line,
+  .hero-side, .hero-name .mark {
+    animation: none;
+  }
 }
