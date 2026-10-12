@@ -105,7 +105,11 @@ export default function CnnLab() {
     const S = 460;
 
     function draw() {
-      const css = getComputedStyle(document.documentElement);
+      // Read the CHAPTER's tokens, not the root's. documentElement carries the
+      // hero palette, so reading there drew this plot in the wrong chapter's
+      // colours the moment each section got its own theme.
+      const host = canvas.closest('.section') || document.documentElement;
+      const css = getComputedStyle(host);
       const tkn = (name, fallback) => (css.getPropertyValue(name) || '').trim() || fallback;
       const hexA = (hex, a) => {
         const h = hex.replace('#', '');
@@ -113,12 +117,14 @@ export default function CnnLab() {
         const num = parseInt(n, 16);
         return `rgba(${(num >> 16) & 255},${(num >> 8) & 255},${num & 255},${a})`;
       };
-      const bg = tkn('--card', '#fffcf4');
-      const line = tkn('--ink', '#221a11');
-      const dot1 = tkn('--light', '#d9a21b');
-      const wrong = tkn('--fire', '#bc3a16');
+      // Functional surfaces and marks, named semantically so the chapter
+      // supplies them: plate, ink, the two classes, and the error red.
+      const bg = tkn('--surface', '#fff9e8');
+      const line = tkn('--ink', '#20231f');
+      const dot1 = tkn('--accent', '#ddaf35');
+      const wrong = tkn('--warn', '#b52d3b');
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const dot0 = tkn('--card', '#fffcf4');
+      const dot0 = tkn('--surface', '#fff9e8');
       const zone = hexA(dot1, isDark ? 0.16 : 0.3);
       ctx.clearRect(0, 0, S, S);
       ctx.fillStyle = bg;

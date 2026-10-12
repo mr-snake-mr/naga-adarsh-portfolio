@@ -71,83 +71,44 @@
 }
 
 :root {
-  /* A Dictionary of Color Combinations #39 Sulpher Yellow: the sheet the work
-     is printed on. Warm deliberately — the book's palette leans warm roughly
-     three to one, so a neutral ground would fight every pigment sitting on it. */
-  --paper: #f5ecc2;
-  --paper-sunk: #e8e0b8;
-  --card: #fcfaee;
+  /* ---------- CHAPTER 1 · hero — warm editorial minimalism ----------
+     The default chapter. Every other chapter overrides this same set, which is
+     why a component written once renders correctly wherever it is placed. */
+  --bg: #f6f1e5;         /* warm ivory ground */
+  --fg: #20231f;         /* deep charcoal */
+  --accent: #246779;     /* muted teal */
+  --accent-2: #8a8f85;   /* warm gray */
+  --muted: #5a5e56;
+  --surface: #fffdf7;
+  --line: #ddd6c5;
+  --on-accent: #f6f1e5;
 
-  /* Black #159 — the dictionary's darkest swatch, and the partner the book
-     itself pairs with Sulpher Yellow (combination 52, 15.7:1). */
-  --ink: #111314;
-  /* darker than the paper alone would need: this also has to clear 4.5:1 on
-     every section band, and the bands are no longer the colour of the paper */
-  --ink-soft: #5f5d4f;
-  --rule: #d5ceaa;
+  /* Legacy role names are kept as the MECHANISM, re-pointed chapter by chapter.
+     Components keep working; new work should use the semantic names above. */
+  --paper: var(--bg);
+  --paper-sunk: #efe9db;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: #e8dfc8;
 
-  /* The pigments, each a named swatch, each standing for a thing rather than a
-     slot: flame, ocean, leaf, air, wood, sun. Deep here, luminous in the dark
-     theme, so text on a pigment fill is governed by --on-accent, never
-     inherited. */
-  --fire: #a62c37;   /* Carmine Red #29  — flame */
-  --water: #005b8d;  /* Helvetia Blue    — ocean */
-  --earth: #1a7444;  /* Diamine Green    — leaf and soil */
-  --wind: #34454c;   /* Slate Color #158 — air */
-  --bark: #4b3317;   /* Vandyke Brown    — wood */
-  --light: #e2b540;  /* Yellow Ocher #60 — sun */
+  /* The six pigment slots resolve to this chapter's own accent, so a component
+     that names one still lands inside the chapter's palette rather than
+     borrowing a colour from a different section. */
+  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
+  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
+  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
+  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
+  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
 
-  /* Each surface is a REAL hue of its own rather than a tint of the paper.
-     Mixing every pigment into cream turned all six into variants of beige,
-     which is precisely why the elements stopped reading as different things;
-     these are Wada swatches from each pigment's own family instead, so a panel
-     is unmistakably water or wood before a single word is read. */
-  --fire-wash: #f48067;   /* Grenadine Pink   — flame */
-  --water-wash: #a7d4e4;  /* Pale King's Blue — ocean */
-  --earth-wash: #c1c494;  /* Olive Buff       — leaf */
-  --wind-wash: #a1a39a;   /* Warm Gray        — air */
-  --bark-wash: #c5a56e;   /* Isabella Color   — wood */
-  --light-wash: #fbe6a0;  /* Naples Yellow    — sun */
-
-  /* Each section sits on its OWN ground rather than on the shared sheet, and
-     that ground is the element's wash at FULL strength — not a tint of it.
-     A pale band is the same failure as the beige washes were: the section has
-     to announce itself before anything on it is read. Nearest pair (earth vs
-     bark) is now 73 apart in RGB instead of 31. */
-  --fire-bg: #f48067;   /* Grenadine Pink   — flame */
-  --water-bg: #a7d4e4;  /* Pale King's Blue — ocean */
-  --earth-bg: #c1c494;  /* Olive Buff       — leaf */
-  --wind-bg: #a1a39a;   /* Warm Gray        — air */
-  --bark-bg: #c5a56e;   /* Isabella Color   — wood */
-  --light-bg: #fbe6a0;  /* Naples Yellow    — sun */
-
-  /* A text tone per element, so a component can be built entirely inside its
-     own family. Each is the MOST saturated tone of its pigment that still
-     clears 4.5:1 both on the ground and on that element's own wash. */
-  --fire-ink: #642128;
-  --water-ink: #005b8d;
-  --earth-ink: #185a37;
-  --wind-ink: #2d3b41;
-  --bark-ink: #4b3317;
-  --light-ink: #79642a;
-
-  /* Text on a pigment fill. All five deep pigments clear 4.5:1 against the
-     paper (fire 5.8, earth 5.1, water 8.1, wind 8.4, bark 11.0), so bone text
-     holds on every one. light is the single exception: a light pigment in both
-     themes, so it always carries ink. */
-  --on-accent: #f5ecc2;
-  --on-light: #111314;
-
-  /* The marker swipe sits BEHIND letterforms, so it contrasts with them and
-     not with the page: Yellow Ocher behind ink letters measures 9.7:1. */
-  --marker: var(--light);
-
-  /* The closing band is Vandyke Brown — the deepest swatch in the palette that
-     is still a colour rather than a black. */
-  --band: #4b3317;
-  --band-fg: #f5ecc2;
-  --band-soft: rgba(245, 236, 194, 0.66);
-  --band-line: rgba(245, 236, 194, 0.24);
+  /* Chapter 6 is defined on .site-footer, which overrides all of the above. */
+  --band: #152d3a;
+  --band-fg: #f6f2e9;
+  --band-soft: rgba(246, 242, 233, 0.7);
+  --band-line: rgba(246, 242, 233, 0.22);
 
   /* type — a high-contrast serif for display, the system face for reading,
      mono for labels. */
@@ -186,6 +147,174 @@
 
   /* light is the default on every device, including dark-set ones */
   color-scheme: light;
+}
+
+/* ============================================================
+   CHAPTERS 2–6
+
+   Each chapter repoints the whole role set, so one chapter's ground, text,
+   accents and surfaces apply to everything inside it and nothing leaks in from
+   a neighbour. The background lands on the full-width <section>; containers
+   inside it are transparent or only faintly surfaced, so no chapter ends up as
+   a large card floating on a different colour.
+   ============================================================ */
+
+/* Chapter 2 · selected work — dark engineering portfolio.
+   The one dark chapter, so it reads as a deliberate break in the run. Lime is
+   the only vivid colour in it and carries every link and numeral. */
+.section[data-el='fire'] {
+  --bg: #18231e;
+  --fg: #f5f1e6;
+  --accent: #d5ef78;     /* electric lime */
+  --accent-2: #a9c0a0;   /* muted sage */
+  --muted: #a8a49b;
+  --surface: #21302a;
+  --line: rgba(245, 241, 230, 0.16);
+  --on-accent: #18231e;  /* forest on lime = 12.67:1 */
+
+  --paper: var(--bg);
+  --paper-sunk: #1c2823;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: var(--accent);
+
+  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
+  --water: var(--accent-2); --water-wash: var(--surface); --water-ink: var(--accent-2);
+  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--muted);     --wind-wash: var(--surface);  --wind-ink: var(--muted);
+  --bark: var(--accent-2);  --bark-wash: var(--surface);  --bark-ink: var(--accent-2);
+  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
+}
+
+/* Chapter 3 · train a tiny neural net — warm scientific experimentation.
+   The yellow runs edge to edge; the experiment itself is NOT a panel on top of
+   it. Only the plot keeps the pale cream surface, because that is a functional
+   surface for reading data, not a container. */
+.section[data-el='water'] {
+  --bg: #f2e7b9;
+  --fg: #20231f;
+  --accent: #ddaf35;     /* mustard gold — a FILL colour */
+  --accent-ink: #7a5a10; /* darker mustard — the same colour used as TEXT */
+  --accent-2: #5c5636;
+  --muted: #5c5636;
+  --surface: #fff9e8;    /* pale cream, for the plot only */
+  --line: rgba(32, 35, 31, 0.18);
+  --on-accent: #20231f;  /* ink on the mustard fill = 7.76:1 */
+  --warn: #b52d3b;       /* muted red = 4.97:1 on the butter */
+
+  --paper: var(--bg);
+  --paper-sunk: #ece0ad;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: var(--accent);
+
+  --fire: var(--accent);      --fire-wash: var(--surface);  --fire-ink: var(--accent-ink);
+  --water: var(--accent);     --water-wash: var(--surface); --water-ink: var(--accent-ink);
+  --earth: var(--accent);     --earth-wash: var(--surface); --earth-ink: var(--accent-ink);
+  --wind: var(--muted);       --wind-wash: var(--surface);  --wind-ink: var(--muted);
+  --bark: var(--accent);      --bark-wash: var(--surface);  --bark-ink: var(--accent-ink);
+  --light: var(--accent);     --light-wash: var(--surface); --light-ink: var(--accent-ink);
+  --on-light: var(--on-accent);
+}
+
+/* Chapter 4 · experience and college — calm sage and forest green.
+   The landing after the yellow: same structure, quieter colour, so the run
+   from the experiment into the professional record feels deliberate. */
+.section[data-el='earth'] {
+  --bg: #dfe8dc;
+  --fg: #20382d;
+  --accent: #41694b;
+  --accent-2: #6f7f6a;
+  --muted: #4d5c50;
+  --surface: #eef3ec;
+  --line: rgba(32, 56, 45, 0.18);
+  --on-accent: #eef3ec;  /* ivory on the green fill = 5.58:1 */
+
+  --paper: var(--bg);
+  --paper-sunk: #d6e1d3;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: var(--accent);
+
+  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
+  --water: var(--accent);   --water-wash: var(--surface); --water-ink: var(--accent);
+  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--accent-2);  --wind-wash: var(--surface);  --wind-ink: var(--muted);
+  --bark: var(--accent);    --bark-wash: var(--surface);  --bark-ink: var(--accent);
+  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
+}
+
+/* Chapter 5 · credentials — muted lavender and ink.
+   Achievements are carried by typography and small details rather than bright
+   oversized badges. */
+.section[data-el='bark'] {
+  --bg: #e9e2f0;
+  --fg: #302638;
+  --accent: #72568d;
+  --accent-2: #6d6a72;
+  --muted: #5b5265;
+  --surface: #fbf9fd;
+  --line: rgba(48, 38, 56, 0.16);
+  --on-accent: #fbf9fd;  /* off-white on violet = 5.85:1 */
+
+  --paper: var(--bg);
+  --paper-sunk: #ded4e8;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: var(--accent);
+
+  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
+  --water: var(--accent);   --water-wash: var(--surface); --water-ink: var(--accent);
+  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--accent-2);  --wind-wash: var(--surface);  --wind-ink: var(--muted);
+  --bark: var(--accent);    --bark-wash: var(--surface);  --bark-ink: var(--accent);
+  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
+}
+
+/* Chapter 6 · contact — deep midnight blue with a warm coral.
+   The band role names are repointed here so the footer's existing rules
+   (eyebrow-inverse, band-soft, band-line) keep working unchanged. */
+.site-footer {
+  --bg: #152d3a;
+  --fg: #f6f2e9;
+  --accent: #ff806d;     /* warm coral */
+  --accent-2: #7b93a0;   /* muted blue-gray */
+  --muted: #9fb2bc;
+  --surface: #1d3a49;
+  --line: rgba(246, 242, 233, 0.22);
+  --on-accent: #152d3a;  /* midnight on coral = 5.83:1 */
+
+  --paper: var(--bg);
+  --paper-sunk: #11242f;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: var(--accent);
+
+  --band: var(--bg);
+  --band-fg: var(--fg);
+  --band-soft: var(--muted);
+  --band-line: var(--line);
+
+  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
+  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
+  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
+  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
+  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
 }
 
 * { box-sizing: border-box; }
@@ -488,6 +617,10 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 .hero {
   padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(4rem, 9vw, 7.5rem);
+  /* the hero owns its ground the same way every other chapter does, rather
+     than inheriting whatever <body> happens to be */
+  background: var(--bg);
+  color: var(--fg);
   border-bottom: 1px solid var(--rule);
 }
 
@@ -743,7 +876,8 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   background: var(--spec-wash);
   border: 1px solid var(--spec-el);
   border-radius: var(--r-l);
-  box-shadow: var(--lift-2);
+  /* no elevation: the hero is editorial and restrained, and a floating toolbox
+     was the most "card-like" thing on the page */
   overflow: hidden;
 }
 
@@ -850,22 +984,17 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
    on top of the hairline that closes the section above. Five bands down the
    page, each on its own ground, and the dictionary states itself once each
    without ever printing its name. */
+/* The chapter ground is applied to the full-width <section> element itself, so
+   it spans the viewport edge to edge at every size. The inner container stays
+   transparent — a chapter is never a card sitting on someone else's colour.
+   The 3px accent rule is the only hard edge between chapters; the background
+   change does the rest of the separating. */
 .section {
   padding: var(--section-y) 0;
-  background: var(--bg, var(--paper));
-  border-bottom: 1px solid var(--rule);
-  border-top: 2px solid var(--el, transparent);
+  background: var(--bg);
+  color: var(--fg);
+  border-top: 3px solid var(--accent);
 }
-
-/* Each section carries its own GROUND as well as its own colour, so the page
-   reads as a run of separate bands rather than one sheet with rules drawn
-   across it. */
-.section[data-el='fire'] { --el: var(--fire); --bg: var(--fire-bg); }
-.section[data-el='water'] { --el: var(--water); --bg: var(--water-bg); }
-.section[data-el='earth'] { --el: var(--earth); --bg: var(--earth-bg); }
-.section[data-el='wind'] { --el: var(--wind); --bg: var(--wind-bg); }
-.section[data-el='bark'] { --el: var(--bark); --bg: var(--bark-bg); }
-.section[data-el='light'] { --el: var(--light); --bg: var(--light-bg); }
 
 .section-heading {
   display: flex;
@@ -1364,19 +1493,22 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 
 .section-play { padding-top: calc(var(--section-y) * 0.6); }
 
+/* The experiment is not a panel sitting ON the yellow — it belongs to the
+   yellow. The container is therefore transparent and borderless, and the
+   chapter colour runs edge to edge behind and around it. Only the plot keeps a
+   pale cream surface, because that is a functional surface for reading data
+   rather than a container wrapping the whole section. */
 .lab {
   display: flex;
   flex-direction: column;
   gap: var(--s4);
-  padding: var(--s5);
-  background: var(--card);
-  border: 1px solid var(--rule);
-  border-top: 3px solid var(--water);
-  border-radius: var(--r-l);
-  box-shadow: var(--lift-1);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
-.lab-nn { gap: var(--s3); padding: var(--s4); }
+.lab-nn { gap: var(--s3); padding: 0; }
 
 .lab-sample {
   cursor: pointer;
@@ -1474,7 +1606,18 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 }
 
 .nn-canvas-wrap { flex: 1 1 320px; max-width: 380px; min-width: 230px; }
-.nn-canvas { width: 100%; height: auto; max-width: 380px; margin-inline: auto; }
+/* The one deliberately contrasting surface in this chapter: the plot plate.
+   It is a functional surface for reading data, not a container wrapping the
+   section, which is why the yellow still runs edge to edge around it. */
+.nn-canvas {
+  width: 100%;
+  height: auto;
+  max-width: 380px;
+  margin-inline: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+}
 
 .nn-legend {
   display: flex;
@@ -2125,4 +2268,119 @@ html[data-theme='dark'] ::selection {
       animation-range: entry 12% cover 30%;
     }
   }
+}
+
+/* ============================================================
+   DARK MODE — a deep version of the SAME SIX CHAPTERS
+
+   Not one global dark palette. The chapters are art-directed, so inverting the
+   whole page would throw that away; instead each chapter keeps its identity at
+   a lower luminance, and the two chapters that are already dark deepen further.
+   Declared last so it supersedes both :root and the chapter blocks above.
+   ============================================================ */
+
+html[data-theme='dark'] {
+  /* chapter 1 · hero */
+  --bg: #1a1c18;
+  --fg: #f0ece0;
+  --accent: #7fb0bf;
+  --accent-2: #8d9389;
+  --muted: #a8a89d;
+  --surface: #22251f;
+  --line: rgba(240, 236, 224, 0.18);
+  --on-accent: #1a1c18;
+
+  --paper: var(--bg);
+  --paper-sunk: #161814;
+  --card: var(--surface);
+  --ink: var(--fg);
+  --ink-soft: var(--muted);
+  --rule: var(--line);
+  --marker: #333b34;
+
+  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
+  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
+  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
+  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
+  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
+  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
+  --on-light: var(--on-accent);
+
+  color-scheme: dark;
+}
+
+/* chapter 2 · selected work */
+html[data-theme='dark'] .section[data-el='fire'] {
+  --bg: #101915;
+  --paper-sunk: #14201a;
+  --fg: #f0ece0;
+  --accent: #d5ef78;
+  --accent-2: #9fb894;
+  --muted: #9fa398;
+  --surface: #17221d;
+  --line: rgba(240, 236, 224, 0.16);
+  --on-accent: #101915;
+  color-scheme: dark;
+}
+
+/* chapter 3 · neural net */
+html[data-theme='dark'] .section[data-el='water'] {
+  --bg: #2a2410;
+  --paper-sunk: #221d0d;
+  --fg: #f4ecd6;
+  --accent: #ddaf35;
+  --accent-ink: #e8c65e;
+  --accent-2: #c0b284;
+  --muted: #c0b284;
+  --surface: #332c16;
+  --line: rgba(244, 236, 214, 0.18);
+  --on-accent: #2a2410;
+  --warn: #e5737f;
+  color-scheme: dark;
+}
+
+/* chapter 4 · experience */
+html[data-theme='dark'] .section[data-el='earth'] {
+  --bg: #16211b;
+  --paper-sunk: #121b16;
+  --fg: #e4ede3;
+  --accent: #8fb79a;
+  --accent-2: #9aab9d;
+  --muted: #a3b3a6;
+  --surface: #1e2b23;
+  --line: rgba(228, 237, 227, 0.16);
+  --on-accent: #16211b;
+  color-scheme: dark;
+}
+
+/* chapter 5 · credentials */
+html[data-theme='dark'] .section[data-el='bark'] {
+  --bg: #1e1a26;
+  --paper-sunk: #191521;
+  --fg: #eae4f2;
+  --accent: #b79ad0;
+  --accent-2: #b0a8bd;
+  --muted: #b0a8bd;
+  --surface: #272231;
+  --line: rgba(234, 228, 242, 0.16);
+  --on-accent: #1e1a26;
+  color-scheme: dark;
+}
+
+/* chapter 6 · contact */
+html[data-theme='dark'] .site-footer {
+  --bg: #0f2029;
+  --paper-sunk: #0b1a22;
+  --fg: #f0ece3;
+  --accent: #ff806d;
+  --accent-2: #8fa5b0;
+  --muted: #93a7b1;
+  --surface: #16303d;
+  --line: rgba(240, 236, 227, 0.2);
+  --on-accent: #0f2029;
+  --band: var(--bg);
+  --band-fg: var(--fg);
+  --band-soft: var(--muted);
+  --band-line: var(--line);
+  color-scheme: dark;
 }
