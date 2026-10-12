@@ -9,7 +9,9 @@ const NAV = [
   { id: 'contact', label: 'contact', href: '#contact' },
 ];
 
-const RESUME = { label: 'cv ↓', href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' };
+// ?v= is a cache-buster: bump it every time public/assets/resume.pdf is replaced,
+// otherwise browsers that already hold the old CV will not re-check for up to an hour.
+const RESUME = { label: 'cv ↓', href: '/assets/resume.pdf?v=2026-10-12', download: 'Naga_Adarsh_Resume.pdf' };
 
 // The boot script in main.jsx has already stamped data-theme on <html>, so the
 // DOM is the source of truth. Guarded because this renders on the server too.

@@ -1,7 +1,8 @@
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { IconLink } from './ui';
 
-const RESUME = { href: '/assets/resume.pdf', download: 'Naga_Adarsh_Resume.pdf' };
+// Keep in step with TopBar: same file, same cache-buster.
+const RESUME = { href: '/assets/resume.pdf?v=2026-10-12', download: 'Naga_Adarsh_Resume.pdf' };
 
 export default function Footer() {
   return (
