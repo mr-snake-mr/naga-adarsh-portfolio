@@ -163,14 +163,19 @@ Fetched immediately afterwards with the Googlebot user agent:
 
 Google's Sitemaps row reads "Couldn't fetch" until it processes a freshly submitted sitemap for the first time; it should become "Success" within about a day. Re-check the Sitemaps report then — resubmitting does not change queue priority.
 
-### Blocked: the GitHub-only backlink work
+### GitHub backlinks — completed
 
-Attempted in your signed-in Chrome and deliberately stopped: **Chrome is not signed in to GitHub**, so nothing was changed.
+The first attempt was blocked (Chrome was signed out of GitHub) and a retry hit a browser `ERR_ABORTED`, so the work was split: the profile README was edited over git, and only the About field needed the web UI.
 
-- `mr-snake-mr/naga-adarsh-portfolio` → About / Website still `https://naga-adarsh-portfolio.vercel.app/`. That URL does `308` to `nag.is-a.dev`, so the link is not broken, but it is not pointing at the canonical host.
-- `mr-snake-mr/mr-snake-mr` (the profile README repo) **exists** and has a README, so the portfolio link can be added in a single commit.
+| Target | Result | How it was verified |
+|---|---|---|
+| `mr-snake-mr/naga-adarsh-portfolio` → About / Website | `https://naga-adarsh-portfolio.vercel.app/` → **`https://nag.is-a.dev/`** | GitHub REST API `homepage` field returns `https://nag.is-a.dev/`, and a cache-busted repo page shows `"website":"https://nag.is-a.dev/"` with no `vercel.app` left. (A plain page fetch still showed the old value — the CDN copy was stale, which is why the API was used.) |
+| `mr-snake-mr/mr-snake-mr` (profile README) | Portfolio badge added to the "Connect With Me" row, linking to `https://nag.is-a.dev/` — commit **`bcbb912`**, a clean single-line insertion | `git diff --numstat` = `1 0`; remote `origin/main` == local HEAD; and the raw file at `raw.githubusercontent.com` contains `href="https://nag.is-a.dev/"` |
+| `mr-snake-mr/naga-adarsh-portfolio` → README | already links the live site (pushed earlier in this run) | raw file fetch |
 
-Both edits take about a minute once GitHub is signed in.
+Without sign-in neither edit was possible, so nothing was changed by the failed attempts — the About field was byte-identical until the successful save.
+
+**Caveat, stated plainly:** GitHub marks outbound links in user content `nofollow`, so these three links are worth **discovery** — they give Googlebot direct paths to the site — not ranking authority. Discovery is the current bottleneck, so this is the right lever, but it is not a ranking signal.
 
 ### Realistic expectations
 
