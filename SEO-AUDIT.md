@@ -128,7 +128,8 @@ Everything below was executed and re-checked against production, not planned.
 | `README.md` with the live link | live at `raw.githubusercontent.com/mr-snake-mr/naga-adarsh-portfolio/main/README.md`, giving github.com a crawlable link to the site |
 | Site's own domain in visible text | the footer now reads `chennai, in · class of 2027 · nag.is-a.dev`; before this the string appeared only in metadata |
 | Security headers | `Referrer-Policy: strict-origin-when-cross-origin` and `X-Content-Type-Options: nosniff` confirmed on the live `200` |
-| Cache headers (found during verification) | Vercel was serving **everything** with `max-age=0, must-revalidate`, including content-hashed JS/CSS and the font files — i.e. a revalidation round trip on the critical path for every repeat visit. Rules now added for `/assets/*.js|css` (1 year, immutable), `/fonts/*` and the icons (1 week + `stale-while-revalidate`), and the résumé PDF (1 hour). |
+| Cache headers (found during verification) | Vercel was serving **everything** with `max-age=0, must-revalidate`, including content-hashed JS/CSS and the font files — i.e. a revalidation round trip on the critical path for every repeat visit. Rules now added for `/assets/*.js|css` (1 year, immutable), `/fonts/*` and the icons (1 week + `stale-while-revalidate`), and the résumé PDF (`max-age=0, must-revalidate`, so a replaced CV is never served stale). |
+| CV replaced (`fa32e46`) | `public/assets/resume.pdf` swapped for the updated single-page CV. The path is unchanged so existing shared links keep working, the download links now carry `?v=2026-10-12` to defeat already-cached copies, and the live file was confirmed byte-identical to the source by SHA-256 (`7ea982796038b7f7239ad6b7b663a55d533663ba3902be9db40c2cfd7438d925`, 81,605 bytes). |
 
 ### What IndexNow does and does not cover
 
@@ -140,3 +141,37 @@ IndexNow notifies **Bing, Yandex, Seznam and Naver** immediately. **Google does 
 2. **GitHub repo "Website" field** — still points at `naga-adarsh-portfolio.vercel.app`. It now redirects correctly, but setting it to `https://nag.is-a.dev/` is a 30-second fix in the repo settings.
 3. **Profile links** — the site is currently linked only from GitHub. Adding `https://nag.is-a.dev/` to the GitHub profile README, LinkedIn, LeetCode, CodeChef and Codolio profiles is the cheapest way to give a name query several crawlable references.
 4. No claim is made here about indexing or ranking: those are the search engines' decisions. Bing/Yandex have been notified; Google has not yet been told.
+
+---
+
+## 9. Search Console outcome (2026-10-12, done in your signed-in Chrome)
+
+- Property `https://nag.is-a.dev/` (**URL prefix**) — **verified**, via the HTML-file method. The verification file `google14317e2017d6fd24.html` is live at the site root (`200`, body `google-site-verification: google14317e2017d6fd24.html`). **Do not remove it** — Google requires it to stay, or the property loses verification.
+- Sitemap `sitemap.xml` — submitted. On first look Google's row showed `Type: Unknown`, Status **"Couldn't fetch"**, 0 discovered pages.
+- URL Inspection on `https://nag.is-a.dev/` — "URL is not on Google / URL is unknown to Google" (expected for a brand-new site, no crawl had happened yet). **Request indexing** was accepted: "URL was added to a priority crawl queue."
+
+### The "Couldn't fetch" status is not a defect on the site
+
+Fetched immediately afterwards with the Googlebot user agent:
+
+| Resource | Result as Googlebot |
+|---|---|
+| `/sitemap.xml` | `200`, 0 redirects, `Content-Type: application/xml`, 264 bytes, parses as valid XML, `<loc>https://nag.is-a.dev/</loc>`, `<lastmod>2026-10-12</lastmod>` |
+| `/robots.txt` | `200`, `text/plain`, allows all, references the sitemap |
+| `/google14317e2017d6fd24.html` | `200`, exact token body |
+| `/` | `index, follow`, no `noindex`, self-referencing canonical |
+
+Google's Sitemaps row reads "Couldn't fetch" until it processes a freshly submitted sitemap for the first time; it should become "Success" within about a day. Re-check the Sitemaps report then — resubmitting does not change queue priority.
+
+### Blocked: the GitHub-only backlink work
+
+Attempted in your signed-in Chrome and deliberately stopped: **Chrome is not signed in to GitHub**, so nothing was changed.
+
+- `mr-snake-mr/naga-adarsh-portfolio` → About / Website still `https://naga-adarsh-portfolio.vercel.app/`. That URL does `308` to `nag.is-a.dev`, so the link is not broken, but it is not pointing at the canonical host.
+- `mr-snake-mr/mr-snake-mr` (the profile README repo) **exists** and has a README, so the portfolio link can be added in a single commit.
+
+Both edits take about a minute once GitHub is signed in.
+
+### Realistic expectations
+
+Indexing is queued, not done. For a new domain with one backlink, Google typically takes **days** to index and longer to settle ranking; Bing and Yandex were notified directly through IndexNow. Nothing here guarantees a position — the site is now fully eligible, which is what the work can control.
