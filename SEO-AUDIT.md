@@ -110,3 +110,33 @@ Do not expect immediate indexing or any ranking outcome — those are search eng
 - Whether Google treats the JSON-LD as eligible for a rich result, and how it renders the prerendered page.
 - Real-world Core Web Vitals under production network latency and on low-end mobile devices.
 - That the CDN serves the six `.woff2` files with long-lived caching (Vercel does this automatically for `/fonts/*`; not verifiable locally).
+
+---
+
+## 8. Post-deploy actions and their verified results (2026-10-12)
+
+Everything below was executed and re-checked against production, not planned.
+
+| Action | Verified result |
+|---|---|
+| Pushed `971c14f` to `main` | Vercel deployed it; `https://nag.is-a.dev/` now returns the prerendered build (35,960 bytes of HTML instead of a 639-byte shell) |
+| `robots.txt`, `sitemap.xml`, `favicon.svg`, `og-image.png` | all `200` in production (they were `404` before) |
+| `/index.html` | `308 Permanent Redirect` → `/` |
+| `naga-adarsh-portfolio.vercel.app` (the host linked from the GitHub repo) | `308 Permanent Redirect` → `https://nag.is-a.dev/`, so the one existing backlink now consolidates onto the canonical host instead of splitting it |
+| Canonical, robots directives, Open Graph, JSON-LD, self-hosted font preload | present in the live HTML |
+| IndexNow submission | `HTTP 202 Accepted` for `https://nag.is-a.dev/` — Bing, Yandex, Seznam and Naver are notified directly; the key file `/<key>.txt` is live at the root |
+| `README.md` with the live link | live at `raw.githubusercontent.com/mr-snake-mr/naga-adarsh-portfolio/main/README.md`, giving github.com a crawlable link to the site |
+| Site's own domain in visible text | the footer now reads `chennai, in · class of 2027 · nag.is-a.dev`; before this the string appeared only in metadata |
+| Security headers | `Referrer-Policy: strict-origin-when-cross-origin` and `X-Content-Type-Options: nosniff` confirmed on the live `200` |
+| Cache headers (found during verification) | Vercel was serving **everything** with `max-age=0, must-revalidate`, including content-hashed JS/CSS and the font files — i.e. a revalidation round trip on the critical path for every repeat visit. Rules now added for `/assets/*.js|css` (1 year, immutable), `/fonts/*` and the icons (1 week + `stale-while-revalidate`), and the résumé PDF (1 hour). |
+
+### What IndexNow does and does not cover
+
+IndexNow notifies **Bing, Yandex, Seznam and Naver** immediately. **Google does not participate in IndexNow** — Google discovery still runs through crawling of links plus Search Console submission, which is why step 2 of the external list below remains the one action that cannot be done from this repository.
+
+### Still outstanding, with the reason
+
+1. **Google Search Console** — needs an account action from you (verification token or driving your signed-in browser). This is the only remaining lever that speeds up Google indexing; without it Google must find the site by crawling the GitHub link, which can take days to weeks for a new, low-authority domain.
+2. **GitHub repo "Website" field** — still points at `naga-adarsh-portfolio.vercel.app`. It now redirects correctly, but setting it to `https://nag.is-a.dev/` is a 30-second fix in the repo settings.
+3. **Profile links** — the site is currently linked only from GitHub. Adding `https://nag.is-a.dev/` to the GitHub profile README, LinkedIn, LeetCode, CodeChef and Codolio profiles is the cheapest way to give a name query several crawlable references.
+4. No claim is made here about indexing or ranking: those are the search engines' decisions. Bing/Yandex have been notified; Google has not yet been told.
