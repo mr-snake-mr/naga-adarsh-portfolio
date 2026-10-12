@@ -10,7 +10,6 @@ export default function Footer() {
       <div className="container">
         <p className="eyebrow eyebrow-inverse">
           <span className="eyebrow-num" aria-hidden="true">05</span>
-          <span className="eyebrow-el" aria-hidden="true">light</span>
           <span className="eyebrow-rule" aria-hidden="true" />
         </p>
 

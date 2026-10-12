@@ -64,6 +64,7 @@ export default function Proof() {
                 href={badge.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-el={badge.cls.replace('b-', '')}
                 data-component="badge"
               >
                 <span className="b-tag">{badge.tag}</span>
@@ -73,6 +74,7 @@ export default function Proof() {
               <div
                 key={badge.title}
                 className={`badge ${badge.cls}`}
+                data-el={badge.cls.replace('b-', '')}
                 data-component="badge"
               >
                 <span className="b-tag">{badge.tag}</span>
@@ -88,6 +90,7 @@ export default function Proof() {
             <a
               key={profile.cap}
               className={`stat-tile ${profile.cls}`}
+              data-el={profile.cls.replace('tile-', '')}
               href={profile.href}
               target="_blank"
               rel="noopener noreferrer"

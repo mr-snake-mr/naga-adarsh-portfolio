@@ -58,10 +58,8 @@ export default function Hero() {
           </div>
 
           <aside className="hero-side" aria-label="Tools and verifiable credentials">
-            <div className="spec-card el-earth">
-              <p className="spec-head">
-                toolbox <span className="spec-el">earth</span>
-              </p>
+            <div className="spec-card el-earth" data-el="earth">
+              <p className="spec-head">toolbox</p>
               <dl className="spec-rows">
                 {STACK.map((line) => (
                   <div className="spec-row" key={line.label}>

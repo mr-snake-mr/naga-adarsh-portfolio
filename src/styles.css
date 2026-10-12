@@ -84,36 +84,38 @@
   --ink-soft: #6c6a5a;
   --rule: #d5ceaa;
 
-  /* The pigments, each a named swatch. Deep here, luminous in the dark theme,
-     so text on a pigment fill is governed by --on-accent and never inherited. */
-  --fire: #a62c37;   /* Carmine Red #29      — action */
-  --water: #1c4286;  /* Deep Lyons Blue      — information */
-  --earth: #a84222;  /* Brick Red #28        — mass */
-  --wind: #34454c;   /* Slate Color #158     — quiet */
-  --bark: #4e1d4c;   /* Dusky Madder Violet  — roots */
-  --light: #e2b540;  /* Yellow Ocher #60     — the highlight */
+  /* The pigments, each a named swatch, each standing for a thing rather than a
+     slot: flame, ocean, leaf, air, wood, sun. Deep here, luminous in the dark
+     theme, so text on a pigment fill is governed by --on-accent, never
+     inherited. */
+  --fire: #a62c37;   /* Carmine Red #29  — flame */
+  --water: #005b8d;  /* Helvetia Blue    — ocean */
+  --earth: #1a7444;  /* Diamine Green    — leaf and soil */
+  --wind: #34454c;   /* Slate Color #158 — air */
+  --bark: #4b3317;   /* Vandyke Brown    — wood */
+  --light: #e2b540;  /* Yellow Ocher #60 — sun */
 
-  --fire-wash: #e7c9a9;
-  --water-wash: #cecdb7;
-  --earth-wash: #e7cda5;
-  --wind-wash: #d2cead;
-  --bark-wash: #d7c7ad;
-  --light-wash: #f2e2ab;
+  /* Each surface is a REAL hue of its own rather than a tint of the paper.
+     Mixing every pigment into cream turned all six into variants of beige,
+     which is precisely why the elements stopped reading as different things;
+     these are Wada swatches from each pigment's own family instead, so a panel
+     is unmistakably water or wood before a single word is read. */
+  --fire-wash: #f48067;   /* Grenadine Pink   — flame */
+  --water-wash: #a7d4e4;  /* Pale King's Blue — ocean */
+  --earth-wash: #c1c494;  /* Olive Buff       — leaf */
+  --wind-wash: #a1a39a;   /* Warm Gray        — air */
+  --bark-wash: #c5a56e;   /* Isabella Color   — wood */
+  --light-wash: #fbe6a0;  /* Naples Yellow    — sun */
 
-  /* A text tone per element. The dictionary's own note is that these are
-     largely warm, mid-chroma pigments whose published pairings often lack a
-     readable body-text tone — so each ink below is the MOST saturated tone of
-     its pigment that still clears 4.5:1, on the ground and on its own wash. */
-  --fire-ink: #a22b36;
-  --water-ink: #1c4286;
-  --earth-ink: #973d20;
-  --wind-ink: #34454c;
-  --bark-ink: #4e1d4c;
-  --light-ink: #77622a;
-
-  /* Elevation is a hue here, not an offset — see --lift-*. */
-  --fire-shadow: #a22b36;  --water-shadow: #1c4286; --earth-shadow: #973d20;
-  --wind-shadow: #34454c;  --bark-shadow: #4e1d4c;  --light-shadow: #77622a;
+  /* A text tone per element, so a component can be built entirely inside its
+     own family. Each is the MOST saturated tone of its pigment that still
+     clears 4.5:1 both on the ground and on that element's own wash. */
+  --fire-ink: #642128;
+  --water-ink: #005b8d;
+  --earth-ink: #185a37;
+  --wind-ink: #2d3b41;
+  --bark-ink: #4b3317;
+  --light-ink: #79642a;
 
   /* Text on a pigment fill. All five deep pigments clear 4.5:1 against the
      paper (fire 5.8, earth 5.1, water 8.1, wind 8.4, bark 11.0), so bone text
@@ -126,9 +128,9 @@
      not with the page: Yellow Ocher behind ink letters measures 9.7:1. */
   --marker: var(--light);
 
-  /* The closing band is Dusky Madder Violet — the deepest swatch in the
-     palette that is still a colour rather than a black. */
-  --band: #4e1d4c;
+  /* The closing band is Vandyke Brown — the deepest swatch in the palette that
+     is still a colour rather than a black. */
+  --band: #4b3317;
   --band-fg: #f5ecc2;
   --band-soft: rgba(245, 236, 194, 0.66);
   --band-line: rgba(245, 236, 194, 0.24);
@@ -754,15 +756,6 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   background: var(--spec-el);
 }
 
-/* The element name, lowercase against the panel's caps. Kept at full
-   opacity on purpose: dimming it drops the pair under 4.5:1 against the
-   dark theme's brighter bark header. */
-.spec-el {
-  text-transform: none;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-}
-
 /* no vertical padding: the rows are a ruled table, and a tinted row surface
    would otherwise leave a strip of the panel showing above and below it */
 .spec-rows { padding: 0; }
@@ -886,19 +879,6 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   color: var(--on-accent);
   background: var(--accent, var(--fire));
   border-radius: var(--r-xs);
-}
-
-/* names the element the section is built from. The palette is part of the
-   page's own copy rather than left as a colour code. */
-/* Element names are always lowercase mono, everywhere they appear — the
-   uppercase in a panel header belongs to the component's name, not the
-   element's, and that contrast is the whole visual grammar. */
-.eyebrow-el {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
 }
 
 .eyebrow[data-accent='fire'] { --accent: var(--fire); }
@@ -1603,7 +1583,6 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 }
 
 .eyebrow-inverse .eyebrow-num { background: var(--light); color: var(--on-light); }
-.eyebrow-inverse .eyebrow-el { color: var(--band-soft); }
 .eyebrow-inverse .eyebrow-rule { opacity: 0.3; }
 
 .footer-title {
@@ -1752,24 +1731,25 @@ html[data-theme='dark'] {
 
   /* The pigments invert. Deep in the light theme, luminous here, so a fill
      holds its contrast against the ground in either theme and the text on it
-     just swaps ends. Every value is a named swatch: Eugenia Red A, Light
-     Glaucous Blue, Yellow Ocher, Warm Gray, Spinel Red, Sulpher Yellow. */
-  --fire: #e2625e;
-  --water: #a5c8d1;
-  --earth: #e2b540;
+     just swaps ends. Each keeps its meaning — flame, ocean, leaf, air, wood,
+     sun — and each is a named swatch again: Orange, Pale King's Blue, Night
+     Green, Warm Gray, Isabella Color, Sulpher Yellow. */
+  --fire: #f37420;
+  --water: #a7d4e4;
+  --earth: #87c540;
   --wind: #a1a39a;
-  --bark: #f27291;
+  --bark: #c5a56e;
   --light: #f5ecc2;
 
-  /* 20% of the pigment laid over the black. Bright enough that a tinted card
-     head still reads as tinted — collapse these and the three project cards
-     become three identical dark boxes. */
-  --fire-wash: #3b2323;
-  --water-wash: #2f373a;
-  --earth-wash: #3b331d;
-  --wind-wash: #2e302f;
-  --bark-wash: #3e262d;
-  --light-wash: #3f3e37;
+  /* 30% of the pigment laid over the black. These have to stay unmistakably
+     hued — collapse them and the three project cards become three identical
+     dark boxes again. */
+  --fire-wash: #3e1b1f;
+  --water-wash: #0c2938;
+  --earth-wash: #143022;
+  --wind-wash: #1c2225;
+  --bark-wash: #221d15;
+  --light-wash: #504421;
 
   /* Text on a pigment fill. Here the pigments are already luminous enough to
      carry the ground on top of them, so --on-accent becomes the black. */
@@ -1785,20 +1765,16 @@ html[data-theme='dark'] {
   --bark-ink: var(--bark);
   --light-ink: var(--ink);
 
-  /* A shadow is darkness: a luminous pigment used as one reads as a glow, so
-     each element gets a deep tone of its own hue. */
-  --fire-shadow: #3b2323;  --water-shadow: #2f373a; --earth-shadow: #3b331d;
-  --wind-shadow: #2e302f;  --bark-shadow: #3e262d;  --light-shadow: #3f3e37;
 
   /* Carmine Red #29 behind the name. The letters here are bone, and bone on
      the dictionary's own gold measures 1.4:1 — the bottoms of "adarsh" washed
      out against the swipe. Against a deep carmine they read at 5.8:1. */
   --marker: #a62c37;
 
-  /* Dusky Madder Violet holds in both themes: on the black ground it sits
-     well above the page, so the closing band stays a colour moment rather
-     than one more dark rectangle. */
-  --band: #4e1d4c;
+  /* Vandyke Brown holds in both themes: on the black ground it sits well above
+     the page, so the closing band stays a colour moment rather than one more
+     dark rectangle. */
+  --band: #4b3317;
   --band-fg: #f5ecc2;
   --band-soft: rgba(245, 236, 194, 0.68);
   --band-line: rgba(245, 236, 194, 0.24);
@@ -1808,12 +1784,12 @@ html[data-theme='dark'] {
 
 /* depth over a flat dark field: fire behind the hero, water under the lab */
 html[data-theme='dark'] .hero {
-  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(226, 98, 94, 0.15), transparent 70%);
+  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(243, 116, 32, 0.14), transparent 70%);
 }
 
 /* the lab panel gets the same treatment under its water spine */
 html[data-theme='dark'] .lab {
-  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(165, 200, 209, 0.12), transparent 72%);
+  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(167, 212, 228, 0.12), transparent 72%);
 }
 
 html[data-theme='dark'] ::selection {
@@ -1899,3 +1875,128 @@ html[data-theme='dark'] ::selection {
     animation: none;
   }
 }
+
+/* ============================================================
+   ELEMENT MOTIFS
+
+   Colour alone was not enough. Every element now carries its own
+   drawing as well, and the drawing says the same thing the colour
+   does: flame, ocean, leaf, air, wood, sun.
+
+   Each motif is an ALPHA MASK rather than a picture, so the strip
+   can be filled with the element's OWN pigment and still invert
+   correctly with the theme. Nothing is ever filled with another
+   element's colour, and no motif is shared between elements.
+   ============================================================ */
+
+/* The element's own pigment + the height its motif wants. `light` masks in
+   --light-ink, because gold on a pale gold wash is invisible. */
+[data-el='fire']  { --motif-color: var(--fire);      --motif-h: 15px; }
+[data-el='water'] { --motif-color: var(--water);     --motif-h: 13px; }
+[data-el='earth'] { --motif-color: var(--earth);     --motif-h: 15px; }
+[data-el='wind']  { --motif-color: var(--wind);      --motif-h: 11px; }
+[data-el='bark']  { --motif-color: var(--bark);      --motif-h: 13px; }
+[data-el='light'] { --motif-color: var(--light-ink); --motif-h: 11px; }
+
+/* flame — tongues of fire, two heights so the row never looks mechanical */
+[data-el='fire'] {
+  --motif: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='15'%3E%3Cpath d='M6 15C2.3 11.1 3.3 5.4 6 0c2.7 5.4 3.7 11.1 0 15z' fill='%23000'/%3E%3Cpath d='M18.6 15c-2.5-3.1-1.6-7.6 0-12.4 1.6 4.8 2.5 9.3 0 12.4z' fill='%23000'/%3E%3C/svg%3E");
+  --motif-size: auto 100%;
+}
+
+/* ocean — a plain sine crest, stroked rather than filled */
+[data-el='water'] {
+  --motif: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14'%3E%3Cpath d='M0 7q5-6 10 0t10 0t10 0t10 0' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+  --motif-size: auto 100%;
+}
+
+/* leaf and soil — two leaves, the taller one leading */
+[data-el='earth'] {
+  --motif: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='15'%3E%3Cpath d='M4 15C4 7.5 9 2 16.5 2c0 7.5-5 13-12.5 13z' fill='%23000'/%3E%3Cpath d='M20.5 15c0-4.6 3-7.6 7.5-7.6 0 4.6-3 7.6-7.5 7.6z' fill='%23000'/%3E%3C/svg%3E");
+  --motif-size: auto 100%;
+}
+
+/* air — streaks, uneven on purpose: wind is not a metronome */
+[data-el='wind'] {
+  --motif: repeating-linear-gradient(90deg,
+    #000 0 30px, transparent 30px 44px,
+    #000 44px 52px, transparent 52px 86px);
+  --motif-size: 86px 100%;
+}
+
+/* wood — vertical grain, two weights */
+[data-el='bark'] {
+  --motif: repeating-linear-gradient(90deg,
+    #000 0 2px, transparent 2px 6px,
+    #000 6px 8px, transparent 8px 15px);
+  --motif-size: 15px 100%;
+}
+
+/* sun — rays on a slant */
+[data-el='light'] {
+  --motif: repeating-linear-gradient(115deg, #000 0 2.5px, transparent 2.5px 14px);
+  --motif-size: 28px 100%;
+}
+
+/* ---- where the motif is drawn ---- */
+
+.section,
+.card-head,
+.spec-head,
+.client-panel,
+.stat-tile,
+.badge {
+  position: relative;
+}
+
+.section::before,
+.card-head::before,
+.spec-head::before,
+.client-panel::before,
+.stat-tile::before,
+.badge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--motif-h, 0px);
+  /* an unknown element has no --motif-color, so its strip is simply not there
+     rather than a solid bar across the top */
+  background-color: var(--motif-color, transparent);
+  -webkit-mask-image: var(--motif, none);
+  mask-image: var(--motif, none);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  -webkit-mask-size: var(--motif-size, auto 100%);
+  mask-size: var(--motif-size, auto 100%);
+  pointer-events: none;
+}
+
+/* each surface pays for its own motif out of its top padding, so the strip
+   never sits on a line of type */
+.card-head    { padding-top: calc(var(--s5) + var(--motif-h, 0px)); }
+.spec-head    { padding-top: calc(9px + var(--motif-h, 0px)); }
+.client-panel { padding-top: calc(var(--s5) + var(--motif-h, 0px)); }
+.stat-tile    { padding-top: calc(var(--s5) + var(--motif-h, 0px)); }
+.badge        { padding-top: calc(var(--s4) + var(--motif-h, 0px)); }
+
+/* The section band is the loudest statement on the page, so it reads twice:
+   a solid rule in the element's pigment, then its motif beneath it. */
+.section::before { opacity: 0.85; }
+.card-head::before,
+.spec-head::before,
+.client-panel::before,
+.stat-tile::before,
+.badge::before { opacity: 0.75; }
+
+/* the badge is small; its motif has to be too */
+.badge { --motif-h: 9px; }
+
+/* These two are filled with the element's SOLID pigment rather than its wash,
+   so their motif has to be drawn in the on-colour or it would disappear into
+   the fill. That is still the element's own pair — nothing is borrowed. */
+.spec-head,
+.stat-tile { --motif-color: var(--on-accent); }

@@ -15,11 +15,9 @@ export function SectionHeading({ id, index, accent = 'fire', title, note }) {
               {index}
             </span>
           )}
-          {accent && (
-            <span className="eyebrow-el" aria-hidden="true">
-              {accent}
-            </span>
-          )}
+          {/* The element's NAME is gone on purpose: each element now has to be
+              legible from its own colour and its own motif alone. `accent` still
+              drives the chip and the motif, so there is one value to change. */}
           <span className="eyebrow-rule" aria-hidden="true" />
         </p>
       )}

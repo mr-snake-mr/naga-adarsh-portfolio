@@ -13,7 +13,7 @@ export default function ClientWork() {
         />
 
         <div className="client-grid">
-          <article className="client-panel panel-earth" data-component="client-panel">
+          <article className="client-panel panel-earth" data-el="earth" data-component="client-panel">
             <span className="when">sep 2025 — oct 2025 · freelance</span>
             <h3>SubbaiH Tuition & Daycare</h3>
             <p className="body">
@@ -39,7 +39,7 @@ export default function ClientWork() {
             </div>
           </article>
 
-          <article className="client-panel panel-water" data-component="client-panel">
+          <article className="client-panel panel-water" data-el="water" data-component="client-panel">
             <span className="when">jun 2025 — jul 2025 · chennai</span>
             <h3>Web Developer — Eagle Hi-Tech Softclou Pvt Ltd</h3>
             <ul className="points">
@@ -66,7 +66,7 @@ export default function ClientWork() {
             </div>
           </article>
 
-          <article className="client-panel panel-wind" data-component="client-panel">
+          <article className="client-panel panel-wind" data-el="wind" data-component="client-panel">
             <span className="when">2023 — 2027</span>
             <h3>B.Tech — Information Technology</h3>
             <p className="body">

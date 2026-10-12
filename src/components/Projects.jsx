@@ -72,7 +72,12 @@ export default function Projects() {
 
         <div className="work-grid">
           {PROJECTS.map((project) => (
-            <article className={`project-card ${project.accent}`} key={project.numeral} data-component="project-card">
+            <article
+              className={`project-card ${project.accent ?? ''}`}
+              data-el={project.accent ? project.accent.slice(2) : 'fire'}
+              key={project.numeral}
+              data-component="project-card"
+            >
               <header className="card-head">
                 <span className="card-numeral">{project.numeral}</span>
                 <span className="card-kind">{project.kind}</span>
