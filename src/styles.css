@@ -109,16 +109,17 @@
   --bark-wash: #c5a56e;   /* Isabella Color   — wood */
   --light-wash: #fbe6a0;  /* Naples Yellow    — sun */
 
-  /* Each section sits on its OWN ground rather than on the shared sheet, so no
-     two sections read as one continuous surface. Mixed from the element's own
-     wash toward white: mixing into the cream paper instead turned every blue
-     into an olive, which put the elements back to looking alike. */
-  --fire-bg: #facabf;
-  --water-bg: #daedf4;
-  --earth-bg: #e5e6d2;
-  --wind-bg: #d8d8d5;
-  --bark-bg: #e7d9c2;
-  --light-bg: #fdf5d7;
+  /* Each section sits on its OWN ground rather than on the shared sheet, and
+     that ground is the element's wash at FULL strength — not a tint of it.
+     A pale band is the same failure as the beige washes were: the section has
+     to announce itself before anything on it is read. Nearest pair (earth vs
+     bark) is now 73 apart in RGB instead of 31. */
+  --fire-bg: #f48067;   /* Grenadine Pink   — flame */
+  --water-bg: #a7d4e4;  /* Pale King's Blue — ocean */
+  --earth-bg: #c1c494;  /* Olive Buff       — leaf */
+  --wind-bg: #a1a39a;   /* Warm Gray        — air */
+  --bark-bg: #c5a56e;   /* Isabella Color   — wood */
+  --light-bg: #fbe6a0;  /* Naples Yellow    — sun */
 
   /* A text tone per element, so a component can be built entirely inside its
      own family. Each is the MOST saturated tone of its pigment that still
@@ -930,7 +931,11 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
 .section-heading .section-note {
   flex: 1 1 22rem;
   max-width: 42ch;
-  color: var(--ink-soft);
+  /* NOT --ink-soft. This is the only line that sits directly on a band rather
+     than on a card, and against a full-strength band the soft grey measures
+     3.2:1. --ink clears 7.2:1 there in light and 5.9:1 in dark, and the
+     hierarchy is carried by size instead. */
+  color: var(--ink);
   font-size: 0.9375rem;
 }
 
@@ -1769,13 +1774,15 @@ html[data-theme='dark'] {
   --bark-wash: #221d15;
   --light-wash: #504421;
 
-  /* the section bands again, lifted off the black ground */
-  --fire-bg: #352316;
-  --water-bg: #293235;
-  --earth-bg: #242f1b;
-  --wind-bg: #282a29;
-  --bark-bg: #2e2a22;
-  --light-bg: #363630;
+  /* the section bands again, and just as saturated: 38% of the luminous
+     pigment over the black, so each band reads as its own colour rather than
+     as another shade of the ground */
+  --fire-bg: #673819;
+  --water-bg: #4a5c63;
+  --earth-bg: #3e5725;
+  --wind-bg: #484a47;
+  --bark-bg: #554a36;
+  --light-bg: #686656;
 
   /* Text on a pigment fill. Here the pigments are already luminous enough to
      carry the ground on top of them, so --on-accent becomes the black. */
@@ -2029,6 +2036,15 @@ html[data-theme='dark'] ::selection {
    the fill. That is still the element's own pair — nothing is borrowed. */
 .spec-head,
 .stat-tile { --motif-color: var(--on-accent); }
+
+/* These sit on an ELEMENT surface — a card head wash, or a section band —
+   rather than on the near-white card body, so they take the ink. At full
+   strength the soft grey measures 2.57:1 on the flame surface and 2.84:1 on
+   the wood band, both well under the 4.5:1 these captions need. Measured by
+   the contrast audit, not by eye. */
+.card-kind,
+.mini-label,
+.repo-what { color: var(--ink); }
 
 /* ============================================================
    MOTION
