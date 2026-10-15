@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Moon, Sun } from 'lucide-react';
 
 const NAV = [
   { id: 'work', label: 'work', href: '#work' },
@@ -13,42 +12,10 @@ const NAV = [
 // otherwise browsers that already hold the old CV will not re-check for up to an hour.
 const RESUME = { label: 'cv ↓', href: '/assets/resume.pdf?v=2026-10-12', download: 'Naga_Adarsh_Resume.pdf' };
 
-// The boot script in main.jsx has already stamped data-theme on <html>, so the
-// DOM is the source of truth. Guarded because this renders on the server too.
-function currentTheme() {
-  if (typeof document === 'undefined') return 'light';
-  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-}
-
-const THEME_COPY = {
-  dark: { label: 'switch to light theme', title: 'light mode' },
-  light: { label: 'switch to dark theme', title: 'dark mode' },
-  unknown: { label: 'toggle colour theme', title: 'colour theme' },
-};
-
 export default function TopBar() {
   const [open, setOpen] = useState(false);
-  // null until mounted: the prerendered HTML cannot know the visitor's saved
-  // theme, so the first client render must agree with it. The icon itself is
-  // CSS-driven, so there is no flash — only the label waits for the effect.
-  const [theme, setTheme] = useState(null);
   const [active, setActive] = useState('');
   const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    setTheme(currentTheme());
-  }, []);
-
-  function toggleTheme() {
-    const next = currentTheme() === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    try {
-      localStorage.setItem('na-theme', next);
-    } catch (e) {
-      /* private mode etc. */
-    }
-    setTheme(next);
-  }
 
   // Reading-position bar. rAF-throttled, passive listener.
   useEffect(() => {
@@ -123,16 +90,6 @@ export default function TopBar() {
             <a className="cv-pill" href={RESUME.href} download={RESUME.download}>
               {RESUME.label}
             </a>
-            <button
-              type="button"
-              className="theme-btn"
-              onClick={toggleTheme}
-              aria-label={THEME_COPY[theme || 'unknown'].label}
-              title={THEME_COPY[theme || 'unknown'].title}
-            >
-              <Moon className="theme-ico theme-ico-light" size={18} strokeWidth={1.9} aria-hidden="true" />
-              <Sun className="theme-ico theme-ico-dark" size={18} strokeWidth={1.9} aria-hidden="true" />
-            </button>
             <button
               type="button"
               className="menu-btn"

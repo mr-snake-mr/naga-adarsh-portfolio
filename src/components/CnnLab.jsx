@@ -97,7 +97,7 @@ export default function CnnLab() {
     setManual((prev) => prev.map((on, idx) => (idx === i ? !on : on)));
   }
 
-  // decision map — theme-aware, and re-drawn instantly on theme change
+  // decision map — drawn once from the chapter's own tokens
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas && canvas.getContext('2d');
@@ -117,15 +117,17 @@ export default function CnnLab() {
         const num = parseInt(n, 16);
         return `rgba(${(num >> 16) & 255},${(num >> 8) & 255},${num & 255},${a})`;
       };
-      // Functional surfaces and marks, named semantically so the chapter
-      // supplies them: plate, ink, the two classes, and the error red.
-      const bg = tkn('--surface', '#fff9e8');
-      const line = tkn('--ink', '#20231f');
-      const dot1 = tkn('--accent', '#ddaf35');
-      const wrong = tkn('--warn', '#b52d3b');
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const dot0 = tkn('--surface', '#fff9e8');
-      const zone = hexA(dot1, isDark ? 0.16 : 0.3);
+      // The experiment's own roles, declared once in the sand chapter: the plate,
+      // the ink, the two classes, and the error red. Nothing here is borrowed
+      // from a generic pigment, so re-colouring the chapter moves the plot too.
+      const bg = tkn('--surface', '#F8EEDB');
+      const line = tkn('--ink', '#292923');
+      const dot1 = tkn('--nn-class1', '#B94D36');
+      const dot0 = tkn('--nn-class0', '#367D84');
+      const wrong = tkn('--nn-error', '#A92F3D');
+      // The zone is class 1's own colour at low alpha over the plate, so it can
+      // only ever read as "the network says class 1".
+      const zone = hexA(dot1, 0.22);
       ctx.clearRect(0, 0, S, S);
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, S, S);
@@ -171,10 +173,6 @@ export default function CnnLab() {
     canvas.width = S;
     canvas.height = S;
     draw();
-
-    const obs = new MutationObserver(draw);
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    return () => obs.disconnect();
   }, [manual, steps, cfgKey, mask]);
 
   // network geometry
@@ -203,7 +201,7 @@ export default function CnnLab() {
         <SectionHeading
           id="play-title"
           index="02"
-          accent="water"
+          accent="light"
           title="train a tiny neural net"
           note="A real mini network, like the one inside the freshness project, learning to tell two classes apart. Each preset is one experiment — pick it and press run."
         />
@@ -253,11 +251,13 @@ export default function CnnLab() {
                     <line x1={nd.x} y1={nd.y} x2={xOut} y2={yMid} />
                   </g>
                 ))}
-                <circle className="nn-node" cx={xIn} cy={yMid - 20} r="13" style={{ fill: 'var(--water)' }} />
-                <circle className="nn-node" cx={xIn} cy={yMid + 20} r="13" style={{ fill: 'var(--water)' }} />
+                {/* Every neuron wears the chapter's single node accent; the
+                    class colours belong to the data, not to the hardware. */}
+                <circle className="nn-node" cx={xIn} cy={yMid - 20} r="13" style={{ fill: 'var(--nn-node, var(--water))' }} />
+                <circle className="nn-node" cx={xIn} cy={yMid + 20} r="13" style={{ fill: 'var(--nn-node, var(--water))' }} />
                 <text x={xIn} y={yMid - 20 + 5} textAnchor="middle" fontSize="12" className="nn-lbl">x</text>
                 <text x={xIn} y={yMid + 20 + 5} textAnchor="middle" fontSize="12" className="nn-lbl">y</text>
-                <circle className="nn-node" cx={xOut} cy={yMid} r="13" style={{ fill: 'var(--fire)' }} />
+                <circle className="nn-node" cx={xOut} cy={yMid} r="13" style={{ fill: 'var(--nn-node, var(--fire))' }} />
                 <text x={xOut} y={yMid + 5} textAnchor="middle" fontSize="11" className="nn-lbl">0/1</text>
                 {nodes.map((nd) => (
                   <g
@@ -273,7 +273,7 @@ export default function CnnLab() {
                     <circle
                       className="nn-node"
                       cx={nd.x} cy={nd.y} r="13"
-                      style={{ fill: nd.on ? 'var(--light)' : 'var(--paper-sunk)' }}
+                      style={{ fill: nd.on ? 'var(--nn-node, var(--light))' : 'var(--paper-sunk)' }}
                       strokeDasharray={nd.on ? '0' : '3 2'}
                       opacity={nd.on ? 1 : 0.7}
                     />

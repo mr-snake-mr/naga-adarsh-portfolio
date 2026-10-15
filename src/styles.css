@@ -1,25 +1,31 @@
 /* ============================================================
-   Naga Adarsh — portfolio v7 · "a dictionary of colour"
+   Naga Adarsh — portfolio v8 · "the martian palette"
 
-   The palette is not invented. Every ground, pigment and ink
-   below is a named swatch from Sanzo Wada's A Dictionary of
-   Color Combinations (1933) — 159 colours the book only ever
-   publishes as 360 fixed pairings.
+   One theme, six chapters. The palette is an original system
+   built from the colours of a Mars mission: log paper and
+   charcoal in the field notebook, cold engineering charcoal in
+   the workshop, dust and sand around the experiment, atmospheric
+   blue-green at the horizon, mission-control navy on the
+   readouts, and burnt orange at sunset. It is inspired by the
+   novel's atmosphere only — no cover art or artwork is copied.
 
-   The book's own caveat sets the method. Only 140 of those 360
-   combinations hold a pair legible enough for body text, and
-   the library leans warm and mid-chroma, so a web palette built
-   from it has to DERIVE its text tones rather than lift them.
-   Here the paper, the ink and the six pigments are the book's
-   own values; each element's ink is then the most saturated
-   tone of that pigment that still clears 4.5:1 — both on the
-   paper and on the element's own wash.
+   THE METHOD. Section colour is the one thing that must never
+   leak: every chapter repoints the SAME role set on its own
+   full-width <section>, so the ground runs edge to edge and the
+   inner container stays transparent. Nothing here is a panel
+   floating on someone else's colour.
 
-   Named swatches in use:
-     paper  Sulpher Yellow #39         ink   Black #159
-     fire   Carmine Red #29            water Deep Lyons Blue
-     earth  Brick Red #28              wind  Slate Color #158
-     bark   Dusky Madder Violet #153   light Yellow Ocher #60
+   WHERE THE SPEC HAD TO BEND, AND WHY. A handful of the given
+   text tones sit below the 4.5:1 that body copy needs on their
+   own grounds — #6F6557 on the sand measures 3.6:1 and #F0D4C5
+   on the sunset 4.3:1. Those two are darkened by the smallest
+   step that clears the bar (#5F5546 and #F2DCD0); every other
+   value in the brief is used exactly as written. Contrast is
+   computed, not eyeballed.
+
+   There is no dark mode. The chapters are already art-directed
+   at six different luminances, and inverting the whole page
+   would throw that away to arrive back at one flat scheme.
    ============================================================ */
 
 /* Fraunces (display) and JetBrains Mono (labels, chips, mono) are served from
@@ -71,44 +77,45 @@
 }
 
 :root {
-  /* ---------- CHAPTER 1 · hero — warm editorial minimalism ----------
-     The default chapter. Every other chapter overrides this same set, which is
+  /* ---------- CHAPTER 1 · hero — "mission log" ----------
+     The default chapter: a clean scientist's field notebook. Log paper, charcoal
+     ink, rust reserved for the few things that matter and a muted teal for links
+     and technical detail. Every other chapter overrides this same set, which is
      why a component written once renders correctly wherever it is placed. */
-  --bg: #f6f1e5;         /* warm ivory ground */
-  --fg: #20231f;         /* deep charcoal */
-  --accent: #246779;     /* muted teal */
-  --accent-2: #8a8f85;   /* warm gray */
-  --muted: #5a5e56;
-  --surface: #fffdf7;
-  --line: #ddd6c5;
-  --on-accent: #f6f1e5;
+  --bg: #F3EEE2;         /* log paper */
+  --fg: #252A2D;         /* charcoal ink */
+  --accent: #B94D36;     /* rust — the main accent */
+  --accent-2: #286B73;   /* muted teal — links */
+  --muted: #656A68;
+  --surface: #FBF8F0;
+  --line: #D8D0C0;
+  --on-accent: #FFF5E6;  /* bone on rust = 5.03:1 */
 
   /* Legacy role names are kept as the MECHANISM, re-pointed chapter by chapter.
-     Components keep working; new work should use the semantic names above. */
+     Components keep working; new work should use the semantic names above. Each
+     pigment carries its own wash and ink, so a component assembled from one
+     element can never borrow a colour from a different one. */
   --paper: var(--bg);
-  --paper-sunk: #efe9db;
+  --paper-sunk: #E9E2D2;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: #e8dfc8;
+  --marker: #E2CFA4;     /* warm sand — the swipe behind the name */
 
-  /* The six pigment slots resolve to this chapter's own accent, so a component
-     that names one still lands inside the chapter's palette rather than
-     borrowing a colour from a different section. */
-  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
-  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
-  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
-  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
-  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
+  --fire: #B94D36;  --fire-wash: #F7E6E0;  --fire-ink: #A5432E;
+  --water: #286B73; --water-wash: #E2ECEA; --water-ink: #286B73;
+  --earth: #5D625F; --earth-wash: #EAE4D7; --earth-ink: #4A4F4C;
+  --wind: #286B73;  --wind-wash: #E2ECEA;  --wind-ink: #286B73;
+  --bark: #B94D36;  --bark-wash: #F7E6E0;  --bark-ink: #A5432E;
+  --light: #D8A63C; --light-wash: #F8EFDA; --light-ink: #252A2D;
+  --on-light: #252A2D;
 
   /* Chapter 6 is defined on .site-footer, which overrides all of the above. */
-  --band: #152d3a;
-  --band-fg: #f6f2e9;
-  --band-soft: rgba(246, 242, 233, 0.7);
-  --band-line: rgba(246, 242, 233, 0.22);
+  --band: #F3EEE2;
+  --band-fg: #252A2D;
+  --band-soft: #656A68;
+  --band-line: #D8D0C0;
 
   /* type — a high-contrast serif for display, the system face for reading,
      mono for labels. */
@@ -159,162 +166,183 @@
    a large card floating on a different colour.
    ============================================================ */
 
-/* Chapter 2 · selected work — dark engineering portfolio.
-   The one dark chapter, so it reads as a deliberate break in the run. Lime is
-   the only vivid colour in it and carries every link and numeral. */
+/* Chapter 2 · selected work — the spacecraft interior.
+   A cold engineering bay: charcoal ground, bone type, burnt orange for anything
+   meant to be clicked and blue-green for the supporting instrumentation. The
+   cards lift off the ground only where a project genuinely needs its own
+   surface, and the section colour stays visible between and around them. */
 .section[data-el='fire'] {
-  --bg: #18231e;
-  --fg: #f5f1e6;
-  --accent: #d5ef78;     /* electric lime */
-  --accent-2: #a9c0a0;   /* muted sage */
-  --muted: #a8a49b;
-  --surface: #21302a;
-  --line: rgba(245, 241, 230, 0.16);
-  --on-accent: #18231e;  /* forest on lime = 12.67:1 */
+  --bg: #1C242A;
+  --fg: #F5F0E6;
+  --accent: #F07855;     /* burnt orange */
+  --accent-2: #88C9C2;   /* blue-green instrumentation */
+  --muted: #B8C1C2;
+  --surface: #263139;
+  --line: #3B484E;
+  --on-accent: #1C242A;  /* charcoal on burnt orange = 6.21:1 */
 
   --paper: var(--bg);
-  --paper-sunk: #1c2823;
+  --paper-sunk: #212B33;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: var(--accent);
+  --marker: #3B484E;
 
-  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
-  --water: var(--accent-2); --water-wash: var(--surface); --water-ink: var(--accent-2);
-  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--muted);     --wind-wash: var(--surface);  --wind-ink: var(--muted);
-  --bark: var(--accent-2);  --bark-wash: var(--surface);  --bark-ink: var(--accent-2);
-  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
+  /* The three cards still need to be told apart, so each takes one of the
+     chapter's own tones; the head wash is that tone laid over the hull. */
+  --fire: #F07855;  --fire-wash: #40312B;  --fire-ink: #F07855;
+  --water: #88C9C2; --water-wash: #2C3B41; --water-ink: #88C9C2;
+  --earth: #E8C99E; --earth-wash: #3E392D; --earth-ink: #E8C99E;
+  --wind: #88C9C2;  --wind-wash: #2C3B41;  --wind-ink: #88C9C2;
+  --bark: #F07855;  --bark-wash: #40312B;  --bark-ink: #F07855;
+  --light: #E8C99E; --light-wash: #3E392D; --light-ink: #E8C99E;
+  --on-light: #1C242A;
 }
 
-/* Chapter 3 · train a tiny neural net — warm scientific experimentation.
-   The yellow runs edge to edge; the experiment itself is NOT a panel on top of
-   it. Only the plot keeps the pale cream surface, because that is a functional
-   surface for reading data, not a container. */
+/* Chapter 3 · train a tiny neural net — Martian terrain.
+   The centrepiece. The sand runs edge to edge and the experiment is NOT a panel
+   sitting on top of it: .lab is transparent and borderless, so the section reads
+   as one continuous desert. Only the plot plate keeps a lighter surface, because
+   that is a functional surface for reading data. */
 .section[data-el='water'] {
-  --bg: #f2e7b9;
-  --fg: #20231f;
-  --accent: #ddaf35;     /* mustard gold — a FILL colour */
-  --accent-ink: #7a5a10; /* darker mustard — the same colour used as TEXT */
-  --accent-2: #5c5636;
-  --muted: #5c5636;
-  --surface: #fff9e8;    /* pale cream, for the plot only */
-  --line: rgba(32, 35, 31, 0.18);
-  --on-accent: #20231f;  /* ink on the mustard fill = 7.76:1 */
-  --warn: #b52d3b;       /* muted red = 4.97:1 on the butter */
+  --bg: #E8C99E;
+  --fg: #292923;
+  --accent: #D8A63C;     /* node gold */
+  --accent-2: #5F5546;
+  --muted: #5F5546;
+  --surface: #F8EEDB;    /* the visualization plate */
+  --line: #CCB58F;
+  --on-accent: #292923;  /* ink on the gold fill = 7.58:1 */
+  --on-light: #292923;
 
   --paper: var(--bg);
-  --paper-sunk: #ece0ad;
+  --paper-sunk: #E5CFAC;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: var(--accent);
+  --marker: #D8A63C;
 
-  --fire: var(--accent);      --fire-wash: var(--surface);  --fire-ink: var(--accent-ink);
-  --water: var(--accent);     --water-wash: var(--surface); --water-ink: var(--accent-ink);
-  --earth: var(--accent);     --earth-wash: var(--surface); --earth-ink: var(--accent-ink);
-  --wind: var(--muted);       --wind-wash: var(--surface);  --wind-ink: var(--muted);
-  --bark: var(--accent);      --bark-wash: var(--surface);  --bark-ink: var(--accent-ink);
-  --light: var(--accent);     --light-wash: var(--surface); --light-ink: var(--accent-ink);
-  --on-light: var(--on-accent);
+  /* The experiment's own roles, named once here so the plot, the diagram and the
+     verdict all read from the same vocabulary instead of borrowing --accent. */
+  --nn-node: #D8A63C;    /* hidden / input / output neurons */
+  --nn-class1: #B94D36;  /* class 1 dots and the zone they occupy */
+  --nn-class0: #367D84;  /* class 0 dots */
+  --nn-error: #A92F3D;   /* "got it wrong" crosses and the alarm verdict */
+  --nn-fg: #292923;      /* ink on the gold / sand fills */
+  --nn-fg-inv: #FFF5E6;  /* bone on the rust, teal and error fills */
+  --btn-primary: #A93F35;    /* the run button */
+  --btn-primary-fg: #FFF5E6;
+
+  --fire: #B94D36;  --fire-wash: #EFDAC7;  --fire-ink: #A03F2C;
+  --water: #367D84; --water-wash: #DCE8E4; --water-ink: #2C666C;
+  --earth: #D8A63C; --earth-wash: #F6E6C2; --earth-ink: #6E5416;
+  --wind: #5F5546;  --wind-wash: #E7DCC2;  --wind-ink: #5F5546;
+  --bark: #B94D36;  --bark-wash: #EFDAC7;  --bark-ink: #A03F2C;
+  --light: #D8A63C; --light-wash: #F6E6C2; --light-ink: #292923;
 }
 
-/* Chapter 4 · experience and college — calm sage and forest green.
-   The landing after the yellow: same structure, quieter colour, so the run
-   from the experiment into the professional record feels deliberate. */
+/* Chapter 4 · experience and college — atmospheric horizon.
+   The muted blue-green of the sky against the horizon: calm, professional, and
+   deliberately between the dark workshop above and the sand below. Rust is held
+   back for the dates and the milestones only. */
 .section[data-el='earth'] {
-  --bg: #dfe8dc;
-  --fg: #20382d;
-  --accent: #41694b;
-  --accent-2: #6f7f6a;
-  --muted: #4d5c50;
-  --surface: #eef3ec;
-  --line: rgba(32, 56, 45, 0.18);
-  --on-accent: #eef3ec;  /* ivory on the green fill = 5.58:1 */
+  --bg: #DDE6E2;
+  --fg: #26363A;
+  --accent: #39777B;
+  --accent-2: #B94D36;   /* rust — dates and milestones, and nothing else */
+  --muted: #5D6C6B;
+  --surface: #EDF2EC;
+  --line: #BECFC9;
+  --on-accent: #FFF5E6;  /* bone on the teal fill = 4.75:1 */
+  --on-light: #FFF5E6;
 
   --paper: var(--bg);
-  --paper-sunk: #d6e1d3;
+  --paper-sunk: #CFDCD6;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: var(--accent);
+  --marker: #B94D36;
 
-  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
-  --water: var(--accent);   --water-wash: var(--surface); --water-ink: var(--accent);
-  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--accent-2);  --wind-wash: var(--surface);  --wind-ink: var(--muted);
-  --bark: var(--accent);    --bark-wash: var(--surface);  --bark-ink: var(--accent);
-  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
+  --fire: #B94D36;  --fire-wash: #F2DED7;  --fire-ink: #A03F2C;
+  --water: #39777B; --water-wash: #E3EDEA; --water-ink: #39777B;
+  --earth: #B94D36; --earth-wash: #F2DED7; --earth-ink: #A03F2C;
+  --wind: #5D6C6B;  --wind-wash: #E6EDE9;  --wind-ink: #5D6C6B;
+  --bark: #39777B;  --bark-wash: #E3EDEA;  --bark-ink: #39777B;
+  --light: #B94D36; --light-wash: #F2DED7; --light-ink: #A03F2C;
 }
 
-/* Chapter 5 · credentials — muted lavender and ink.
-   Achievements are carried by typography and small details rather than bright
-   oversized badges. */
+/* Chapter 5 · credentials — mission control.
+   Instrument panels reading out verified milestones. Gold marks the achievement
+   itself, blue-green carries the links, and nothing glows: the drama is carried
+   by the navy ground rather than by saturated badges. */
 .section[data-el='bark'] {
-  --bg: #e9e2f0;
-  --fg: #302638;
-  --accent: #72568d;
-  --accent-2: #6d6a72;
-  --muted: #5b5265;
-  --surface: #fbf9fd;
-  --line: rgba(48, 38, 56, 0.16);
-  --on-accent: #fbf9fd;  /* off-white on violet = 5.85:1 */
+  --bg: #253444;
+  --fg: #F4F0E6;
+  --accent: #E7B85B;     /* mission gold */
+  --accent-2: #88C9C2;   /* blue-green links */
+  --muted: #BAC7CB;
+  --surface: #2D3E4B;
+  --line: #40515D;
+  --on-accent: #253444;  /* navy on gold = 7.03:1 */
+  --on-light: #253444;
 
   --paper: var(--bg);
-  --paper-sunk: #ded4e8;
+  --paper-sunk: #1F2C39;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: var(--accent);
+  --marker: #E7B85B;
 
-  --fire: var(--accent);    --fire-wash: var(--surface);  --fire-ink: var(--accent);
-  --water: var(--accent);   --water-wash: var(--surface); --water-ink: var(--accent);
-  --earth: var(--accent);   --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--accent-2);  --wind-wash: var(--surface);  --wind-ink: var(--muted);
-  --bark: var(--accent);    --bark-wash: var(--surface);  --bark-ink: var(--accent);
-  --light: var(--accent);   --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
+  /* Every stat tile takes a light fill so one --on-accent can word all four;
+     the crown tile is the cream, which is why it stays the brightest. */
+  --fire: #E7B85B;  --fire-wash: #33465A;  --fire-ink: #E7B85B;
+  --water: #88C9C2; --water-wash: #33465A; --water-ink: #88C9C2;
+  --earth: #F07855; --earth-wash: #33465A; --earth-ink: #F07855;
+  --wind: #BAC7CB;  --wind-wash: #33465A;  --wind-ink: #BAC7CB;
+  --bark: #E7B85B;  --bark-wash: #33465A;  --bark-ink: #E7B85B;
+  --light: #F4F0E6; --light-wash: #35485A; --light-ink: #F4F0E6;
 }
 
-/* Chapter 6 · contact — deep midnight blue with a warm coral.
-   The band role names are repointed here so the footer's existing rules
-   (eyebrow-inverse, band-soft, band-line) keep working unchanged. */
+/* Chapter 6 · contact — Martian sunset.
+   The last warm moment of the page. One flat burnt-orange field, bone type, and
+   pale gold held back for the email, the hovers and the horizon rule itself — no
+   second panel is introduced inside it. The band role names are repointed here
+   so the footer's existing rules (eyebrow-inverse, band-soft, band-line) keep
+   working unchanged. */
 .site-footer {
-  --bg: #152d3a;
-  --fg: #f6f2e9;
-  --accent: #ff806d;     /* warm coral */
-  --accent-2: #7b93a0;   /* muted blue-gray */
-  --muted: #9fb2bc;
-  --surface: #1d3a49;
-  --line: rgba(246, 242, 233, 0.22);
-  --on-accent: #152d3a;  /* midnight on coral = 5.83:1 */
+  --bg: #A94130;
+  --fg: #FFF4E5;
+  --accent: #F1C879;     /* pale gold */
+  --accent-2: #F2DCD0;
+  --muted: #F2DCD0;      /* the brief's #F0D4C5, lifted to clear 4.5:1 */
+  --surface: #B04E3B;
+  --line: #C76A50;
+  --on-accent: #4A1A12;  /* deep rust on the pale gold = 9.41:1 */
+  --on-light: #4A1A12;
 
   --paper: var(--bg);
-  --paper-sunk: #11242f;
+  --paper-sunk: #8F3427;
   --card: var(--surface);
   --ink: var(--fg);
   --ink-soft: var(--muted);
   --rule: var(--line);
-  --marker: var(--accent);
+  --marker: #F1C879;
 
   --band: var(--bg);
   --band-fg: var(--fg);
   --band-soft: var(--muted);
   --band-line: var(--line);
 
-  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
-  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
-  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
-  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
-  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
+  --fire: #F1C879;  --fire-wash: #B04E3B; --fire-ink: #F1C879;
+  --water: #FFF4E5; --water-wash: #B04E3B; --water-ink: #FFF4E5;
+  --earth: #F1C879; --earth-wash: #B04E3B; --earth-ink: #F1C879;
+  --wind: #F2DCD0;  --wind-wash: #B04E3B;  --wind-ink: #F2DCD0;
+  --bark: #F1C879;  --bark-wash: #B04E3B;  --bark-ink: #F1C879;
+  --light: #F1C879; --light-wash: #B04E3B; --light-ink: #F1C879;
 }
 
 * { box-sizing: border-box; }
@@ -342,7 +370,9 @@ a { color: inherit; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
 svg { display: block; }
 
-::selection { background: var(--fire); color: var(--on-accent); }
+/* --accent rather than --fire: in the sand chapter the pigment is the one fill
+   that every chapter's --on-accent is measured against */
+::selection { background: var(--accent); color: var(--on-accent); }
 
 :focus-visible {
   outline: 2px solid var(--ink);
@@ -482,7 +512,6 @@ section {
 }
 .cv-pill:hover { transform: translateY(-1px); box-shadow: var(--lift-2); border-color: var(--fire); }
 
-.theme-btn,
 .menu-btn {
   display: inline-flex;
   align-items: center;
@@ -500,17 +529,8 @@ section {
   cursor: pointer;
   transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
-.theme-btn:hover,
 .menu-btn:hover { border-color: var(--fire); }
 .menu-btn { padding: 0 14px; }
-
-/* The toggle's icon is chosen from the <html data-theme> the boot script sets,
-   never from JS state. Picking it in JS would make the prerendered HTML differ
-   from the first client render for anyone with a saved theme (hydration
-   mismatch); with CSS the correct icon is on screen from the first paint. */
-.theme-ico-dark { display: none; }
-html[data-theme='dark'] .theme-ico-light { display: none; }
-html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 .menu-panel {
   border-top: 1px solid var(--rule);
@@ -589,10 +609,13 @@ html[data-theme='dark'] .theme-ico-dark { display: block; }
 
 /* fire: solid, worded in bone. Filled buttons drop their rule entirely — a
    hairline of the fill's own tone would only thicken the edge. */
+/* --btn-primary lets a chapter that owns a primary action pin it to the exact
+   fill its --on-accent was measured against; everywhere else it is the element's
+   own pigment. */
 .btn-fire {
-  background: var(--fire);
-  color: var(--on-accent);
-  border-color: var(--fire);
+  background: var(--btn-primary, var(--fire));
+  color: var(--btn-primary-fg, var(--on-accent));
+  border-color: var(--btn-primary, var(--fire));
 }
 
 .btn-paper { background: var(--card); color: var(--ink); }
@@ -1292,14 +1315,18 @@ a.receipt-value:hover { text-decoration-color: var(--rc, var(--fire)); }
   line-height: 1.3;
 }
 
+/* The date is the one place rust is allowed in this chapter, so it is a solid
+   chip rather than a sunk one — the section's secondary accent, worded in the
+   chapter's own on-accent so the pair is always measured together. */
 .client-panel .when {
   align-self: flex-start;
   padding: 4px 11px;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 700;
-  background: var(--paper-sunk);
-  border: 1px solid var(--rule);
+  color: var(--on-accent);
+  background: var(--accent-2, var(--paper-sunk));
+  border: 1px solid var(--accent-2, var(--rule));
   border-radius: var(--r-pill);
 }
 
@@ -1529,8 +1556,8 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 }
 
 .nn-presets .lab-sample:disabled.active {
-  color: var(--on-accent);
-  background: var(--water);
+  color: var(--btn-primary-fg, var(--on-accent));
+  background: var(--btn-primary, var(--water));
   border-color: var(--ink);
 }
 
@@ -1540,9 +1567,11 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
   align-items: center;
   gap: var(--s2) var(--s3);
 }
+/* The selected position wears the chapter's primary action fill, so "which
+   experiment am I on" and "run it" read as the same colour family. */
 .nn-presets .lab-sample.active {
-  background: var(--water);
-  color: var(--on-accent);
+  background: var(--btn-primary, var(--water));
+  color: var(--btn-primary-fg, var(--on-accent));
   border-color: var(--ink);
 }
 
@@ -1639,9 +1668,12 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
   display: inline-block;
   flex: none;
 }
-.lg-light { background: var(--light); }
-.lg-hollow { background: var(--card); }
-.lg-zone { background: var(--light); border-radius: 3px; opacity: 0.55; }
+/* The four swatches read from the experiment's own roles, not from generic
+   pigments — the legend has to describe the plot, and the plot's two classes are
+   the only place rust and teal mean anything specific. */
+.lg-light { background: var(--nn-class1, var(--light)); }
+.lg-hollow { background: var(--nn-class0, var(--card)); }
+.lg-zone { background: var(--nn-class1, var(--light)); border-radius: 3px; opacity: 0.32; }
 .lg-x { position: relative; background: transparent; border: 0; }
 .lg-x::before, .lg-x::after {
   content: "";
@@ -1650,7 +1682,7 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
   top: 4px;
   width: 9px;
   height: 2px;
-  background: var(--fire);
+  background: var(--nn-error, var(--fire));
   transform: rotate(45deg);
 }
 .lg-x::after { transform: rotate(-45deg); }
@@ -1706,20 +1738,22 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
 }
 .verdict-why { font-size: 0.8125rem; line-height: 1.45; }
 
-/* no green anywhere in this palette, so the verdict colours carry the
-   meaning instead: light for a clear fit, fire for the alarm, wind for the
-   merely unsatisfying one. */
-.verdict-light { background: var(--light); border-color: transparent; }
-.verdict-light .verdict-name, .verdict-light .verdict-why { color: var(--on-light); }
-.verdict-fire { background: var(--fire); border-color: transparent; }
-.verdict-wind { background: var(--wind); border-color: transparent; }
+/* The three verdicts borrow the experiment's own vocabulary rather than a
+   generic palette: gold for a healthy fit (dark ink, 7.58:1), the error red for
+   the alarm and the muted sand for the merely unsatisfying one (bone on each,
+   6.16:1 and 6.77:1). A green "pass" would be the one hue this palette has no
+   place for, so the fit is stated in gold instead. */
+.verdict-light { background: var(--nn-node, var(--light)); border-color: transparent; }
+.verdict-light .verdict-name, .verdict-light .verdict-why { color: var(--nn-fg, var(--on-light)); }
+.verdict-fire { background: var(--nn-error, var(--fire)); border-color: transparent; }
+.verdict-wind { background: var(--muted); border-color: transparent; }
 .verdict-fire .verdict-name, .verdict-fire .verdict-why,
-.verdict-wind .verdict-name, .verdict-wind .verdict-why { color: var(--on-accent); }
+.verdict-wind .verdict-name, .verdict-wind .verdict-why { color: var(--nn-fg-inv, var(--on-accent)); }
 .verdict-idle { background: var(--paper-sunk); }
 
 .nn-wire line { stroke: var(--ink); }
 .nn-node { stroke: var(--ink); stroke-width: 2; }
-.nn-lbl { fill: var(--on-accent); font-family: var(--font-mono); font-weight: 700; }
+.nn-lbl { fill: var(--nn-fg, var(--on-accent)); font-family: var(--font-mono); font-weight: 700; }
 .nn-x { fill: var(--ink); font-weight: 800; }
 
 /* short screens: shrink the stage so the whole demo fits */
@@ -1879,98 +1913,6 @@ a.stat-tile:hover { transform: translateY(-2px); box-shadow: var(--lift-2); }
   background: var(--light);
   color: var(--on-light);
   border-color: var(--light);
-}
-
-/* ---------- dark theme ---------- */
-
-html[data-theme='dark'] {
-  /* Inverted, and out of the same book: the ground is Black #159 and the bone
-     is Sulpher Yellow #39. The paper and the ink simply trade places, so the
-     palette is still only ever reading from the dictionary. */
-  --paper: #111314;
-  --paper-sunk: #1c1e1f;
-  /* the surface sits clearly above the page, so panels read as panels */
-  --card: #232526;
-  --ink: #f5ecc2;
-  --ink-soft: #9e9a80;
-  --rule: #414243;
-
-  /* The pigments invert. Deep in the light theme, luminous here, so a fill
-     holds its contrast against the ground in either theme and the text on it
-     just swaps ends. Each keeps its meaning — flame, ocean, leaf, air, wood,
-     sun — and each is a named swatch again: Orange, Pale King's Blue, Night
-     Green, Warm Gray, Isabella Color, Sulpher Yellow. */
-  --fire: #f37420;
-  --water: #a7d4e4;
-  --earth: #87c540;
-  --wind: #a1a39a;
-  --bark: #c5a56e;
-  --light: #f5ecc2;
-
-  /* 30% of the pigment laid over the black. These have to stay unmistakably
-     hued — collapse them and the three project cards become three identical
-     dark boxes again. */
-  --fire-wash: #3e1b1f;
-  --water-wash: #0c2938;
-  --earth-wash: #143022;
-  --wind-wash: #1c2225;
-  --bark-wash: #221d15;
-  --light-wash: #504421;
-
-  /* the section bands again, and just as saturated: 38% of the luminous
-     pigment over the black, so each band reads as its own colour rather than
-     as another shade of the ground */
-  --fire-bg: #673819;
-  --water-bg: #4a5c63;
-  --earth-bg: #3e5725;
-  --wind-bg: #484a47;
-  --bark-bg: #554a36;
-  --light-bg: #686656;
-
-  /* Text on a pigment fill. Here the pigments are already luminous enough to
-     carry the ground on top of them, so --on-accent becomes the black. */
-  --on-accent: #111314;
-  --on-light: #111314;
-
-  /* In dark the pigments are light enough to serve as their own text tone, so
-     an element's ink and its pigment are the same value here. */
-  --fire-ink: var(--fire);
-  --water-ink: var(--water);
-  --earth-ink: var(--earth);
-  --wind-ink: var(--wind);
-  --bark-ink: var(--bark);
-  --light-ink: var(--ink);
-
-
-  /* Carmine Red #29 behind the name. The letters here are bone, and bone on
-     the dictionary's own gold measures 1.4:1 — the bottoms of "adarsh" washed
-     out against the swipe. Against a deep carmine they read at 5.8:1. */
-  --marker: #a62c37;
-
-  /* Vandyke Brown holds in both themes: on the black ground it sits well above
-     the page, so the closing band stays a colour moment rather than one more
-     dark rectangle. */
-  --band: #4b3317;
-  --band-fg: #f5ecc2;
-  --band-soft: rgba(245, 236, 194, 0.68);
-  --band-line: rgba(245, 236, 194, 0.24);
-
-  color-scheme: dark;
-}
-
-/* depth over a flat dark field: fire behind the hero, water under the lab */
-html[data-theme='dark'] .hero {
-  background-image: radial-gradient(48rem 24rem at 12% -4%, rgba(243, 116, 32, 0.14), transparent 70%);
-}
-
-/* the lab panel gets the same treatment under its water spine */
-html[data-theme='dark'] .lab {
-  background-image: radial-gradient(34rem 16rem at 8% 0%, rgba(167, 212, 228, 0.12), transparent 72%);
-}
-
-html[data-theme='dark'] ::selection {
-  background: var(--light);
-  color: var(--on-light);
 }
 
 /* ---------- responsive ---------- */
@@ -2270,117 +2212,3 @@ html[data-theme='dark'] ::selection {
   }
 }
 
-/* ============================================================
-   DARK MODE — a deep version of the SAME SIX CHAPTERS
-
-   Not one global dark palette. The chapters are art-directed, so inverting the
-   whole page would throw that away; instead each chapter keeps its identity at
-   a lower luminance, and the two chapters that are already dark deepen further.
-   Declared last so it supersedes both :root and the chapter blocks above.
-   ============================================================ */
-
-html[data-theme='dark'] {
-  /* chapter 1 · hero */
-  --bg: #1a1c18;
-  --fg: #f0ece0;
-  --accent: #7fb0bf;
-  --accent-2: #8d9389;
-  --muted: #a8a89d;
-  --surface: #22251f;
-  --line: rgba(240, 236, 224, 0.18);
-  --on-accent: #1a1c18;
-
-  --paper: var(--bg);
-  --paper-sunk: #161814;
-  --card: var(--surface);
-  --ink: var(--fg);
-  --ink-soft: var(--muted);
-  --rule: var(--line);
-  --marker: #333b34;
-
-  --fire: var(--accent);   --fire-wash: var(--surface); --fire-ink: var(--accent);
-  --water: var(--accent);  --water-wash: var(--surface); --water-ink: var(--accent);
-  --earth: var(--accent);  --earth-wash: var(--surface); --earth-ink: var(--accent);
-  --wind: var(--accent-2); --wind-wash: var(--surface); --wind-ink: var(--muted);
-  --bark: var(--accent);   --bark-wash: var(--surface); --bark-ink: var(--accent);
-  --light: var(--accent);  --light-wash: var(--surface); --light-ink: var(--accent);
-  --on-light: var(--on-accent);
-
-  color-scheme: dark;
-}
-
-/* chapter 2 · selected work */
-html[data-theme='dark'] .section[data-el='fire'] {
-  --bg: #101915;
-  --paper-sunk: #14201a;
-  --fg: #f0ece0;
-  --accent: #d5ef78;
-  --accent-2: #9fb894;
-  --muted: #9fa398;
-  --surface: #17221d;
-  --line: rgba(240, 236, 224, 0.16);
-  --on-accent: #101915;
-  color-scheme: dark;
-}
-
-/* chapter 3 · neural net */
-html[data-theme='dark'] .section[data-el='water'] {
-  --bg: #2a2410;
-  --paper-sunk: #221d0d;
-  --fg: #f4ecd6;
-  --accent: #ddaf35;
-  --accent-ink: #e8c65e;
-  --accent-2: #c0b284;
-  --muted: #c0b284;
-  --surface: #332c16;
-  --line: rgba(244, 236, 214, 0.18);
-  --on-accent: #2a2410;
-  --warn: #e5737f;
-  color-scheme: dark;
-}
-
-/* chapter 4 · experience */
-html[data-theme='dark'] .section[data-el='earth'] {
-  --bg: #16211b;
-  --paper-sunk: #121b16;
-  --fg: #e4ede3;
-  --accent: #8fb79a;
-  --accent-2: #9aab9d;
-  --muted: #a3b3a6;
-  --surface: #1e2b23;
-  --line: rgba(228, 237, 227, 0.16);
-  --on-accent: #16211b;
-  color-scheme: dark;
-}
-
-/* chapter 5 · credentials */
-html[data-theme='dark'] .section[data-el='bark'] {
-  --bg: #1e1a26;
-  --paper-sunk: #191521;
-  --fg: #eae4f2;
-  --accent: #b79ad0;
-  --accent-2: #b0a8bd;
-  --muted: #b0a8bd;
-  --surface: #272231;
-  --line: rgba(234, 228, 242, 0.16);
-  --on-accent: #1e1a26;
-  color-scheme: dark;
-}
-
-/* chapter 6 · contact */
-html[data-theme='dark'] .site-footer {
-  --bg: #0f2029;
-  --paper-sunk: #0b1a22;
-  --fg: #f0ece3;
-  --accent: #ff806d;
-  --accent-2: #8fa5b0;
-  --muted: #93a7b1;
-  --surface: #16303d;
-  --line: rgba(240, 236, 227, 0.2);
-  --on-accent: #0f2029;
-  --band: var(--bg);
-  --band-fg: var(--fg);
-  --band-soft: var(--muted);
-  --band-line: var(--line);
-  color-scheme: dark;
-}

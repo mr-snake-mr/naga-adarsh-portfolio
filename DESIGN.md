@@ -451,3 +451,77 @@ Rendered over HTTP from `dist` through headless Chrome over CDP at 1440×900 and
 - `og-image.png` 1200×630, `favicon-192.png` 192×192, `apple-touch-icon.png` 180×180 — dimensions read back from the PNG headers after generation.
 
 Screenshots captured to `theme-check/` for review; headless Chrome closed through CDP and the preview server stopped.
+## v11 — "the martian palette" (supersedes v10's palette, v10's dark theme, and the v6/v7/v8 element names as *colour* values)
+
+Brief: re-colour the site from a palette inspired by Andy Weir's *The Martian* — "the contrast between the dusty red planet, sandy terrain, dark spacecraft interiors, mission-control displays, and muted atmospheric blue-green tones." Colour only: layout, content, typography, component structure, navigation, animations and functionality are unchanged. No cover art or artwork is referenced or reproduced; the palette is an original system built from the described atmosphere. A later instruction in the same request removed dark mode outright.
+
+### One theme, six chapters
+
+There is no longer a `data-theme` attribute, no toggle, no `localStorage` key and no second token set. The chapters were already art-directed at six different luminances, so inverting the whole page would have thrown that away to arrive back at one flat scheme. `color-scheme: light` stays; the toggle, its icons, its copy and the `html[data-theme='dark']` boot rule in `index.html` are deleted.
+
+### Chapter grounds
+
+Every value below is applied to the **full-width `<section>`** (or `.hero` / `.site-footer`), never to an inner container.
+
+| Ch. | Section | Ground | Primary | Secondary | Accents | Surface | Border |
+|---|---|---|---|---|---|---|---|
+| 1 | hero / toolbox — "mission log" | `#F3EEE2` | `#252A2D` | `#656A68` | rust `#B94D36`, teal `#286B73` | `#FBF8F0` | `#D8D0C0` |
+| 2 | selected work — "spacecraft engineering" | `#1C242A` | `#F5F0E6` | `#B8C1C2` | orange `#F07855`, blue-green `#88C9C2` | `#263139` | `#3B484E` |
+| 3 | tiny neural net — "martian terrain" | `#E8C99E` | `#292923` | `#5F5546` | gold `#D8A63C`, rust `#B94D36`, teal `#367D84` | `#F8EEDB` | `#CCB58F` |
+| 4 | experience & college — "atmospheric horizon" | `#DDE6E2` | `#26363A` | `#5D6C6B` | teal `#39777B`, rust `#B94D36` | `#EDF2EC` | `#BECFC9` |
+| 5 | credentials — "mission control" | `#253444` | `#F4F0E6` | `#BAC7CB` | gold `#E7B85B`, blue-green `#88C9C2` | `#2D3E4B` | `#40515D` |
+| 6 | contact — "martian sunset" | `#A94130` | `#FFF4E5` | `#F2DCD0` | pale gold `#F1C879` | `#B04E3B` | `#C76A50` |
+
+The mechanism is unchanged from v6/v7: a role set (`--bg --fg --accent --accent-2 --muted --surface --line --on-accent`) is repointed per chapter on the section itself, with the six legacy pigment slots (`--fire --water --earth --wind --bark --light`, each with `-wash` / `-ink`) still resolving inside the chapter. No component was rewritten to change a colour.
+
+### The neural-net chapter gets its own named roles
+
+The experiment was borrowing generic pigments (`--accent`, `--surface`, `--warn`, `--water`, `--fire`, `--light`) for six things that mean something specific, so the brief's values could not be expressed without ambiguity. The sand chapter now declares them once:
+
+| Token | Value | Used by |
+|---|---|---|
+| `--nn-node` | `#D8A63C` | every `<circle>` neuron in the SVG |
+| `--nn-class1` | `#B94D36` | class-1 dots, the legend swatch, the shaded decision zone |
+| `--nn-class0` | `#367D84` | class-0 dots and the legend swatch |
+| `--nn-error` | `#A92F3D` | the "got it wrong" crosses, the overfitting verdict, `.lg-x` |
+| `--nn-fg` / `--nn-fg-inv` | `#292923` / `#FFF5E6` | ink on the gold and sand fills / bone on the rust, teal and error fills |
+| `--btn-primary` / `--btn-primary-fg` | `#A93F35` / `#FFF5E6` | "run the full experiment" and the selected preset chip |
+
+`CnnLab.jsx` reads these instead of `--accent` / `--warn`, and its two class colours are now genuinely different fills rather than a filled circle and a hollow one. The `MutationObserver` on `data-theme` is gone — there is nothing left to observe.
+
+### The sandy full-width requirement
+
+The brief's critical requirement was that the sand cover the whole section and that no blue surround appear around a cream panel. Verified rather than assumed: `.section[data-el='water']` paints `rgb(232, 201, 158)` at `left: 0, width: viewport` at 1440 / 1024 / 768 / 390 / 320, `.lab` and `.lab-nn` compute to `rgba(0, 0, 0, 0)` with no border, and only `.nn-canvas` keeps `#F8EEDB`. **Zero** painted descendants span the full section width in any chapter, so no chapter is a card floating on another colour.
+
+### Where two brief values had to bend for legibility
+
+Computed, not eyeballed. Two of the given text tones sit under the 4.5:1 that body copy needs on their own ground:
+
+- **`#6F6557` on the sand `#E8C99E` = 3.61:1** → the chapter's secondary text is `#5F5546` (4.62:1). Used for every `--ink-soft` caption in the chapter.
+- **`#F0D4C5` on the sunset `#A94130` = 4.28:1** → `--band-soft` is `#F2DCD0` (4.57:1).
+
+Everything else in the brief is used exactly as written. Two further substitutions were needed where the brief's mid-tone accents cannot word their own fills at the sizes used:
+
+- `#E7B85B` on `#253444` is fine, but the reverse (navy on gold) is what the eyebrow chip uses, so chapter 5 keeps `--on-accent: #253444` and every stat tile takes a **light** fill so one on-colour words all four.
+- The footer's pale gold `#F1C879` cannot carry bone text (2.8:1) or `#A94130` (3.81:1), so `--on-light` is the deep rust `#4A1A12` (9.41:1) for the email hover, the icon hovers, the `05` chip and "back to top".
+
+Rust in chapter 4 is a **solid chip**, not a sunk one: `.client-panel .when` now takes `--accent-2` as its background with the chapter's own `--on-accent` on top, which is what "use rust red sparingly for dates and milestones" needed. The chapter-3 heading chip moved from `accent="water"` to `accent="light"` because teal-on-charcoal-ink is 3.55:1 and gold-on-ink is 7.58:1.
+
+### Files changed
+
+`src/styles.css` (palette header, `:root`, chapters 2–6, `::selection`, `.btn-fire`, `.client-panel .when`, `.lg-*`, `.verdict-*`, `.nn-lbl`, `.lab-sample.active`, both dark blocks and the `.theme-ico-*` rules deleted), `src/components/CnnLab.jsx`, `src/components/TopBar.jsx`, `src/main.jsx`, `index.html`.
+
+### Verified
+
+`npm run build` clean (1591 modules; `dist/index.html` 9.02 kB carrying **26,231** chars of prerendered markup; CSS **39.81 kB** / 8.12 kB gzip; JS **176.16 kB** / 56.77 kB gzip). No lint script or lint configuration exists in this project, so the build is the only available static check.
+
+Rendered over HTTP from `dist` through headless Chrome over CDP:
+
+- **Full width at every size.** At 1440, 1024, 768, 390 and 320 the six grounds all measure `left: 0` and `width === viewport`; `scrollWidth === innerWidth` at all five; **0** horizontally overflowing elements.
+- **No breaks between chapters.** The vertical gap between each adjacent pair is **0px** at all five widths.
+- **Contrast, measured on the real DOM.** 102 text/ground pairs at 1440 and 103 at 390, each compared against its nearest *painted* ancestor, with the threshold chosen per element from its own computed size and weight — **0** below threshold. In the sand chapter the SVG neurons compute `fill: rgb(216, 166, 60)` and their labels `rgb(41, 41, 35)`.
+- **The experiment still runs.** Preset switched to "too big (12)", "run the full experiment" reached **14,000 steps / 98% / 79%** with the verdict reading **overfitting** on `rgb(169, 47, 61)` with `rgb(255, 245, 230)` text; `+2,000` moved it to 16,000; `reset` returned it to `0 steps` and "not trained yet"; a hidden neuron toggled `true → false → true`. Canvas pixel counts changed from `{rust 3815, teal 1190, plate 0}` untrained to `{rust 3595, teal 2855, plate 118155}` trained, so the decision zone is genuinely being painted.
+- **Nothing left of dark mode.** `document.documentElement.getAttribute('data-theme')` is `null`, `document.querySelectorAll('.theme-btn').length === 0`, `.theme-ico` is `0`, and the only `color-scheme` left is `light` (declared in `:root` and in the `index.html` meta).
+- `theme-color` meta reads `#F3EEE2`.
+
+One note on the captured evidence: a full-page screenshot taken with `captureBeyondViewport` shows the six bands but not their text, because the per-section entrance animation is scroll-timeline driven and those containers are still at `opacity: 0` off-screen. The in-place captures and the computed-style probes above are what actually confirm the content.
