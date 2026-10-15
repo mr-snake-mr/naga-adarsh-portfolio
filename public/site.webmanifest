@@ -1,0 +1,28 @@
+{
+  "name": "Naga Adarsh — AI & Backend Portfolio",
+  "short_name": "nag",
+  "description": "Computer-vision and backend projects by Naga Adarsh, with code, live demos and a published Indian patent application.",
+  "start_url": "/",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "background_color": "#F3EEE2",
+  "theme_color": "#F3EEE2",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/favicon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    }
+  ]
+}

@@ -9,7 +9,7 @@
       name="description"
       content="Naga Adarsh — final-year B.Tech IT student in Chennai. Computer-vision and backend projects with code, live demos and a published Indian patent application."
     />
-    <meta name="theme-color" content="#f6f1e5" />
+    <meta name="theme-color" content="#F3EEE2" />
     <!-- light is the default regardless of the device setting, so UA widgets
          (scrollbars, form controls) must not render dark before CSS lands -->
     <meta name="color-scheme" content="light" />
@@ -19,13 +19,23 @@
     <link rel="canonical" href="https://nag.is-a.dev/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="Naga Adarsh" />
+    <!-- The short name the site is shared under. "nag" is the handle: it is the
+         domain, and it is what the link shortener is called. It is declared here,
+         in the manifest and in the structured data so a search engine reads it
+         rather than having to infer it from the hostname. -->
+    <meta name="application-name" content="nag" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- iOS ignores the manifest's short_name, so "nag" has to be stated
+         separately or an Add-to-Home-Screen shortcut would take the full
+         page title instead of the short name. -->
+    <meta name="apple-mobile-web-app-title" content="nag" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Naga Adarsh" />
+    <meta property="og:site_name" content="nag" />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:url" content="https://nag.is-a.dev/" />
     <meta property="og:title" content="Naga Adarsh — AI &amp; Backend Portfolio" />
@@ -61,11 +71,10 @@
     <link rel="preload" href="/fonts/fraunces-700.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jetbrains-mono-700.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Before the stylesheet lands: chapter 1's warm ivory, and the deep
-         ground used when the dark theme is on. Prevents a white flash. -->
+    <!-- Before the stylesheet lands: chapter 1's log paper. Prevents a white
+         flash. There is only one theme, so this is a single flat value. -->
     <style>
-      html { background: #f6f1e5; }
-      html[data-theme='dark'] { background: #1a1c18; }
+      html { background: #F3EEE2; }
     </style>
 
     <!-- One @graph, one script, no repeated/conflicting definitions. Every value
@@ -78,6 +87,7 @@
             "@type": "Person",
             "@id": "https://nag.is-a.dev/#person",
             "name": "Naga Adarsh",
+            "alternateName": ["nag"],
             "url": "https://nag.is-a.dev/",
             "email": "mailto:nagaadarsh354@gmail.com",
             "jobTitle": "Computer-vision and backend developer",
@@ -122,7 +132,8 @@
             "@type": "WebSite",
             "@id": "https://nag.is-a.dev/#website",
             "url": "https://nag.is-a.dev/",
-            "name": "Naga Adarsh — AI & Backend Portfolio",
+            "name": "nag",
+            "alternateName": ["Naga Adarsh — AI & Backend Portfolio", "Naga Adarsh"],
             "inLanguage": "en",
             "author": { "@id": "https://nag.is-a.dev/#person" },
             "publisher": { "@id": "https://nag.is-a.dev/#person" }

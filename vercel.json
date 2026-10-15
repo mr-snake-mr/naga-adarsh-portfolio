@@ -8,7 +8,63 @@
       "permanent": true
     },
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.nag.is-a.dev"
+        }
+      ],
+      "destination": "https://nag.is-a.dev/$1",
+      "permanent": true
+    },
+    {
       "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/nag",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/nag/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/naga",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/naga-adarsh",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/nagaadarsh",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/me",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about",
       "destination": "/",
       "permanent": true
     }
